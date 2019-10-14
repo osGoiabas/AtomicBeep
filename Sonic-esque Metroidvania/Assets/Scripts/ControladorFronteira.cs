@@ -5,7 +5,7 @@ using UnityEngine;
 //[RequireComponent (typeof (BoxCollider2D))]
 public class ControladorFronteira : MonoBehaviour
 {
-    private BoxCollider2D managerBox;
+    public  BoxCollider2D managerBox;
     private Transform player;
     public GameObject boundary;
 

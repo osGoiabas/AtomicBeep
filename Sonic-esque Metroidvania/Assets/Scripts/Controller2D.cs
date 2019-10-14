@@ -9,8 +9,10 @@ public class Controller2D : RaycastController {
     public override void Start() {
         base.Start();
         collisions.faceDir = 1;
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         spriteRenderer.flipX = false;
+
+        personagem = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
     }
 
     public void Move(Vector3 moveAmount) {
@@ -36,7 +38,7 @@ public class Controller2D : RaycastController {
         FliparPersonagem();
 
         if (collisions.below) {
-            Inclinar(); //NOVIDADE------------------------------------
+            Inclinar();
         }
 
         transform.Translate(moveAmount);
@@ -78,7 +80,7 @@ public class Controller2D : RaycastController {
 
     public bool estáBalançando = false;
 
-    public LayerMask collisionMask;
+    public LayerMask máscaraColisão;
     float maxSlopeAngle = 1000;
 
     void HorizontalCollisions(ref Vector3 moveAmount) {
@@ -94,7 +96,7 @@ public class Controller2D : RaycastController {
         {
             Vector3 rayOrigin = (directionX == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight;
             rayOrigin += transform.up * (horizontalRaySpacing * i);
-            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, transform.right * directionX, rayLength, collisionMask);
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, transform.right * directionX, rayLength, máscaraColisão);
 
             // DESENHA RAIOS PARA FINS DE TESTE
             Debug.DrawRay(rayOrigin, transform.right * directionX, Color.green);
@@ -147,7 +149,7 @@ public class Controller2D : RaycastController {
         {
             Vector3 rayOrigin = (directionY == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
             rayOrigin += transform.right * (verticalRaySpacing * i + moveAmount.x);
-            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, transform.up * directionY, rayLength, collisionMask);
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, transform.up * directionY, rayLength, máscaraColisão);
 
             // DESENHA RAIOS PARA FINS DE TESTE
             Debug.DrawRay(rayOrigin, transform.up * directionY, Color.green);
@@ -249,6 +251,12 @@ public class Controller2D : RaycastController {
 
     */
 
+
+
+    //-----------------------------------------------------------------------------------------------------
+    // INVERTE O LADO DO SPRITE DO PERSONAGEM
+    //-----------------------------------------------------------------------------------------------------
+
     SpriteRenderer spriteRenderer;
 
     void FliparPersonagem() {
@@ -258,7 +266,6 @@ public class Controller2D : RaycastController {
             spriteRenderer.flipX = true;
         }
         //transform.localScale = new Vector3(transform.localScale.x * collisions.faceDir, transform.localScale.y, transform.localScale.z);
-
     }
 
 
@@ -266,50 +273,69 @@ public class Controller2D : RaycastController {
     // INCLINA PERSONAGEM
     //-----------------------------------------------------------------------------------------------------
 
-    float comprimentoRaio = 1;
 
-    
+    public Transform personagem;
 
     void Inclinar() {
+
+
+        /*
+        float comprimentoRaio = espessuraPele + 1;
 
         Vector2 posicaoInfEsq = new Vector2(infEsq.position.x + espessuraPele, infEsq.position.y + espessuraPele);
         Vector2 posicaoInfDir = new Vector2(infDir.position.x - espessuraPele, infDir.position.y + espessuraPele);
 
-        // LANÇA RAIO DOS CANTOS PRA BAIXO
-        RaycastHit2D alvoInfoEsq = Physics2D.Raycast(posicaoInfEsq, -transform.up, comprimentoRaio, collisionMask);
-        RaycastHit2D alvoInfoDir = Physics2D.Raycast(posicaoInfDir, -transform.up, comprimentoRaio, collisionMask);
+        // LANÇA E DESENHA RAIO DOS CANTOS PRA BAIXO
+        RaycastHit2D hitEsq = Physics2D.Raycast(posicaoInfEsq, -transform.up, comprimentoRaio, máscaraColisão);
+        RaycastHit2D hitDir = Physics2D.Raycast(posicaoInfDir, -transform.up, comprimentoRaio, máscaraColisão);
 
-        Debug.DrawRay(posicaoInfEsq, -transform.up * alvoInfoEsq.distance, Color.yellow);
-        Debug.DrawRay(posicaoInfDir, -transform.up * alvoInfoDir.distance, Color.yellow);
+        Debug.DrawRay(posicaoInfEsq, -transform.up * hitEsq.distance, Color.yellow);
+        Debug.DrawRay(posicaoInfDir, -transform.up * hitDir.distance, Color.yellow);
 
-        Debug.DrawRay(alvoInfoEsq.point, alvoInfoEsq.normal * 5, Color.red);
-        Debug.DrawRay(alvoInfoDir.point, alvoInfoDir.normal * 5, Color.red);
+        Debug.DrawRay(hitEsq.point, hitEsq.normal * 5, Color.red);
+        Debug.DrawRay(hitDir.point, hitDir.normal * 5, Color.red);
         
         // ACHA E DESENHA O RAIO DO MEIO
-        Vector2 mediaNormal = (alvoInfoEsq.normal + alvoInfoDir.normal) / 2;
-        Vector2 mediaPonto = (alvoInfoEsq.point + alvoInfoDir.point) / 2;
-        float mediaDistancia = (alvoInfoEsq.distance + alvoInfoDir.distance) / 2;
+        Vector2 mediaNormal = (hitEsq.normal + hitDir.normal) / 2;
+        Vector2 mediaPonto = (hitEsq.point + hitDir.point) / 2;
+        float mediaDistancia = (hitEsq.distance + hitDir.distance) / 2;
         Debug.DrawRay(mediaPonto, mediaNormal * mediaDistancia, Color.blue);
 
-        transform.rotation = Quaternion.LookRotation(Vector3.forward, mediaNormal);
+        //transform.rotation = Quaternion.LookRotation(transform.forward, mediaNormal);
         //transform.rotation = Quaternion.Euler(0, 0, anguloRampa);
 
 
+        */
 
 
+        Vector2 centroPersonagem = personagem.position;
+
+        // LANÇA E DESENHA RAIO DO CENTRO DO PERSONAGEM PRA BAIXO
+        RaycastHit2D hitInferiorCentral = Physics2D.Raycast(centroPersonagem, -transform.up, 5, máscaraColisão);
+
+        Debug.DrawRay(centroPersonagem, -transform.up * hitInferiorCentral.distance, Color.yellow);
+        Debug.DrawRay(hitInferiorCentral.point, hitInferiorCentral.normal * 5, Color.red);
+
+        transform.rotation = Quaternion.LookRotation(transform.forward, hitInferiorCentral.normal);
+
+
+
+
+
+        /*
 
         Vector2 posicaoInfMeio = new Vector2((posicaoInfDir.x + posicaoInfEsq.x) / 2, (posicaoInfDir.y + posicaoInfEsq.y) / 2);
-        RaycastHit2D alvoInfoMeio = Physics2D.Raycast(posicaoInfMeio, -transform.up, comprimentoRaio, collisionMask);
-        Debug.DrawRay(alvoInfoMeio.point, alvoInfoMeio.normal * 5, Color.red);
+        RaycastHit2D alvoInfoMeio = Physics2D.Raycast(posicaoInfMeio, -transform.up, comprimentoRaio, máscaraColisão);
+        //Debug.DrawRay(alvoInfoMeio.point, -alvoInfoMeio.normal * 3, Color.yellow);
 
-        if ((alvoInfoEsq && !alvoInfoMeio && !alvoInfoDir) ||
-            (!alvoInfoEsq && !alvoInfoMeio && alvoInfoDir)) {
+        if ((hitEsq && !alvoInfoMeio && !hitDir) ||
+            (!hitEsq && !alvoInfoMeio && hitDir)) {
             //print ("Tá quase caindo!");
             estáBalançando = true;
         } else {
             //print ("Não tá caindo.");
             estáBalançando = false;
         }
-
+        */
     }
 }

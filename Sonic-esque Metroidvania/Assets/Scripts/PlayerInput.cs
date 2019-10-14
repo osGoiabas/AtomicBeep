@@ -26,9 +26,11 @@ public class PlayerInput : MonoBehaviour {
 
         // BULLET TIME
         if (Input.GetKeyDown(KeyCode.Q) && !player.estáEmBulletTime) {
-            player.ComeçarBulletTime();
-        } else if (Input.GetKeyDown(KeyCode.Q) && player.estáEmBulletTime) {
-            player.PararBulletTime();
+            if (!player.estáEmBulletTime) {
+                player.ComeçarBulletTime();
+            } else {
+                player.PararBulletTime();
+            }
         }
     }
 }

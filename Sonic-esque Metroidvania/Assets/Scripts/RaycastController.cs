@@ -46,6 +46,8 @@ public class RaycastController : MonoBehaviour {
         //raycastOrigins.topRight = new Vector2(bounds.max.x, bounds.max.y);
 
         //define a posição dos quatro vetores do futuro raycast como transforms específicos de gameObjects vazios
+
+        // ISSO NÃO FUNCIONA DIREITO QUANDO ELE FICA INCLINADO!
         raycastOrigins.topLeft = new Vector2(supEsq.position.x + espessuraPele, supEsq.position.y - espessuraPele);
         raycastOrigins.topRight = new Vector2(supDir.position.x - espessuraPele, supDir.position.y - espessuraPele);
         raycastOrigins.bottomLeft = new Vector2(infEsq.position.x + espessuraPele, infEsq.position.y + espessuraPele);

@@ -12,9 +12,9 @@ public class Player : MonoBehaviour {
     Controller2D controller;
     Animator animator;
 
-    public float maxJumpHeight = 4;
-    public float minJumpHeight = 1;
-    public float timeToJumpApex = 0.4f;
+    float maxJumpHeight = 7;
+    float minJumpHeight = 2;
+    float timeToJumpApex = 0.4f;
 
     float maxJumpVelocity;
     float minJumpVelocity;
@@ -24,7 +24,7 @@ public class Player : MonoBehaviour {
 
     void Start() {
         controller = GetComponent<Controller2D>();
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
 
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
@@ -52,8 +52,8 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public float moveSpeed = 10;
-    public float velocidadeMáximaX = 20;
+    float moveSpeed = 20;
+    float velocidadeMáximaX = 30;
 
     float velocityXSmoothing;
     float accelerationTime = .5f; //aceleração do movimento
