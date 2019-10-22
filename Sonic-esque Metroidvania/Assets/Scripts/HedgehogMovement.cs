@@ -28,7 +28,7 @@ public class HedgehogMovement : MonoBehaviour
 
 
     //-----------------------------------------------------------------------------------------------------
-    // GENERAL
+    // GERAL
     //-----------------------------------------------------------------------------------------------------
 
     public bool grounded { get; private set; }
@@ -59,24 +59,6 @@ public class HedgehogMovement : MonoBehaviour
     private Vector2 standRightRPos;
     //private Vector2 spinLeftRPos;
     //private Vector2 spinRightRPos;
-
-
-    private Vector2 leftRaycastPos
-    {
-        get
-        {
-            //if (rolling || jumped) { return spinLeftRPos; } else { 
-            return standLeftRPos; //}
-        }
-    }
-    private Vector2 rightRaycastPos
-    {
-        get
-        {
-            //if (rolling || jumped) { return spinRightRPos; } else { 
-            return standRightRPos; //}
-        }
-    }
 
     private int speedHash;
     private int standHash;
@@ -233,11 +215,12 @@ public class HedgehogMovement : MonoBehaviour
 
             bool lostFooting = false;
 
+            // SE NÃO ESTÁ NO CHÃO, MAS NÃO TEM VELOCIDADE PRA CORRER NA PAREDE/TETO
             if (groundMode != GroundMode.Floor && Mathf.Abs(groundVelocity) < fallVelocityThreshold)
             {
-                groundMode = GroundMode.Floor;
-                grounded = false;
-                hControlLock = true;
+                groundMode = GroundMode.Floor; // VIRE PRO CHÃO
+                grounded = false; // CAIA
+                hControlLock = true; // TRAVE O CONTROLE NA HORIZONTAL
                 hControlLockTime = 0.5f;
                 lostFooting = true;
             }
@@ -370,6 +353,10 @@ public class HedgehogMovement : MonoBehaviour
                 Vector2 angledSpeed = new Vector2(groundVelocity * Mathf.Cos(currentGroundInfo.angle), 
                                                   groundVelocity * Mathf.Sin(currentGroundInfo.angle));
                 velocity = angledSpeed;
+
+                //-----------------------------------------------------------------------------------------------------
+                // DESGRUDOU DO TETO/PAREDE? ENTÃO RESETA O MOVIMENTO.
+                //-----------------------------------------------------------------------------------------------------
                 if (lostFooting)
                 {
                     groundVelocity = 0f;
@@ -382,7 +369,6 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         else
         {
-
             //-----------------------------------------------------------------------------------------------------
             // ALTURA DE PULO VARIÁVEL
             //-----------------------------------------------------------------------------------------------------
@@ -449,33 +435,25 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         Paredes();
 
-        // TETO???
+        //-----------------------------------------------------------------------------------------------------
+        // TETO E PISO
+        //-----------------------------------------------------------------------------------------------------
+        TetoPiso(input);
 
+        //-----------------------------------------------------------------------------------------------------
+        // ANIMAÇÃO
+        //-----------------------------------------------------------------------------------------------------
+        // animator.SetBool(spinHash, rolling || jumped);
 
+        //-----------------------------------------------------------------------------------------------------
+        // ÁGUA
+        //-----------------------------------------------------------------------------------------------------
+        //if (!underwater && transform.position.y <= waterLevel.position.y) { EnterWater(); }
+        //else if (underwater && transform.position.y > waterLevel.position.y) { ExitWater(); }
 
-
-
-
-
-
-
-
-
-
-
-
-
-        /* animator.SetBool(spinHash, rolling || jumped);
-
-        if (!underwater && transform.position.y <= waterLevel.position.y)
-        {
-            EnterWater();
-        }
-        else if (underwater && transform.position.y > waterLevel.position.y)
-        {
-            ExitWater();
-        } */
-
+        //-----------------------------------------------------------------------------------------------------
+        // ROTAÇÃO
+        //-----------------------------------------------------------------------------------------------------
         transform.localRotation = Quaternion.Euler(0f, 0f, SnapAngle(characterAngle));
     }
 
@@ -490,6 +468,11 @@ public class HedgehogMovement : MonoBehaviour
         underwater = false;
         velocity.y *= 2f;
     } */
+
+
+    //-----------------------------------------------------------------------------------------------------
+    // PAREDES
+    //-----------------------------------------------------------------------------------------------------
 
     void Paredes()
     {
@@ -522,15 +505,293 @@ public class HedgehogMovement : MonoBehaviour
         }
     }
 
+    public LayerMask máscaraColisão;
+
     void WallCheck(float distance, float heightOffset, out RaycastHit2D hitLeft, out RaycastHit2D hitRight)
     {
         Vector2 pos = new Vector2(transform.position.x, transform.position.y + heightOffset);
 
-        hitLeft = Physics2D.Raycast(pos, Vector2.left, distance);
-        hitRight = Physics2D.Raycast(pos, Vector2.right, distance);
+        hitLeft = Physics2D.Raycast(pos, Vector2.left, distance, máscaraColisão);
+        hitRight = Physics2D.Raycast(pos, Vector2.right, distance, máscaraColisão);
 
         Debug.DrawLine(pos, pos + (Vector2.left * distance), Color.yellow);
         Debug.DrawLine(pos, pos + (Vector2.right * distance), Color.yellow);
     }
+
+
+    //-----------------------------------------------------------------------------------------------------
+    // TETO E PISO
+    //-----------------------------------------------------------------------------------------------------
+
+    bool groundedLeft = false;
+    bool groundedRight = false;
+
+    void TetoPiso(Vector2 input) {
+
+        bool ceilingLeft = false;
+        bool ceilingRight = false;
+
+        int ceilDirection = (int)groundMode + 2; // se groundMode for 0, o teto será 2
+        if (ceilDirection > 3) { ceilDirection -= 4; } // se groundMode for 3, o teto será 5-4, isto é, 1.
+
+        GroundInfo ceil = GroundedCheck(groundRaycastDist, (GroundMode)ceilDirection, out ceilingLeft, out ceilingRight);
+
+        if (grounded) // ESTÁ NO CHÃO?
+        {   
+            currentGroundInfo = GroundedCheck(groundRaycastDist, groundMode, out groundedLeft, out groundedRight);
+            grounded = groundedLeft || groundedRight;
+        }
+        else
+        {
+            if (ceil.valid && velocity.y > 0f) { DanarCabeçaNoTeto(ceil); }
+            else { Aterrissar(); } // TETO NÃO É VÁLIDO OU SONIC TÁ CAINDO 
+        }
+
+        if (grounded)
+        {
+            StickToGround(currentGroundInfo);
+
+            // ANIMAÇÃO
+            //animator.SetFloat(speedHash, Mathf.Abs(groundVelocity));
+
+            lowCeiling = ceil.valid && transform.position.y > ceil.point.y - 25f;
+        }
+
+
+
+
+
+    }
+
+    //-----------------------------------------------------------------------------------------------------
+    // DANAR CABEÇA NO TETO
+    //-----------------------------------------------------------------------------------------------------
+    void DanarCabeçaNoTeto (GroundInfo ceil) {
+        bool hitCeiling = transform.position.y >= (ceil.point.y - heightHalf);
+        float angleDeg = ceil.angle * Mathf.Rad2Deg;
+
+        // GRUDA NO TETO SE O ÂNGULO DELE NÃO FOR RETO (não gosto disso)
+        /*if (hitCeiling && ((angleDeg >= 225f && angleDeg <= 270f) || (angleDeg >= 90f && angleDeg <= 135f)))
+        {
+            grounded = true;
+            jumped = false;
+            //rolling = false;
+            currentGroundInfo = ceil;
+            groundMode = GroundMode.Ceiling;
+
+            groundVelocity = velocity.y * Mathf.Sign(Mathf.Sin(currentGroundInfo.angle));
+            velocity.y = 0f; 
+        }
+        else*/
+        if (hitCeiling)
+        {
+            // PASSOU DO TETO?
+            if (transform.position.y > ceil.point.y - heightHalf)
+            {
+                // CORRIJA A POSIÇÃO
+                transform.position = new Vector2(transform.position.x, ceil.point.y - heightHalf);
+                // E PARE DE CAIR
+                velocity.y = 0f;
+            }
+        }
+    }
+    
+    //-----------------------------------------------------------------------------------------------------
+    // ATERRISSAR
+    //-----------------------------------------------------------------------------------------------------
+    void Aterrissar () {
+        // VERIFICA SE JÁ TOCOU NO CHÃO
+        GroundInfo info = GroundedCheck(groundRaycastDist, GroundMode.Floor, out groundedLeft, out groundedRight);
+        grounded = (groundedLeft || groundedRight) && velocity.y <= 0f && transform.position.y <= (info.height + heightHalf);
+
+        // SE SIM, TRANSFORMA A VELOCIDADE NO AR EM VELOCIDADE NO CHÃO 
+        if (grounded)
+        {
+            // If in a roll jump, add 5 to position upon landing
+            //if (jumped) { transform.position += new Vector3(0f, 5f); }
+
+            jumped = false;
+            //rolling = false;
+
+            currentGroundInfo = info;
+            groundMode = GroundMode.Floor;
+            float angleDeg = currentGroundInfo.angle * Mathf.Rad2Deg;
+
+            // SE O ÂNGULO É BAIXO, SIMPLESMENTE USE A VELOCIDADE DO CHÃO
+            if (angleDeg < 22.5f || (angleDeg > 337.5 && angleDeg <= 360f))
+            {
+                groundVelocity = velocity.x;
+            }
+            // SE O ÂNGULO É MAIOR, ATÉ 45º:
+            else if ((angleDeg >= 22.5f && angleDeg < 45f) || (angleDeg >= 315f && angleDeg < 337.5f))
+            {
+                // MAS A VELOCIDADE X AINDA É MAIOR QUE A Y, CONTINUA USANDO SÓ A X
+                if (Mathf.Abs(velocity.x) > Mathf.Abs(velocity.y)) { groundVelocity = velocity.x; }
+                // SE NÃO (está caindo/subindo muito rápido), USA METADE DA velocY, CORRIGIDA POR TRIGONOMETRIA
+                else { groundVelocity = velocity.y * 0.5f * Mathf.Sign(Mathf.Sin(currentGroundInfo.angle)); }
+            }
+            // SE O ÂNGULO É AINDA MAIOR, ATÉ 90º:
+            else if ((angleDeg >= 45f && angleDeg < 90f) || (angleDeg >= 270f && angleDeg < 315f))
+            {
+                // MAS A VELOCIDADE X AINDA É MAIOR QUE A Y, CONTINUA USANDO SÓ A X
+                if (Mathf.Abs(velocity.x) > Mathf.Abs(velocity.y)) { groundVelocity = velocity.x; }
+                // SE NÃO (está caindo/subindo muito rápido), USA A velocY INTEIRA, CORRIGIDA POR TRIGONOMETRIA
+                else { groundVelocity = velocity.y * Mathf.Sign(Mathf.Sin(currentGroundInfo.angle)); }
+            }
+
+            // FINALMENTE, PARE DE CAIR (você já está no chão)
+            velocity.y = 0f;
+        }
+    }
+
+
+
+    private Vector2 leftRaycastPos { get { //if (rolling || jumped) { return spinLeftRPos; } else { 
+            return standLeftRPos; //} 
+        }
+    }
+    private Vector2 rightRaycastPos { get { //if (rolling || jumped) { return spinRightRPos; } else { 
+            return standRightRPos; //}
+        }
+    }
+
+    GroundInfo GroundedCheck(float distance, GroundMode groundMode, out bool groundedLeft, out bool groundedRight)
+    {
+        Quaternion rot = Quaternion.Euler(0f, 0f, (90f * (int)groundMode)); // COMO QUE ELE CONVERTE groundMode EM INT?
+        Vector2 dir = rot * Vector2.down;
+        Vector2 leftCastPos = rot * leftRaycastPos;
+        Vector2 rightCastPos = rot * rightRaycastPos;
+        Vector2 pos = new Vector2(transform.position.x, transform.position.y);
+
+        RaycastHit2D leftHit = Physics2D.Raycast(pos + leftCastPos, dir, distance, máscaraColisão);
+        groundedLeft = leftHit.collider != null;
+
+        RaycastHit2D rightHit = Physics2D.Raycast(pos + rightCastPos, dir, distance, máscaraColisão);
+        groundedRight = rightHit.collider != null;
+
+        Debug.DrawLine(pos + leftCastPos, pos + leftCastPos + (dir * distance), Color.magenta);
+        Debug.DrawLine(pos + rightCastPos, pos + rightCastPos + (dir * distance), Color.red);
+
+        GroundInfo found = null;
+
+        if (groundedLeft && groundedRight)
+        {
+            float leftCompare = 0f;
+            float rightCompare = 0f;
+
+            switch (groundMode)
+            {
+                case GroundMode.Floor:
+                    leftCompare = leftHit.point.y;
+                    rightCompare = rightHit.point.y;
+                    break;
+                case GroundMode.RightWall:
+                    leftCompare = -leftHit.point.x;
+                    rightCompare = -rightHit.point.x;
+                    break;
+                case GroundMode.Ceiling:
+                    leftCompare = -leftHit.point.y;
+                    rightCompare = -rightHit.point.y;
+                    break;
+                case GroundMode.LeftWall:
+                    leftCompare = leftHit.point.x;
+                    rightCompare = rightHit.point.x;
+                    break;
+                default:
+                    break;
+            }
+
+            if (leftCompare >= rightCompare) { found = GetGroundInfo(leftHit); }
+            else { found = GetGroundInfo(rightHit); }
+        }
+        else if (groundedLeft) { 
+            found = GetGroundInfo(leftHit); 
+            // checar "raio do meio" e fazer animação de balanço
+        }
+        else if (groundedRight) { 
+            found = GetGroundInfo(rightHit);
+            // checar "raio do meio" e fazer animação de balanço
+        }
+        else { found = new GroundInfo(); }
+
+        return found;   
+    }
+    GroundInfo GetGroundInfo(RaycastHit2D hit)
+    {
+        GroundInfo info = new GroundInfo();
+        if (hit.collider != null)
+        {
+            info.height = hit.point.y;
+            info.point = hit.point;
+            info.normal = hit.normal;
+            info.angle = Vector2ToAngle(hit.normal);
+            info.valid = true;
+        }
+
+        return info;
+    }
+
+    void StickToGround(GroundInfo info)
+    {
+        float angle = info.angle * Mathf.Rad2Deg;
+        characterAngle = angle;
+        Vector3 pos = transform.position;
+
+        // SE O ÂNGULO NÃO CONDIZER COM O groundMode ATUAL, MUDE-O.
+        switch (groundMode) 
+        {
+            case GroundMode.Floor:
+                if (angle < 315f && angle > 225f) { groundMode = GroundMode.LeftWall; }
+                else if (angle > 45f && angle < 180f) { groundMode = GroundMode.RightWall; }
+                pos.y = info.point.y + heightHalf;
+                break;
+            case GroundMode.RightWall:
+                if (angle < 45f && angle > 0f) { groundMode = GroundMode.Floor; }
+                else if (angle > 135f && angle < 270f) { groundMode = GroundMode.Ceiling; }
+                pos.x = info.point.x - heightHalf;
+                break;
+            case GroundMode.Ceiling:
+                if (angle < 135f && angle > 45f) { groundMode = GroundMode.RightWall; }
+                else if (angle > 225f && angle < 360f) { groundMode = GroundMode.LeftWall; }
+                pos.y = info.point.y - heightHalf;
+                break;
+            case GroundMode.LeftWall:
+                if (angle < 225f && angle > 45f) { groundMode = GroundMode.Ceiling; }
+                else if (angle > 315f) { groundMode = GroundMode.Floor; }
+                pos.x = info.point.x + heightHalf;
+                break;
+            default:
+                break;
+        }
+
+        transform.position = pos;
+    }
+
+
+
+    //-----------------------------------------------------------------------------------------------------
+    // MATEMÁTICA
+    //-----------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Retorna ângulo ajustado ao incremento de 45° mais próximo
+    /// </summary>
+    float SnapAngle(float angle)
+    {
+        int mult = (int)(angle + 22.5f);
+        mult /= 45;
+        return mult * 45f;
+    }
+
+    /// <summary>
+    /// Converte um Vector2 em um ângulo de 0-360° Converts vector to 0-360 degree (counter-clockwise) angle, with a vector pointing straight up as zero.
+    /// </summary>
+    float Vector2ToAngle(Vector2 vector)
+    {
+        float angle = Mathf.Atan2(vector.y, vector.x) - (Mathf.PI / 2f);
+        if (angle < 0f) { angle += Mathf.PI * 2f; }
+        return angle;
+    }
+
 
 }
