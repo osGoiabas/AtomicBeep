@@ -24,7 +24,7 @@ public class HedgehogMovement : MonoBehaviour
         LeftWall,
     }
 
-    //public Animator animator;
+    public Animator animator;
 
 
     //-----------------------------------------------------------------------------------------------------
@@ -33,7 +33,10 @@ public class HedgehogMovement : MonoBehaviour
 
     public bool grounded { get; private set; }
     public bool jumped { get; private set; }
+    public bool caindo { get; private set; }
     //public bool rolling { get; private set; }
+    public bool empurrando { get; private set; }
+
 
     public float standingHeight = 40f;
     //public float ballHeight = 30f;
@@ -60,10 +63,6 @@ public class HedgehogMovement : MonoBehaviour
     //private Vector2 spinLeftRPos;
     //private Vector2 spinRightRPos;
 
-    private int speedHash;
-    private int standHash;
-    //private int spinHash;
-    private int pushHash;
 
     //-----------------------------------------------------------------------------------------------------
     // GROUND MOVEMENT
@@ -90,6 +89,7 @@ public class HedgehogMovement : MonoBehaviour
     private float hControlLockTime = 0.5f;
     private GroundInfo currentGroundInfo;
     private GroundMode groundMode = GroundMode.Floor;
+
 
     //-----------------------------------------------------------------------------------------------------
     // AIR MOVEMENT
@@ -118,6 +118,16 @@ public class HedgehogMovement : MonoBehaviour
     private Transform waterLevel; */
 
 
+    //-----------------------------------------------------------------------------------------------------
+    // ANIMAÇÃO
+    //-----------------------------------------------------------------------------------------------------
+    private int speedHash;
+    private int standHash;
+    private int jumpHash;
+    private int cairHash;
+    //private int spinHash;
+    private int empurrarHash;
+    private int wallStickHash;
 
     void Awake()
     {
@@ -128,10 +138,13 @@ public class HedgehogMovement : MonoBehaviour
         //spinLeftRPos = new Vector2(-spinWidthHalf, 0f);
         //spinRightRPos = new Vector2(spinWidthHalf, 0f);
 
-        //speedHash = Animator.StringToHash("Speed");
-        //standHash = Animator.StringToHash("Stand");
+        speedHash = Animator.StringToHash("Speed");
+        standHash = Animator.StringToHash("Stand");
+        jumpHash = Animator.StringToHash("Jump");
+        cairHash = Animator.StringToHash("Fall");
         //spinHash = Animator.StringToHash("Spin");
-        //pushHash = Animator.StringToHash("Push");
+        empurrarHash = Animator.StringToHash("Push");
+        wallStickHash = Animator.StringToHash("Grudado na Parede");
     }
 
 
@@ -147,8 +160,11 @@ public class HedgehogMovement : MonoBehaviour
     {
         if (debug)
         {
-            GUILayout.BeginArea(new Rect(10, 10, 200, 160), "Stats", "Window");
-            GUILayout.Label("Jumped: " + (jumped ? "YES" : "NO"));
+            GUILayout.BeginArea(new Rect(10, 10, 200, 200), "Stats", "Window");
+            GUILayout.Label("Jumped: " + (jumped ? "SIM" : "NÃO"));
+            GUILayout.Label("Caindo: " + (caindo ? "SIM" : "NÃO"));
+            GUILayout.Label("Empurrando: " + (empurrando ? "SIM" : "NÃO"));
+            GUILayout.Label("Grudado: " + (grudadoParede ? "SIM" : "NÃO"));
             //GUILayout.Label("Rolling: " + (rolling ? "YES" : "NO"));
             //GUILayout.Label("Underwater: " + (underwater ? "YES" : "NO"));
             if (currentGroundInfo != null && currentGroundInfo.valid)
@@ -174,7 +190,7 @@ public class HedgehogMovement : MonoBehaviour
 
         float accelSpeedCap = /*underwater ? uwGroundTopSpeed :*/ groundTopSpeed;
 
-
+        bool olhandoDireita = groundVelocity > 0;
 
         //-----------------------------------------------------------------------------------------------------
         // ESTÁ NO CHÃO?
@@ -219,7 +235,7 @@ public class HedgehogMovement : MonoBehaviour
             if (groundMode != GroundMode.Floor && Mathf.Abs(groundVelocity) < fallVelocityThreshold)
             {
                 groundMode = GroundMode.Floor; // VIRE PRO CHÃO
-                grounded = false; // CAIA
+                grounded = false; // NÃO TÁ NO CHÃO
                 hControlLock = true; // TRAVE O CONTROLE NA HORIZONTAL
                 hControlLockTime = 0.5f;
                 lostFooting = true;
@@ -283,10 +299,8 @@ public class HedgehogMovement : MonoBehaviour
                     float accel = /*underwater ? uwAcceleration :*/ groundAcceleration;
                     float decel = /*underwater ? uwDeceleration :*/ deceleration;
 
-
-
                     // TODO: Set a direction variable instead
-                    transform.localScale = new Vector3(Mathf.Sign(groundVelocity), 1, 1); // MEU CÓDIGO
+                    transform.localScale = new Vector3(olhandoDireita ? 1 : -1, 1, 1); // MEU CÓDIGO
 
                     //-----------------------------------------------------------------------------------------------------
                     // ESQUERDA
@@ -373,13 +387,14 @@ public class HedgehogMovement : MonoBehaviour
             // ALTURA DE PULO VARIÁVEL
             //-----------------------------------------------------------------------------------------------------
 
-            float jumpRelThreshold = /*underwater ? uwJumpReleaseThreshold :*/ jumpReleaseThreshold;
+            //define valor máximo do pulo
+            float jumpReleaThreshold = /*underwater ? uwJumpReleaseThreshold :*/ jumpReleaseThreshold;
 
-            // JÁ PULOU, SOLTOU O BOTÃO E A VELOCIDADE VERTICAL A SER APLICADA PASSOU DO LIMITE MÍNIMO?
-            // VOLTA A APLICAR SÓ O MÍNIMO (a gravidade eventualmente o puxará pra baixo)
-            if (jumped && velocity.y > jumpRelThreshold && Input.GetButtonUp("Jump"))
+            // JÁ PULOU, SOLTOU O BOTÃO E A VELOCIDADE VERTICAL A SER APLICADA PASSOU DO LIMITE MÁXIMO?
+            // VOLTA A APLICAR SÓ O MÁXIMO (a gravidade eventualmente o puxará pra baixo)
+            if (jumped && velocity.y > jumpReleaThreshold && Input.GetButtonUp("Jump"))
             {
-                velocity.y = jumpRelThreshold;
+                velocity.y = jumpReleaThreshold;
             }
             else
             {
@@ -425,31 +440,43 @@ public class HedgehogMovement : MonoBehaviour
         velocity.x = Mathf.Clamp(velocity.x, -speedLimit, speedLimit);
         velocity.y = Mathf.Clamp(velocity.y, -speedLimit, speedLimit);
 
+
+        //-----------------------------------------------------------------------------------------------------
+        // CHEQUE COLISÕES
+        //-----------------------------------------------------------------------------------------------------
+        TetoPiso(input);
+        Paredes();
+
+
         //-----------------------------------------------------------------------------------------------------
         // MOVA-SE, DE FATO.
         //-----------------------------------------------------------------------------------------------------
         transform.position += new Vector3(velocity.x, velocity.y, 0f) * Time.fixedDeltaTime;
-
-        //-----------------------------------------------------------------------------------------------------
-        // AGORA, CHEQUE COLISÕES
-        //-----------------------------------------------------------------------------------------------------
-        Paredes();
-
-        //-----------------------------------------------------------------------------------------------------
-        // TETO E PISO
-        //-----------------------------------------------------------------------------------------------------
-        TetoPiso(input);
+        
 
         //-----------------------------------------------------------------------------------------------------
         // ANIMAÇÃO
         //-----------------------------------------------------------------------------------------------------
-        // animator.SetBool(spinHash, rolling || jumped);
+        if (!grounded && velocity.y < 0) 
+        { 
+            caindo = true;
+            characterAngle = 0;
+            groundMode = GroundMode.Floor;
+        }
+        else { caindo = false; }
+
+        animator.SetBool(jumpHash, jumped);
+        animator.SetBool(cairHash, caindo);
+        animator.SetBool(empurrarHash, empurrando);
+        animator.SetBool(wallStickHash, grudadoParede);
+
 
         //-----------------------------------------------------------------------------------------------------
         // ÁGUA
         //-----------------------------------------------------------------------------------------------------
         //if (!underwater && transform.position.y <= waterLevel.position.y) { EnterWater(); }
         //else if (underwater && transform.position.y > waterLevel.position.y) { ExitWater(); }
+
 
         //-----------------------------------------------------------------------------------------------------
         // ROTAÇÃO
@@ -474,6 +501,10 @@ public class HedgehogMovement : MonoBehaviour
     // PAREDES
     //-----------------------------------------------------------------------------------------------------
 
+    public bool grudadoParede { get; private set; }
+    float tempoMáximoGrudado = 0.5f;
+    float quantoFaltaDesgrudar = 0.5f;
+
     void Paredes()
     {
         RaycastHit2D leftHit;
@@ -482,8 +513,7 @@ public class HedgehogMovement : MonoBehaviour
 
         if (leftHit.collider != null && rightHit.collider != null)
         {
-            // Got squashed
-            Debug.Log("GOT SQUASHED");
+            Debug.Log("GOT SQUASHED"); // Got squashed
         }
         else if (leftHit.collider != null)
         {
@@ -492,7 +522,9 @@ public class HedgehogMovement : MonoBehaviour
             {
                 velocity.x = 0f;
                 groundVelocity = 0f;
-            }
+                if (grounded) { empurrando = true; }
+                else { empurrando = false; }
+            } else if (velocity.x == 0) { empurrando = false; }
         }
         else if (rightHit.collider != null)
         {
@@ -501,6 +533,39 @@ public class HedgehogMovement : MonoBehaviour
             {
                 velocity.x = 0f;
                 groundVelocity = 0f;
+                if (grounded) { empurrando = true; }
+                else { empurrando = false; }
+            } else if (velocity.x == 0) { empurrando = false; }
+        } else { empurrando = false; }
+        
+
+
+
+        //-----------------------------------------------------------------------------------------------------
+        // GRUDAR NA PAREDE
+        //-----------------------------------------------------------------------------------------------------
+
+        grudadoParede = false;
+        if ((leftHit.collider != null || rightHit.collider != null) && !grounded) {
+            grudadoParede = true;
+            velocity.y = 0;
+        }
+
+
+        //-----------------------------------------------------------------------------------------------------
+        // CAIR DA PAREDE
+        //-----------------------------------------------------------------------------------------------------
+        //&& Input.GetKeyDown(KeyCode.Space)
+        if (grudadoParede) {
+            if (quantoFaltaDesgrudar > 0 && !Input.GetButtonDown("Jump")) 
+            {
+                quantoFaltaDesgrudar -= Time.deltaTime;
+            } 
+            else if (quantoFaltaDesgrudar <= 0 || Input.GetButtonDown("Jump")) 
+            {
+                if (leftHit.collider != null) { velocity.x += 50; }
+                else if (rightHit.collider != null) { velocity.x -= 50; }
+                quantoFaltaDesgrudar = tempoMáximoGrudado;
             }
         }
     }
@@ -517,7 +582,6 @@ public class HedgehogMovement : MonoBehaviour
         Debug.DrawLine(pos, pos + (Vector2.left * distance), Color.yellow);
         Debug.DrawLine(pos, pos + (Vector2.right * distance), Color.yellow);
     }
-
 
     //-----------------------------------------------------------------------------------------------------
     // TETO E PISO
@@ -540,27 +604,20 @@ public class HedgehogMovement : MonoBehaviour
         {   
             currentGroundInfo = GroundedCheck(groundRaycastDist, groundMode, out groundedLeft, out groundedRight);
             grounded = groundedLeft || groundedRight;
+
+            StickToGround(currentGroundInfo);
+
+            // ANIMAÇÃO
+            animator.SetFloat(speedHash, Mathf.Abs(groundVelocity));
+
+            // o teto é baixo?
+            lowCeiling = ceil.valid && transform.position.y > ceil.point.y - 25f;
         }
         else
         {
             if (ceil.valid && velocity.y > 0f) { DanarCabeçaNoTeto(ceil); }
             else { Aterrissar(); } // TETO NÃO É VÁLIDO OU SONIC TÁ CAINDO 
         }
-
-        if (grounded)
-        {
-            StickToGround(currentGroundInfo);
-
-            // ANIMAÇÃO
-            //animator.SetFloat(speedHash, Mathf.Abs(groundVelocity));
-
-            lowCeiling = ceil.valid && transform.position.y > ceil.point.y - 25f;
-        }
-
-
-
-
-
     }
 
     //-----------------------------------------------------------------------------------------------------
@@ -792,6 +849,4 @@ public class HedgehogMovement : MonoBehaviour
         if (angle < 0f) { angle += Mathf.PI * 2f; }
         return angle;
     }
-
-
 }
