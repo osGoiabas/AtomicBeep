@@ -34,8 +34,11 @@ public class HedgehogMovement : MonoBehaviour
     public bool grounded { get; private set; }
     public bool jumped { get; private set; }
     public bool caindo { get; private set; }
-    //public bool rolling { get; private set; }
+    public bool deslizando { get; private set; }
+    public bool freando { get; private set; }
     public bool empurrando { get; private set; }
+
+    //public bool rolling { get; private set; }
 
 
     public float standingHeight = 40f;
@@ -82,7 +85,7 @@ public class HedgehogMovement : MonoBehaviour
     public float sideRaycastOffset = -4f;
     public float sideRaycastDist = 11f;
     public float groundRaycastDist = 36f;
-    public float fallVelocityThreshold = 150f;
+    public float fallVelocityThreshold = 180f;
 
     private float groundVelocity;
     private bool hControlLock;
@@ -126,6 +129,8 @@ public class HedgehogMovement : MonoBehaviour
     private int jumpHash;
     private int cairHash;
     //private int spinHash;
+    private int deslizandoHash;
+    private int freandoHash;
     private int empurrarHash;
     private int wallStickHash;
 
@@ -143,6 +148,8 @@ public class HedgehogMovement : MonoBehaviour
         jumpHash = Animator.StringToHash("Jump");
         cairHash = Animator.StringToHash("Fall");
         //spinHash = Animator.StringToHash("Spin");
+        deslizandoHash = Animator.StringToHash("Deslizando");
+        freandoHash = Animator.StringToHash("Freando");
         empurrarHash = Animator.StringToHash("Push");
         wallStickHash = Animator.StringToHash("Grudado na Parede");
     }
@@ -160,11 +167,14 @@ public class HedgehogMovement : MonoBehaviour
     {
         if (debug)
         {
-            GUILayout.BeginArea(new Rect(10, 10, 200, 200), "Stats", "Window");
-            GUILayout.Label("Jumped: " + (jumped ? "SIM" : "NÃO"));
+            GUILayout.BeginArea(new Rect(10, 10, 200, 240), "Stats", "Window");
+            GUILayout.Label("Olhando pra direita: " + (olhandoDireita ? "SIM" : "NÃO"));            
+            //GUILayout.Label("Jumped: " + (jumped ? "SIM" : "NÃO"));
             GUILayout.Label("Caindo: " + (caindo ? "SIM" : "NÃO"));
+            GUILayout.Label("Deslizando: " + (deslizando ? "SIM" : "NÃO"));
             GUILayout.Label("Empurrando: " + (empurrando ? "SIM" : "NÃO"));
             GUILayout.Label("Grudado: " + (grudadoParede ? "SIM" : "NÃO"));
+            //GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
             //GUILayout.Label("Rolling: " + (rolling ? "YES" : "NO"));
             //GUILayout.Label("Underwater: " + (underwater ? "YES" : "NO"));
             if (currentGroundInfo != null && currentGroundInfo.valid)
@@ -182,15 +192,19 @@ public class HedgehogMovement : MonoBehaviour
     // COISAS DO UPDATE
     //-----------------------------------------------------------------------------------------------------
 
+    bool olhandoDireita = true;
     void FixedUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; }
+        if (Input.GetKeyDown(KeyCode.E)) { 
+            estáEmBulletTime = !estáEmBulletTime;
+            BulletTime();
+        }
+        
 
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
         float accelSpeedCap = /*underwater ? uwGroundTopSpeed :*/ groundTopSpeed;
-
-        bool olhandoDireita = groundVelocity > 0;
 
         //-----------------------------------------------------------------------------------------------------
         // ESTÁ NO CHÃO?
@@ -213,16 +227,19 @@ public class HedgehogMovement : MonoBehaviour
             // RAMPAS
             //-----------------------------------------------------------------------------------------------------
 
-            float slope = 0f; // APAGAR? a única utilidade dessa variável era o código abaixo.
-            /*if (rolling)
-            {
-                float sin = Mathf.Sin(currentGroundInfo.angle);
-                bool uphill = (sin >= 0f && groundVelocity >= 0f) || (sin <= 0f && groundVelocity <= 0);
-                slope = uphill ? rollUphillSlope : rollDownhillSlope;
-            }
-            else {*/ slope = slopeFactor; //}
+            float slope; //= 0f; // APAGAR? a única utilidade dessa variável era o código abaixo.
+                         /*if (rolling)
+                         {
+                             float sin = Mathf.Sin(currentGroundInfo.angle);
+                             bool uphill = (sin >= 0f && groundVelocity >= 0f) || (sin <= 0f && groundVelocity <= 0);
+                             slope = uphill ? rollUphillSlope : rollDownhillSlope;
+                         }
+                         else {*/
+            slope = slopeFactor; //}
+
             // ADICIONA AO groundVelocity O FATOR DE RAMPA APROPRIADO, AJUSTADO PELO TEMPO QUE PASSOU
             groundVelocity += (slope * -Mathf.Sin(currentGroundInfo.angle)) * Time.fixedDeltaTime;
+
 
 
             //-----------------------------------------------------------------------------------------------------
@@ -236,9 +253,10 @@ public class HedgehogMovement : MonoBehaviour
             {
                 groundMode = GroundMode.Floor; // VIRE PRO CHÃO
                 grounded = false; // NÃO TÁ NO CHÃO
-                hControlLock = true; // TRAVE O CONTROLE NA HORIZONTAL
-                hControlLockTime = 0.5f;
+                //hControlLock = true; // TRAVE O CONTROLE NA HORIZONTAL
+                //hControlLockTime = 0.5f;
                 lostFooting = true;
+                //return; // deveria?
             }
 
 
@@ -254,8 +272,8 @@ public class HedgehogMovement : MonoBehaviour
                 velocity.y += jumpVel * (Mathf.Cos(currentGroundInfo.angle));
                 grounded = false;
                 jumped = true;
-            } 
-            else 
+            }
+            else
             {
                 //-----------------------------------------------------------------------------------------------------
                 // FRICÇÃO
@@ -280,41 +298,39 @@ public class HedgehogMovement : MonoBehaviour
                         if (groundVelocity > 0f) { groundVelocity = 0f; }
                     }
                 }
-                
+
 
                 //-----------------------------------------------------------------------------------------------------
                 // CONTROL LOCK????
                 //-----------------------------------------------------------------------------------------------------
 
-                if (hControlLock)
+                /*if (hControlLock)
                 {
                     hControlLockTime -= Time.fixedDeltaTime;
                     if (hControlLockTime <= 0f)
                     {
                         hControlLock = false;
                     }
-                }
-                if (!hControlLock && Mathf.Abs(input.x) >= 0.005f)
+                }*/
+                if (/*!hControlLock && !deslizando && */Mathf.Abs(input.x) >= 0.005f)
                 {
                     float accel = /*underwater ? uwAcceleration :*/ groundAcceleration;
                     float decel = /*underwater ? uwDeceleration :*/ deceleration;
-
-                    // TODO: Set a direction variable instead
-                    transform.localScale = new Vector3(olhandoDireita ? 1 : -1, 1, 1); // MEU CÓDIGO
 
                     //-----------------------------------------------------------------------------------------------------
                     // ESQUERDA
                     //-----------------------------------------------------------------------------------------------------
                     if (input.x < 0f)
                     {
+                        olhandoDireita = false;
                         float acceleration = 0f;
                         //if (rolling && groundVelocity > 0f) { acceleration = rollingDeceleration; } else
                         if (/*!rolling &&*/ groundVelocity > 0f) { acceleration = decel; }
-                        else 
+                        else
                         if (/*!rolling &&*/ groundVelocity <= 0f) { acceleration = accel; }
 
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
-                        if (groundVelocity > -accelSpeedCap) 
+                        if (groundVelocity > -accelSpeedCap)
                         {
                             groundVelocity = Mathf.Max(-accelSpeedCap, groundVelocity + (input.x * acceleration) * Time.deltaTime);
                         }
@@ -325,20 +341,21 @@ public class HedgehogMovement : MonoBehaviour
                     //-----------------------------------------------------------------------------------------------------
                     else
                     {
+                        olhandoDireita = true;
                         float acceleration = 0f;
                         //if (rolling && groundVelocity < 0f) { acceleration = rollingDeceleration; } else 
                         if (/*!rolling &&*/ groundVelocity < 0f) { acceleration = decel; }
-                        else 
+                        else
                         if (/*!rolling &&*/ groundVelocity >= 0f) { acceleration = accel; }
 
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
                         if (groundVelocity < accelSpeedCap)
                         {
                             groundVelocity = Mathf.Min(accelSpeedCap, groundVelocity + (input.x * acceleration) * Time.deltaTime);
-                        }   
+                        }
                     }
                 }
-                
+
 
                 //-----------------------------------------------------------------------------------------------------
                 // IMPEDE A VELOCIDADE NO CHÃO DE PASSAR DO LIMITE GLOBAL DE VELOCIDADE
@@ -364,7 +381,7 @@ public class HedgehogMovement : MonoBehaviour
                 // VELOCIDADE ANGULAR????
                 //-----------------------------------------------------------------------------------------------------
 
-                Vector2 angledSpeed = new Vector2(groundVelocity * Mathf.Cos(currentGroundInfo.angle), 
+                Vector2 angledSpeed = new Vector2(groundVelocity * Mathf.Cos(currentGroundInfo.angle),
                                                   groundVelocity * Mathf.Sin(currentGroundInfo.angle));
                 velocity = angledSpeed;
 
@@ -412,8 +429,8 @@ public class HedgehogMovement : MonoBehaviour
                 //-----------------------------------------------------------------------------------------------------
                 // GRAVIDADE E VELOCIDADE TERMINAL
                 //-----------------------------------------------------------------------------------------------------
-
                 float grv = /*underwater ? uwGravity :*/ gravity;
+
                 velocity.y = Mathf.Max(velocity.y + (grv * Time.fixedDeltaTime), -terminalVelocity);
             }
 
@@ -449,26 +466,58 @@ public class HedgehogMovement : MonoBehaviour
 
 
         //-----------------------------------------------------------------------------------------------------
-        // MOVA-SE, DE FATO.
+        // ANIMAÇÃO DE CAIR
         //-----------------------------------------------------------------------------------------------------
-        transform.position += new Vector3(velocity.x, velocity.y, 0f) * Time.fixedDeltaTime;
-        
-
-        //-----------------------------------------------------------------------------------------------------
-        // ANIMAÇÃO
-        //-----------------------------------------------------------------------------------------------------
-        if (!grounded && velocity.y < 0) 
-        { 
+        /*if (!grounded && velocity.y < 0) 
+        {
             caindo = true;
             characterAngle = 0;
             groundMode = GroundMode.Floor;
         }
-        else { caindo = false; }
+        else { caindo = false; }*/
 
+        /*
+        //-----------------------------------------------------------------------------------------------------
+        // ANIMAÇÃO DE FREIO
+        //-----------------------------------------------------------------------------------------------------
+
+        if (groundVelocity != 0 && input.x != 0 && grounded && Mathf.Abs(groundVelocity) > 10
+                                      && ((olhandoDireita && Mathf.Sign(groundVelocity) == -1)
+                                      || (!olhandoDireita && Mathf.Sign(groundVelocity) == 1)))
+        {
+            freando = true;
+        }
+        else
+        {
+            freando = false;
+        }*/
+
+        //-----------------------------------------------------------------------------------------------------
+        // ANIMAÇÃO DE DESLIZAR NA RAMPA
+        //-----------------------------------------------------------------------------------------------------
+
+        if (groundVelocity != 0 && grounded && ((olhandoDireita && Mathf.Sign(groundVelocity) == -1)
+                                             || (!olhandoDireita && Mathf.Sign(groundVelocity) == 1)))
+        {
+            deslizando = true;
+            print("deslizando, veloc é: " + groundVelocity);
+        }
+        else
+        {
+            deslizando = false;
+            print("não tá deslizando, veloc é: " + groundVelocity + ". grounded? " + grounded + ". groundMode? " + groundMode);
+        }
+
+
+        //-----------------------------------------------------------------------------------------------------
+        // APLICAR ANIMAÇÕES
+        //-----------------------------------------------------------------------------------------------------
         animator.SetBool(jumpHash, jumped);
         animator.SetBool(cairHash, caindo);
         animator.SetBool(empurrarHash, empurrando);
         animator.SetBool(wallStickHash, grudadoParede);
+        animator.SetBool(deslizandoHash, deslizando);
+        animator.SetBool(freandoHash, freando);
 
 
         //-----------------------------------------------------------------------------------------------------
@@ -478,10 +527,25 @@ public class HedgehogMovement : MonoBehaviour
         //else if (underwater && transform.position.y > waterLevel.position.y) { ExitWater(); }
 
 
+
         //-----------------------------------------------------------------------------------------------------
         // ROTAÇÃO
         //-----------------------------------------------------------------------------------------------------
-        transform.localRotation = Quaternion.Euler(0f, 0f, SnapAngle(characterAngle));
+        // rotaciona personagem em incrementos de 45°, assim como em Sonic 1, 2, 3&K
+        //transform.localRotation = Quaternion.Euler(0f, 0f, SnapAngle(characterAngle)); 
+
+        // rotaciona personagem perfeitamente, assim como em Sonic Mania e Freedom Planet
+        transform.localRotation = Quaternion.Euler(0f, 0f, characterAngle);
+
+        //-----------------------------------------------------------------------------------------------------
+        // DIREÇÃO
+        //-----------------------------------------------------------------------------------------------------
+        transform.localScale = new Vector3(olhandoDireita ? 1 : -1, 1, 1);
+
+        //-----------------------------------------------------------------------------------------------------
+        // MOVA-SE, DE FATO.
+        //-----------------------------------------------------------------------------------------------------
+        transform.position += new Vector3(velocity.x, velocity.y, 0f) * Time.fixedDeltaTime;
     }
 
     /* void EnterWater() {
@@ -517,27 +581,34 @@ public class HedgehogMovement : MonoBehaviour
         }
         else if (leftHit.collider != null)
         {
+            olhandoDireita = false;
             transform.position = new Vector2(leftHit.point.x + sideRaycastDist, transform.position.y);
             if (velocity.x < 0f)
             {
                 velocity.x = 0f;
                 groundVelocity = 0f;
-                if (grounded) { empurrando = true; }
+                if (grounded && (characterAngle == 0 || characterAngle == 180)) { empurrando = true; }
                 else { empurrando = false; }
             } else if (velocity.x == 0) { empurrando = false; }
         }
         else if (rightHit.collider != null)
         {
+            olhandoDireita = true;
             transform.position = new Vector2(rightHit.point.x - sideRaycastDist, transform.position.y);
             if (velocity.x > 0f)
             {
                 velocity.x = 0f;
                 groundVelocity = 0f;
-                if (grounded) { empurrando = true; }
+                if (grounded && (characterAngle == 0 || characterAngle == 180)) { empurrando = true; }
                 else { empurrando = false; }
             } else if (velocity.x == 0) { empurrando = false; }
         } else { empurrando = false; }
-        
+
+
+
+
+
+
 
 
 
@@ -545,11 +616,16 @@ public class HedgehogMovement : MonoBehaviour
         // GRUDAR NA PAREDE
         //-----------------------------------------------------------------------------------------------------
 
-        grudadoParede = false;
-        if ((leftHit.collider != null || rightHit.collider != null) && !grounded) {
+
+        if ((leftHit.collider != null || rightHit.collider != null) 
+             && !grounded 
+             && groundMode == GroundMode.Floor 
+             && (characterAngle == 0 || characterAngle == 180))
+        {
             grudadoParede = true;
             velocity.y = 0;
         }
+        else { grudadoParede = false; }
 
 
         //-----------------------------------------------------------------------------------------------------
@@ -604,6 +680,7 @@ public class HedgehogMovement : MonoBehaviour
         {   
             currentGroundInfo = GroundedCheck(groundRaycastDist, groundMode, out groundedLeft, out groundedRight);
             grounded = groundedLeft || groundedRight;
+            if (!grounded) { return; }
 
             StickToGround(currentGroundInfo);
 
@@ -758,7 +835,7 @@ public class HedgehogMovement : MonoBehaviour
                     break;
             }
 
-            if (leftCompare >= rightCompare) { found = GetGroundInfo(leftHit); }
+            if (leftCompare >= rightCompare) { found = GetGroundInfo(leftHit); } // checa o lado com valor mais "alto", a depender do ângulo
             else { found = GetGroundInfo(rightHit); }
         }
         else if (groundedLeft) { 
@@ -821,9 +898,35 @@ public class HedgehogMovement : MonoBehaviour
                 break;
         }
 
+
         transform.position = pos;
     }
 
+
+    //-----------------------------------------------------------------------------------------------------
+    // BULLET TIME
+    //-----------------------------------------------------------------------------------------------------
+
+    float fatorLentidão = 0.1f; //tempo do unity fica 50% mais lento
+    float duraçãoLentidão = 2f;
+    bool estáEmBulletTime = false;
+
+    public void BulletTime()
+    {
+        if (estáEmBulletTime)
+        {
+            print("ZA WARUDO!");
+            Time.timeScale = fatorLentidão;
+            //jogadorVelocidade /= fatorLentidão; //se o tempo está 50% mais lento, a velocidade do jogador dobra
+            Time.fixedDeltaTime = Time.timeScale * 0.02f; //esse valor me parece arbitrário, melhor pesquisar
+        }
+        else 
+        {
+            print("Fim do Bullet Time.");
+            //Time.timeScale += (1f / duraçãoLentidão) * Time.unscaledDeltaTime; //esse deltaTime é absoluto, não fica mais lento
+            Time.timeScale = 1;
+        }
+    }
 
 
     //-----------------------------------------------------------------------------------------------------
@@ -833,12 +936,14 @@ public class HedgehogMovement : MonoBehaviour
     /// <summary>
     /// Retorna ângulo ajustado ao incremento de 45° mais próximo
     /// </summary>
+
+    /*
     float SnapAngle(float angle)
     {
         int mult = (int)(angle + 22.5f);
         mult /= 45;
         return mult * 45f;
-    }
+    }*/
 
     /// <summary>
     /// Converte um Vector2 em um ângulo de 0-360° Converts vector to 0-360 degree (counter-clockwise) angle, with a vector pointing straight up as zero.
