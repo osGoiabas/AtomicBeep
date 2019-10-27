@@ -535,7 +535,17 @@ public class HedgehogMovement : MonoBehaviour
         //transform.localRotation = Quaternion.Euler(0f, 0f, SnapAngle(characterAngle)); 
 
         // rotaciona personagem perfeitamente, assim como em Sonic Mania e Freedom Planet
-        transform.localRotation = Quaternion.Euler(0f, 0f, characterAngle);
+        if (grounded)
+        {
+            transform.localRotation = Quaternion.Euler(0f, 0f, characterAngle);
+        }
+        else 
+        {
+            //if (characterAngle <= 60 || 300 <= characterAngle)  
+            //{
+                transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.identity, 5 * Time.fixedDeltaTime);
+            //}           
+        }
 
         //-----------------------------------------------------------------------------------------------------
         // DIREÇÃO
