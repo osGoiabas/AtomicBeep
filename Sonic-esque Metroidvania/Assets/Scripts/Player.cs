@@ -53,6 +53,7 @@ public class Player : MonoBehaviour {
     }
 
     float moveSpeed = 20;
+    /*
     float velocidadeMáximaX = 30;
 
     float velocityXSmoothing;
@@ -61,6 +62,7 @@ public class Player : MonoBehaviour {
     float aceleraçãoX = 0.2f;
     float deceleraçãoX = 0.5f;
     float fricção = 0.2f;
+    */
 
     void CalculateVelocity() {
         //float targetVelocityX = directionalInput.x * moveSpeed;

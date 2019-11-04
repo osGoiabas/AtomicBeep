@@ -81,7 +81,7 @@ public class Controller2D : RaycastController {
     public bool estáBalançando = false;
 
     public LayerMask máscaraColisão;
-    float maxSlopeAngle = 1000;
+    //float maxSlopeAngle = 1000;
 
     void HorizontalCollisions(ref Vector3 moveAmount) {
 
