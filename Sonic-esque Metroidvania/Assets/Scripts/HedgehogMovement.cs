@@ -167,8 +167,9 @@ public class HedgehogMovement : MonoBehaviour
             GUILayout.Label("Olhando pra direita: " + (olhandoDireita ? "SIM" : "NÃO"));            
             GUILayout.Label("Pulou: " + (pulou ? "SIM" : "NÃO"));
             GUILayout.Label("Caindo: " + (caindo ? "SIM" : "NÃO"));
-            GUILayout.Label("Empurrando: " + (empurrando ? "SIM" : "NÃO"));
+            //GUILayout.Label("Empurrando: " + (empurrando ? "SIM" : "NÃO"));
             GUILayout.Label("Grudado: " + (grudadoParede ? "SIM" : "NÃO"));
+            GUILayout.Label("Ground Mode: " + (groundMode));
             //GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
             //GUILayout.Label("Rolling: " + (rolling ? "YES" : "NO"));
             //GUILayout.Label("Underwater: " + (underwater ? "YES" : "NO"));
@@ -244,11 +245,11 @@ public class HedgehogMovement : MonoBehaviour
 
             bool lostFooting = false;
 
-            // SE NÃO ESTÁ NO CHÃO, MAS NÃO TEM VELOCIDADE PRA CORRER NA PAREDE/TETO
+            // SE NÃO ESTÁ NO FLOOR, MAS NÃO TEM VELOCIDADE PRA CORRER NA PAREDE/TETO
             if (groundMode != GroundMode.Floor && Mathf.Abs(groundVelocity) < fallVelocityThreshold)
             {
                 groundMode = GroundMode.Floor; // VIRE PRO CHÃO
-                //grounded = false; // NÃO TÁ NO CHÃO
+                grounded = false; // NÃO TÁ NO CHÃO
                 //hControlLock = true; // TRAVE O CONTROLE NA HORIZONTAL
                 //hControlLockTime = 0.5f;
                 lostFooting = true;
@@ -369,9 +370,8 @@ public class HedgehogMovement : MonoBehaviour
                 // APLICA groundVelocity À VELOCIDADE DO PERSONAGEM, LEVANDO EM CONTA O ÂNGULO DO CHÃO 
                 //-----------------------------------------------------------------------------------------------------
 
-                Vector2 angledSpeed = new Vector2(groundVelocity * Mathf.Cos(currentGroundInfo.angle),
-                                                  groundVelocity * Mathf.Sin(currentGroundInfo.angle));
-                velocity = angledSpeed;
+                velocity = new Vector2(groundVelocity * Mathf.Cos(currentGroundInfo.angle),
+                                       groundVelocity * Mathf.Sin(currentGroundInfo.angle));
 
                 //-----------------------------------------------------------------------------------------------------
                 // DESGRUDOU DO TETO/PAREDE? ENTÃO RESETA O MOVIMENTO.
@@ -425,11 +425,8 @@ public class HedgehogMovement : MonoBehaviour
             // ACELERAR NO AR
             //-----------------------------------------------------------------------------------------------------
 
-            // CAIU DO PRECIPÍCIO ROLANDO (rolling) E TENTOU SE MOVER?
-            // OU SERÁ QUE FEZ UM PULO (jumped) NORMAL, SEM ROLAR, E TENTOU SE MOVER?
             // MOVA-SE, USANDO A airAcceleration AO INVÉS DA ACELERAÇÃO DO CHÃO
-
-            if (!(pulou/*&& rolling*/) && Mathf.Abs(input.x) >= 0.005f)
+            if (Mathf.Abs(input.x) >= 0.005f)
             {
                 if ((input.x < 0f && velocity.x > -accelSpeedCap) || (input.x > 0f && velocity.x < accelSpeedCap))
                 {
@@ -438,18 +435,6 @@ public class HedgehogMovement : MonoBehaviour
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         // CLAMP VELOCITY TO THE GLOBAL SPEED LIMIT (going any faster could result in passing through things)
@@ -467,15 +452,6 @@ public class HedgehogMovement : MonoBehaviour
         // ANIMAÇÕES
         //-----------------------------------------------------------------------------------------------------
         FaçaAnimações();
-
-
-        //-----------------------------------------------------------------------------------------------------
-        // ÁGUA
-        //-----------------------------------------------------------------------------------------------------
-        //if (!underwater && transform.position.y <= waterLevel.position.y) { EnterWater(); }
-        //else if (underwater && transform.position.y > waterLevel.position.y) { ExitWater(); }
-
-
 
         //-----------------------------------------------------------------------------------------------------
         // ROTAÇÃO
@@ -516,7 +492,6 @@ public class HedgehogMovement : MonoBehaviour
 
     void Paredes()
     {
-
         //-----------------------------------------------------------------------------------------------------
         // COLISÃO NA DIREITA E NA ESQUERDA
         //-----------------------------------------------------------------------------------------------------
@@ -597,8 +572,8 @@ public class HedgehogMovement : MonoBehaviour
         hitLeft = Physics2D.Raycast(pos, Vector2.left, distance, máscaraColisão);
         hitRight = Physics2D.Raycast(pos, Vector2.right, distance, máscaraColisão);
 
-        Debug.DrawLine(pos, pos + (Vector2.left * distance), Color.yellow);
-        Debug.DrawLine(pos, pos + (Vector2.right * distance), Color.yellow);
+        Debug.DrawLine(pos, pos + (Vector2.left * distance), Color.green);
+        Debug.DrawLine(pos, pos + (Vector2.right * distance), Color.green);
     }
 
     //-----------------------------------------------------------------------------------------------------
@@ -629,13 +604,42 @@ public class HedgehogMovement : MonoBehaviour
             // ANIMAÇÃO
             animator.SetFloat(speedHash, Mathf.Abs(groundVelocity));
 
-            // o teto é baixo?
+            // A CABEÇA DO SPRITE ESTÁ DENTRO DO TETO?
             lowCeiling = ceil.valid && transform.position.y > ceil.point.y - 25f;
         }
         else
         {
             if (ceil.valid && velocity.y > 0f) { DanarCabeçaNoTeto(ceil); }
             else { Aterrissar(); } // TETO NÃO É VÁLIDO OU SONIC TÁ CAINDO 
+
+
+
+
+
+
+            //currentGroundInfo = null;
+            groundMode = GroundMode.Floor;
+            lowCeiling = false;
+
+            
+            if (Mathf.Abs(input.x) > 0.005f /*&& !(rolling && pulou)*/)
+            {
+                //Vector3 scale = Vector3.one;
+                //scale.x *= Mathf.Sign(input.x);
+                //transform.localScale = scale;
+            }
+            
+            // não sei se isso é necessário
+            if (characterAngle > 0f && characterAngle <= 180f)
+            {
+                characterAngle -= Time.deltaTime * 180f;
+                if (characterAngle < 0f) { characterAngle = 0f; }
+            }
+            else if (characterAngle < 360f && characterAngle > 180f)
+            {
+                characterAngle += Time.deltaTime * 180f;
+                if (characterAngle >= 360f) { characterAngle = 0f; }
+            }
         }
     }
 
