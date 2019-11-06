@@ -34,10 +34,15 @@ public class HedgehogMovement : MonoBehaviour
     public bool grounded { get; private set; }
     public bool pulou { get; private set; }
     public bool caindo { get; private set; }
-    public bool freando { get; private set; }
-    public bool empurrando { get; private set; }
+
+
+    public bool abaixado { get; private set; }
 
     //public bool rolling { get; private set; }
+
+
+    public bool empurrando { get; private set; }
+    public bool grudadoParede { get; private set; }
 
 
     public float standingHeight = 40f;
@@ -74,10 +79,13 @@ public class HedgehogMovement : MonoBehaviour
     public float speedLimit = 960f;
     //public float rollingMinSpeed = 61.875f;
     //public float unrollThreshold = 30f;
-    public float friction = 168.75f;
-    //public float rollingFriction = 84.375f;
-    public float deceleration = 1800f;
-    //public float rollingDeceleration = 450f;
+
+    float friction = 168.75f;
+    //float abaixadoFriction = 84.375f;
+    float abaixadoFriction = 337.50f; //84.375f;
+    float deceleration = 1800f;
+    //float rollingDeceleration = 450f;
+
     public float slopeFactor = 450f;
     //public float rollUphillSlope = 281.25f;
     //public float rollDownhillSlope = 1125f;
@@ -123,13 +131,15 @@ public class HedgehogMovement : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------
     // ANIMAÇÃO
     //-----------------------------------------------------------------------------------------------------
-    private int speedHash;
     private int standHash;
-    private int cairHash;
+    private int speedHash;
+    private int caindoHash;
+
+    private int abaixadoHash;
     //private int spinHash;
-    private int freandoHash;
-    private int empurrarHash;
-    private int wallStickHash;
+
+    private int empurrandoHash;
+    private int grudadoParedeHash;
 
     void Awake()
     {
@@ -140,13 +150,15 @@ public class HedgehogMovement : MonoBehaviour
         //spinLeftRPos = new Vector2(-spinWidthHalf, 0f);
         //spinRightRPos = new Vector2(spinWidthHalf, 0f);
 
-        speedHash = Animator.StringToHash("Speed");
         standHash = Animator.StringToHash("Stand");
-        cairHash = Animator.StringToHash("Fall");
+        speedHash = Animator.StringToHash("Speed");
+        caindoHash = Animator.StringToHash("Caindo");
+
+        abaixadoHash = Animator.StringToHash("Abaixado");
         //spinHash = Animator.StringToHash("Spin");
-        freandoHash = Animator.StringToHash("Freando");
-        empurrarHash = Animator.StringToHash("Push");
-        wallStickHash = Animator.StringToHash("Grudado na Parede");
+
+        empurrandoHash = Animator.StringToHash("Empurrando");
+        grudadoParedeHash = Animator.StringToHash("Grudado na Parede");
     }
 
 
@@ -219,6 +231,12 @@ public class HedgehogMovement : MonoBehaviour
                 transform.position -= new Vector3(0f, 5f);
             }*/
 
+            //-----------------------------------------------------------------------------------------------------
+            // ABAIXAR
+            //-----------------------------------------------------------------------------------------------------
+
+            if (input.y < -0.005f) { abaixado = true; }
+            else { abaixado = false; }
 
             //-----------------------------------------------------------------------------------------------------
             // RAMPAS
@@ -276,13 +294,13 @@ public class HedgehogMovement : MonoBehaviour
                 //-----------------------------------------------------------------------------------------------------
 
                 // NÃO HÁ INPUT? aplique fricção.
-                if (/*rolling ||*/ Mathf.Abs(input.x) < 0.005f)
+                if (abaixado || Mathf.Abs(input.x) < 0.005f)
                 {
                     // Mostly because I don't like chaining ternaries 
-                    float fric = /*underwater ? uwFriction :*/ friction;
-                    //float rollFric = underwater ? uwRollingFriction : rollingFriction;
+                    float dePéFric = /*underwater ? uwFriction :*/ friction;
+                    float abaixadoFric = /*underwater ? uwRollingFriction :*/ abaixadoFriction;
 
-                    float frc = /*rolling ? rollFric :*/ fric;
+                    float frc = abaixado ? abaixadoFric : dePéFric;
 
                     if (groundVelocity > 0f)
                     {
@@ -314,9 +332,9 @@ public class HedgehogMovement : MonoBehaviour
                         olhandoDireita = false;
                         float acceleration = 0f;
                         //if (rolling && groundVelocity > 0f) { acceleration = rollingDeceleration; } else
-                        if (/*!rolling &&*/ groundVelocity > 0f) { acceleration = decel; }
+                        if (!abaixado && groundVelocity > 0f) { acceleration = decel; } // FREAR
                         else
-                        if (/*!rolling &&*/ groundVelocity <= 0f) { acceleration = accel; }
+                        if (!abaixado && groundVelocity <= 0f) { acceleration = accel; } // ACELERAR
 
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
                         if (groundVelocity > -accelSpeedCap)
@@ -333,9 +351,9 @@ public class HedgehogMovement : MonoBehaviour
                         olhandoDireita = true;
                         float acceleration = 0f;
                         //if (rolling && groundVelocity < 0f) { acceleration = rollingDeceleration; } else 
-                        if (/*!rolling &&*/ groundVelocity < 0f) { acceleration = decel; }
+                        if (!abaixado && groundVelocity < 0f) { acceleration = decel; }
                         else
-                        if (/*!rolling &&*/ groundVelocity >= 0f) { acceleration = accel; }
+                        if (!abaixado && groundVelocity >= 0f) { acceleration = accel; }
 
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
                         if (groundVelocity < accelSpeedCap)
@@ -486,7 +504,6 @@ public class HedgehogMovement : MonoBehaviour
     // PAREDES
     //-----------------------------------------------------------------------------------------------------
 
-    public bool grudadoParede { get; private set; }
     float tempoMáximoGrudado = 0.5f;
     float quantoFaltaDesgrudar = 0.5f;
 
@@ -630,6 +647,7 @@ public class HedgehogMovement : MonoBehaviour
             }
             
             // não sei se isso é necessário
+            /*
             if (characterAngle > 0f && characterAngle <= 180f)
             {
                 characterAngle -= Time.deltaTime * 180f;
@@ -639,7 +657,7 @@ public class HedgehogMovement : MonoBehaviour
             {
                 characterAngle += Time.deltaTime * 180f;
                 if (characterAngle >= 360f) { characterAngle = 0f; }
-            }
+            }*/
         }
     }
 
@@ -821,8 +839,11 @@ public class HedgehogMovement : MonoBehaviour
         switch (groundMode) 
         {
             case GroundMode.Floor:
-                if (angle < 315f && angle > 225f) { groundMode = GroundMode.LeftWall; }
-                else if (angle > 45f && angle < 180f) { groundMode = GroundMode.RightWall; }
+                if (Mathf.Abs(groundVelocity) >= fallVelocityThreshold) 
+                {
+                    if (angle < 315f && angle > 225f) { groundMode = GroundMode.LeftWall; }
+                    else if (angle > 45f && angle < 180f) { groundMode = GroundMode.RightWall; }
+                }
                 pos.y = info.point.y + heightHalf;
                 break;
             case GroundMode.RightWall:
@@ -895,10 +916,10 @@ public class HedgehogMovement : MonoBehaviour
             animator.speed = 1;
         }
 
-        animator.SetBool(cairHash, caindo);
-        animator.SetBool(empurrarHash, empurrando);
-        animator.SetBool(wallStickHash, grudadoParede);
-        animator.SetBool(freandoHash, freando);
+        animator.SetBool(caindoHash, caindo);
+        animator.SetBool(empurrandoHash, empurrando);
+        animator.SetBool(grudadoParedeHash, grudadoParede);
+        animator.SetBool(abaixadoHash, abaixado);
     }
 
 
