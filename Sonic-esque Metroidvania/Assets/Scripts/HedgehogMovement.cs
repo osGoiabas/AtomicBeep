@@ -131,7 +131,7 @@ public class HedgehogMovement : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------
     // ANIMAÇÃO
     //-----------------------------------------------------------------------------------------------------
-    private int standHash;
+    //private int standHash;
     private int speedHash;
     private int caindoHash;
 
@@ -150,7 +150,7 @@ public class HedgehogMovement : MonoBehaviour
         //spinLeftRPos = new Vector2(-spinWidthHalf, 0f);
         //spinRightRPos = new Vector2(spinWidthHalf, 0f);
 
-        standHash = Animator.StringToHash("Stand");
+        //standHash = Animator.StringToHash("Stand");
         speedHash = Animator.StringToHash("Speed");
         caindoHash = Animator.StringToHash("Caindo");
 
@@ -483,7 +483,7 @@ public class HedgehogMovement : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, 0f, characterAngle);
         }
         // não está no chão? fique em posição de queda normal.
-        else 
+        else
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, 5 * Time.fixedDeltaTime);
         }
@@ -899,23 +899,30 @@ public class HedgehogMovement : MonoBehaviour
 
     //
     float duraçãoAnimação = 1f;
-    float timeToJumpApex = 0.5f;    
+    float timeToJumpApex = 0.5f;
+    bool backfliping;
 
     void FaçaAnimações() {
 
+        /*
         if (!grounded && velocity.y < 0)
         { caindo = true; }
         else 
         { caindo = false; }
 
+        */
         if (pulou && !caindo && !grounded) {
             animator.SetTrigger("Pulou");
+            backfliping = true;
             animator.speed = duraçãoAnimação / timeToJumpApex; 
         } else {
             animator.ResetTrigger("Pulou");
+            backfliping = false;
             animator.speed = 1;
         }
 
+
+        animator.SetBool("Backflip", backfliping);
         animator.SetBool(caindoHash, caindo);
         animator.SetBool(empurrandoHash, empurrando);
         animator.SetBool(grudadoParedeHash, grudadoParede);

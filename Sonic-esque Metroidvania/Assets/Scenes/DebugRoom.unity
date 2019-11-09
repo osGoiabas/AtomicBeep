@@ -328,8 +328,6 @@ MonoBehaviour:
   groundAcceleration: 168.75
   groundTopSpeed: 360
   speedLimit: 960
-  friction: 168.75
-  deceleration: 1800
   slopeFactor: 450
   sideRaycastOffset: -4
   sideRaycastDist: 11
@@ -1209,13 +1207,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1363006212}
-  m_LocalRotation: {x: -0, y: -0, z: 0.45705932, w: 0.88943624}
-  m_LocalPosition: {x: -2017.8, y: -422.01, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0.5735764, w: 0.8191521}
+  m_LocalPosition: {x: -2001.904, y: -369.785, z: 0}
   m_LocalScale: {x: 10, y: 100, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 54.395004}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 70}
 --- !u!4 &1488114620 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8619584018405667330, guid: 50646f174b5309f4abb4fa96835f54d3,
