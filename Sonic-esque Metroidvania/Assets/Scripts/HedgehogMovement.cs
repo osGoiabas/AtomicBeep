@@ -189,7 +189,6 @@ public class HedgehogMovement : MonoBehaviour
             GUILayout.BeginArea(new Rect(10, 10, 200, 240), "Stats", "Window");
             GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
             GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
-            GUILayout.Label("freandoVirar: " + (freandoVirar ? "SIM" : "NÃO"));
             GUILayout.Label("Olhando pra direita: " + (olhandoDireita ? "SIM" : "NÃO"));            
             GUILayout.Label("Pulou: " + (pulou ? "SIM" : "NÃO"));
             GUILayout.Label("Caindo: " + (caindo ? "SIM" : "NÃO"));
@@ -499,6 +498,8 @@ public class HedgehogMovement : MonoBehaviour
         }
         else if (leftHit.collider != null)
         {
+            olhandoDireita = false;
+            travaDireção = true;
             transform.position = new Vector2(leftHit.point.x + sideRaycastDist, transform.position.y);
             if (velocity.x < 0f)
             {
@@ -511,6 +512,8 @@ public class HedgehogMovement : MonoBehaviour
         }
         else if (rightHit.collider != null)
         {
+            olhandoDireita = true;
+            travaDireção = true;
             transform.position = new Vector2(rightHit.point.x - sideRaycastDist, transform.position.y);
             if (velocity.x > 0f)
             {
@@ -521,7 +524,11 @@ public class HedgehogMovement : MonoBehaviour
             }
             else if (velocity.x == 0) { empurrando = false; }
         }
-        else { empurrando = false; }
+        else 
+        { 
+            empurrando = false;
+            travaDireção = false;
+        }
 
 
         //-----------------------------------------------------------------------------------------------------
@@ -599,49 +606,49 @@ public class HedgehogMovement : MonoBehaviour
         //transform.localRotation = Quaternion.Euler(0f, 0f, SnapAngle(characterAngle)); 
 
         // rotaciona personagem perfeitamente, assim como em Sonic Mania e Freedom Planet
-        if (grounded)
-        {
-            transform.rotation = Quaternion.Euler(0f, 0f, characterAngle);
-        }
+        if (grounded) { transform.rotation = Quaternion.Euler(0f, 0f, characterAngle); }
         // não está no chão? fique em posição de queda normal.
-        else
-        {
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, 5 * Time.fixedDeltaTime);
-        }
+        else { transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, 5 * Time.fixedDeltaTime); }
 
         //-----------------------------------------------------------------------------------------------------
         // DIREÇÃO
         //-----------------------------------------------------------------------------------------------------
-        if (Mathf.Abs(input.x) > 0 && !freando)
+        if (Mathf.Abs(input.x) > 0 && grounded && !freando && !travaDireção)
         {
             if (groundVelocity < 0) { olhandoDireita = false; }
             else { olhandoDireita = true; }
         }
 
 
-        if (freando == false && Mathf.Abs(groundVelocity) >= freandoLimiteVirar && ((groundVelocity < 0 && input.x > 0) ||
-                                                                                   (groundVelocity > 0 && input.x < 0)))
+        //-----------------------------------------------------------------------------------------------------
+        // FREANDO
+        //-----------------------------------------------------------------------------------------------------
+
+        if (grounded)
         {
-            animator.SetTrigger("Freando");
-            freando = true;
-            freandoVirar = false;
+            if (freando == false && Mathf.Abs(groundVelocity) >= freandoLimiteVirar && ((groundVelocity < 0 && input.x > 0) ||
+                                                                                       (groundVelocity > 0 && input.x < 0)))
+            {
+                animator.SetTrigger("Freando");
+                freando = true;
+                travaDireção = true;
+                FindObjectOfType<SoundManager>().Play("freando");
+            }
+            else if (freando && Mathf.Abs(groundVelocity) < freandoLimiteVirar)
+            {
+                if (Mathf.Abs(input.x) > 0.05f)
+                {
+                    olhandoDireita = !olhandoDireita;
+                    animator.SetTrigger("FreandoVirar");
+                }
+                freando = false;
+                travaDireção = true;
+            }
+            else if (groundVelocity == 0 || ((groundVelocity > 0 && input.x > 0) || (groundVelocity < 0 && input.x < 0)))
+            {
+                travaDireção = false;
+            }
         }
-        else if (freando && Mathf.Abs(groundVelocity) < 50) //&& ((groundVelocity < 0 && input.x > 0) || (groundVelocity > 0 && input.x < 0)))
-        {
-            animator.SetTrigger("FreandoVirar");
-            freando = false;
-            freandoVirar = true;
-        }
-        else if (freandoVirar && Mathf.Abs(groundVelocity) < 0.5) {
-            olhandoDireita = !olhandoDireita;
-            freandoVirar = false;
-        }       
-        else if (groundVelocity == 0) {
-            //animator.ResetTrigger("FreandoVirar");
-            freando = false;
-            freandoVirar = false;
-        }
-        
 
         transform.localScale = new Vector3(olhandoDireita ? 1 : -1, 1, 1);
 
@@ -654,8 +661,11 @@ public class HedgehogMovement : MonoBehaviour
     }
 
     bool freando = false;
-    bool freandoVirar = false;
+    bool travaDireção = false;
+    //bool freandoVirar = false;
     float freandoLimiteVirar = 100;
+    public AudioSource somFreando;
+
 
 
     public LayerMask máscaraColisão;
@@ -745,7 +755,9 @@ public class HedgehogMovement : MonoBehaviour
                 //-----------------------------------------------------------------------------------------------------
 
                 GroundInfo info = GroundedCheck(groundRaycastDist, GroundMode.Floor, out groundedLeft, out groundedRight);
-                grounded = (groundedLeft || groundedRight) && velocity.y <= 0f && transform.position.y <= (info.height + heightHalf);
+                grounded = (groundedLeft || groundedRight)
+                                && velocity.y <= 0f;
+                                //&& transform.position.y <= (info.height + heightHalf);
 
                 // SE SIM, TRANSFORMA A VELOCIDADE NO AR EM VELOCIDADE NO CHÃO 
                 if (grounded)
