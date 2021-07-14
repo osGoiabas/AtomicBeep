@@ -393,10 +393,11 @@ public class HedgehogMovement : MonoBehaviour
         velocity.y = Mathf.Clamp(velocity.y, -speedLimit, speedLimit);
 
 
+
         //-----------------------------------------------------------------------------------------------------
-        // CHEQUE COLISÕES
+        // MOVA-SE, DE FATO.
         //-----------------------------------------------------------------------------------------------------
-        TetoPiso(input);
+        transform.position += new Vector3(velocity.x, velocity.y, 0f) * Time.fixedDeltaTime;
 
 
 
@@ -496,15 +497,139 @@ public class HedgehogMovement : MonoBehaviour
 
 
         //-----------------------------------------------------------------------------------------------------
+        // COLISÃO EM CIMA E EM BAIXO
+        //-----------------------------------------------------------------------------------------------------
+
+        bool groundedLeft = false;
+        bool groundedRight = false;
+
+        bool ceilingLeft = false;
+        bool ceilingRight = false;
+
+        int ceilDirection = (int)groundMode + 2; // se groundMode for 0, o teto será 2
+        if (ceilDirection > 3) { ceilDirection -= 4; } // se groundMode for 3, o teto será 5-4, isto é, 1.
+
+        GroundInfo ceil = GroundedCheck(groundRaycastDist, (GroundMode)ceilDirection, out ceilingLeft, out ceilingRight);
+
+
+
+
+        if (grounded) // ESTÁ NO CHÃO?
+        {
+            currentGroundInfo = GroundedCheck(groundRaycastDist, groundMode, out groundedLeft, out groundedRight);
+            grounded = groundedLeft || groundedRight;
+            if (!grounded) { return; }
+        }
+        else
+        {
+            if (ceil.valid && velocity.y > 0f)
+            {
+                //-----------------------------------------------------------------------------------------------------
+                // DANAR CABEÇA NO TETO
+                //-----------------------------------------------------------------------------------------------------
+
+                bool hitCeiling = transform.position.y >= (ceil.point.y - heightHalf);
+                float angleDeg = ceil.angle * Mathf.Rad2Deg;
+
+                if (hitCeiling)
+                {
+                    // PASSOU DO TETO?
+                    if (transform.position.y > ceil.point.y - heightHalf)
+                    {
+                        // CORRIJA A POSIÇÃO
+                        transform.position = new Vector2(transform.position.x, ceil.point.y - heightHalf);
+                        // E PARE DE CAIR
+                        velocity.y = 0f;
+                    }
+                }
+            }
+            else // TETO NÃO É VÁLIDO OU SONIC TÁ CAINDO 
+            {
+                //-----------------------------------------------------------------------------------------------------
+                // ATERRISSAR (VERIFICA SE JÁ TOCOU NO CHÃO)
+                //-----------------------------------------------------------------------------------------------------
+
+                GroundInfo info = GroundedCheck(groundRaycastDist, GroundMode.Floor, out groundedLeft, out groundedRight);
+                grounded = (groundedLeft || groundedRight)
+                                && velocity.y <= 0f
+                                && transform.position.y <= (info.height + heightHalf);
+
+                // SE SIM, TRANSFORMA A VELOCIDADE NO AR EM VELOCIDADE NO CHÃO 
+                if (grounded)
+                {
+                    // If in a roll jump, add 5 to position upon landing
+                    //if (jumped) { transform.position += new Vector3(0f, 5f); }
+
+                    pulou = false;
+                    //rolling = false;
+
+                    currentGroundInfo = info;
+                    groundMode = GroundMode.Floor;
+                    float angleDeg = currentGroundInfo.angle * Mathf.Rad2Deg;
+
+                    // SE O ÂNGULO É BAIXO, SIMPLESMENTE USE A VELOCIDADE DO CHÃO
+                    if (angleDeg < 22.5f || (angleDeg > 337.5 && angleDeg <= 360f))
+                    {
+                        groundVelocity = velocity.x;
+                    }
+                    // SE O ÂNGULO É MAIOR, ATÉ 45º:
+                    else if ((angleDeg >= 22.5f && angleDeg < 45f) || (angleDeg >= 315f && angleDeg < 337.5f))
+                    {
+                        // MAS A VELOCIDADE X AINDA É MAIOR QUE A Y, CONTINUA USANDO SÓ A X
+                        if (Mathf.Abs(velocity.x) > Mathf.Abs(velocity.y)) { groundVelocity = velocity.x; }
+                        // SE NÃO (está caindo/subindo muito rápido), USA METADE DA velocY, CORRIGIDA POR TRIGONOMETRIA
+                        else { groundVelocity = velocity.y * 0.5f * Mathf.Sign(Mathf.Sin(currentGroundInfo.angle)); }
+                    }
+                    // SE O ÂNGULO É AINDA MAIOR, ATÉ 90º:
+                    else if ((angleDeg >= 45f && angleDeg < 90f) || (angleDeg >= 270f && angleDeg < 315f))
+                    {
+                        // MAS A VELOCIDADE X AINDA É MAIOR QUE A Y, CONTINUA USANDO SÓ A X
+                        if (Mathf.Abs(velocity.x) > Mathf.Abs(velocity.y)) { groundVelocity = velocity.x; }
+                        // SE NÃO (está caindo/subindo muito rápido), USA A velocY INTEIRA, CORRIGIDA POR TRIGONOMETRIA
+                        else { groundVelocity = velocity.y * Mathf.Sign(Mathf.Sin(currentGroundInfo.angle)); }
+                    }
+
+                    // FINALMENTE, PARE DE CAIR (você já está no chão)
+                    velocity.y = 0f;
+                }
+            }
+
+            //currentGroundInfo = null;
+            groundMode = GroundMode.Floor;
+            lowCeiling = false;
+
+            //isso é pra virar o personagem pra direita ou esquerda, mas eu não uso esse código
+            if (Mathf.Abs(input.x) > 0.005f /*&& !(rolling && pulou)*/)
+            {
+                //Vector3 scale = Vector3.one;
+                //scale.x *= Mathf.Sign(input.x);
+                //transform.localScale = scale;
+            }
+        }
+
+
+        if (grounded) 
+        {
+            StickToGround(currentGroundInfo);
+
+            // ANIMAÇÃO
+            animator.SetFloat(speedHash, Mathf.Abs(groundVelocity));
+
+            // A CABEÇA DO SPRITE ESTÁ DENTRO DO TETO?
+            lowCeiling = ceil.valid && transform.position.y > ceil.point.y - 25f;
+        }
+
+
+        //-----------------------------------------------------------------------------------------------------
         // ANIMAÇÕES
         //-----------------------------------------------------------------------------------------------------
-        /*
+        
         if (!grounded && velocity.y < 0)
         { caindo = true; }
         else 
         { caindo = false; }
 
-        */
+        
         if (pulou && !caindo && !grounded)
         {
             animator.SetTrigger("Pulou");
@@ -553,10 +678,11 @@ public class HedgehogMovement : MonoBehaviour
 
         if (grounded)
         {
-            if (freando == false && Mathf.Abs(groundVelocity) >= freandoLimiteVirar && ((groundVelocity < 0 && input.x > 0) ||
-                                                                                       (groundVelocity > 0 && input.x < 0)))
+            if (freando == false && Mathf.Abs(groundVelocity) >= freandoLimiteVirar
+                                 && ((groundVelocity < 0 && input.x > 0) ||
+                                     (groundVelocity > 0 && input.x < 0)))
             {
-                animator.SetTrigger("Freando");
+                //animator.SetTrigger("Freando");
                 freando = true;
                 travaDireção = true;
                 FindObjectOfType<SoundManager>().Play("freando");
@@ -579,12 +705,9 @@ public class HedgehogMovement : MonoBehaviour
 
         transform.localScale = new Vector3(olhandoDireita ? 1 : -1, 1, 1);
 
-        //-----------------------------------------------------------------------------------------------------
-        // MOVA-SE, DE FATO.
-        //-----------------------------------------------------------------------------------------------------
-        Debug.DrawLine(transform.position, new Vector3(transform.position.x + velocity.x/5,
-                                                       transform.position.y + velocity.y/5, 0), Color.red);
-        transform.position += new Vector3(velocity.x, velocity.y, 0f) * Time.fixedDeltaTime;
+        //#TODO ver pra que serve essa linha
+        Debug.DrawLine(transform.position, new Vector3(transform.position.x + velocity.x / 5,
+                                               transform.position.y + velocity.y / 5, 0), Color.red);
     }
 
     bool freando = false;
@@ -612,120 +735,6 @@ public class HedgehogMovement : MonoBehaviour
     // TETO E PISO
     //-----------------------------------------------------------------------------------------------------
 
-    bool groundedLeft = false;
-    bool groundedRight = false;
-
-    void TetoPiso(Vector2 input) {
-
-        bool ceilingLeft = false;
-        bool ceilingRight = false;
-
-        int ceilDirection = (int)groundMode + 2; // se groundMode for 0, o teto será 2
-        if (ceilDirection > 3) { ceilDirection -= 4; } // se groundMode for 3, o teto será 5-4, isto é, 1.
-
-        GroundInfo ceil = GroundedCheck(groundRaycastDist, (GroundMode)ceilDirection, out ceilingLeft, out ceilingRight);
-
-        if (grounded) // ESTÁ NO CHÃO?
-        {   
-            currentGroundInfo = GroundedCheck(groundRaycastDist, groundMode, out groundedLeft, out groundedRight);
-            grounded = groundedLeft || groundedRight;
-            if (!grounded) { return; }
-
-            StickToGround(currentGroundInfo);
-
-            // ANIMAÇÃO
-            animator.SetFloat(speedHash, Mathf.Abs(groundVelocity));
-
-            // A CABEÇA DO SPRITE ESTÁ DENTRO DO TETO?
-            lowCeiling = ceil.valid && transform.position.y > ceil.point.y - 25f;
-        }
-        else
-        {
-            if (ceil.valid && velocity.y > 0f) 
-            {
-                //-----------------------------------------------------------------------------------------------------
-                // DANAR CABEÇA NO TETO
-                //-----------------------------------------------------------------------------------------------------
-
-                bool hitCeiling = transform.position.y >= (ceil.point.y - heightHalf);
-                float angleDeg = ceil.angle * Mathf.Rad2Deg;
-
-                if (hitCeiling)
-                {
-                    // PASSOU DO TETO?
-                    if (transform.position.y > ceil.point.y - heightHalf)
-                    {
-                        // CORRIJA A POSIÇÃO
-                        transform.position = new Vector2(transform.position.x, ceil.point.y - heightHalf);
-                        // E PARE DE CAIR
-                        velocity.y = 0f;
-                    }
-                }
-            }
-            else // TETO NÃO É VÁLIDO OU SONIC TÁ CAINDO 
-            {
-                //-----------------------------------------------------------------------------------------------------
-                // ATERRISSAR (VERIFICA SE JÁ TOCOU NO CHÃO)
-                //-----------------------------------------------------------------------------------------------------
-
-                GroundInfo info = GroundedCheck(groundRaycastDist, GroundMode.Floor, out groundedLeft, out groundedRight);
-                grounded = (groundedLeft || groundedRight)
-                                && velocity.y <= 0f;
-                                //&& transform.position.y <= (info.height + heightHalf);
-
-                // SE SIM, TRANSFORMA A VELOCIDADE NO AR EM VELOCIDADE NO CHÃO 
-                if (grounded)
-                {
-                    // If in a roll jump, add 5 to position upon landing
-                    //if (jumped) { transform.position += new Vector3(0f, 5f); }
-
-                    pulou = false;
-                    //rolling = false;
-
-                    currentGroundInfo = info;
-                    groundMode = GroundMode.Floor;
-                    float angleDeg = currentGroundInfo.angle * Mathf.Rad2Deg;
-
-                    // SE O ÂNGULO É BAIXO, SIMPLESMENTE USE A VELOCIDADE DO CHÃO
-                    if (angleDeg < 22.5f || (angleDeg > 337.5 && angleDeg <= 360f))
-                    {
-                        groundVelocity = velocity.x;
-                    }
-                    // SE O ÂNGULO É MAIOR, ATÉ 45º:
-                    else if ((angleDeg >= 22.5f && angleDeg < 45f) || (angleDeg >= 315f && angleDeg < 337.5f))
-                    {
-                        // MAS A VELOCIDADE X AINDA É MAIOR QUE A Y, CONTINUA USANDO SÓ A X
-                        if (Mathf.Abs(velocity.x) > Mathf.Abs(velocity.y)) { groundVelocity = velocity.x; }
-                        // SE NÃO (está caindo/subindo muito rápido), USA METADE DA velocY, CORRIGIDA POR TRIGONOMETRIA
-                        else { groundVelocity = velocity.y * 0.5f * Mathf.Sign(Mathf.Sin(currentGroundInfo.angle)); }
-                    }
-                    // SE O ÂNGULO É AINDA MAIOR, ATÉ 90º:
-                    else if ((angleDeg >= 45f && angleDeg < 90f) || (angleDeg >= 270f && angleDeg < 315f))
-                    {
-                        // MAS A VELOCIDADE X AINDA É MAIOR QUE A Y, CONTINUA USANDO SÓ A X
-                        if (Mathf.Abs(velocity.x) > Mathf.Abs(velocity.y)) { groundVelocity = velocity.x; }
-                        // SE NÃO (está caindo/subindo muito rápido), USA A velocY INTEIRA, CORRIGIDA POR TRIGONOMETRIA
-                        else { groundVelocity = velocity.y * Mathf.Sign(Mathf.Sin(currentGroundInfo.angle)); }
-                    }
-
-                    // FINALMENTE, PARE DE CAIR (você já está no chão)
-                    velocity.y = 0f;
-                }
-            } 
-
-            //currentGroundInfo = null;
-            groundMode = GroundMode.Floor;
-            lowCeiling = false;            
-            
-            //isso é pra virar o personagem pra direita ou esquerda, mas eu não uso esse código
-            if (Mathf.Abs(input.x) > 0.005f /*&& !(rolling && pulou)*/)
-            {
-                //Vector3 scale = Vector3.one;
-                //scale.x *= Mathf.Sign(input.x);
-                //transform.localScale = scale;
-            }
-        }
-    }
 
     private Vector2 leftRaycastPos { get { //if (rolling || jumped) { return spinLeftRPos; } else { 
             return standLeftRPos; //} 
@@ -790,11 +799,11 @@ public class HedgehogMovement : MonoBehaviour
         }
         else if (groundedLeft) { 
             found = GetGroundInfo(leftHit); 
-            // checar "raio do meio" e fazer animação de balanço
+            //#TODO checar "raio do meio" e fazer animação de balanço
         }
         else if (groundedRight) { 
             found = GetGroundInfo(rightHit);
-            // checar "raio do meio" e fazer animação de balanço
+            //#TODO checar "raio do meio" e fazer animação de balanço
         }
         else { found = new GroundInfo(); }
 
