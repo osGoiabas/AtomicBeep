@@ -138,7 +138,7 @@ public class HedgehogMovement : MonoBehaviour
     // DEBUG WINDOW
     //-----------------------------------------------------------------------------------------------------
 
-    bool debug = true;
+    bool debug = false;
 
     void OnGUI()
     {
@@ -675,7 +675,7 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         // FREANDO
         //-----------------------------------------------------------------------------------------------------
-
+        /*
         if (grounded)
         {
             if (freando == false && Mathf.Abs(groundVelocity) >= freandoLimiteVirar
@@ -702,7 +702,7 @@ public class HedgehogMovement : MonoBehaviour
                 travaDireção = false;
             }
         }
-
+        */
         transform.localScale = new Vector3(olhandoDireita ? 1 : -1, 1, 1);
 
         //#TODO ver pra que serve essa linha
