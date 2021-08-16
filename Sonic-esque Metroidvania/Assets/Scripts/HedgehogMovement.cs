@@ -88,7 +88,8 @@ public class HedgehogMovement : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------
     // AIR MOVEMENT
     //-----------------------------------------------------------------------------------------------------
-    public float airAcceleration = 340f;        
+    //public float airAcceleration = 340f;        
+    public float airAcceleration = 170f;
     public float jumpVelocity = 390f;
     public float jumpReleaseThreshold = 240f;
     public float gravity = -790f;
@@ -113,12 +114,17 @@ public class HedgehogMovement : MonoBehaviour
     float timeToJumpApex = 0.5f;
     bool backfliping;
 
+
+
+    //SKIN
+    float peleGrossura = 0.05f;
+
     void Awake()
     {
         //waterLevel = GameObject.FindWithTag("WaterLevel").transform;
 
-        standLeftRPos = new Vector2(-standWidthHalf, 0f);
-        standRightRPos = new Vector2(standWidthHalf, 0f);
+        standLeftRPos = new Vector2(-standWidthHalf + peleGrossura, 0f);
+        standRightRPos = new Vector2(standWidthHalf - peleGrossura, 0f);
 
         //standHash = Animator.StringToHash("Stand");
         speedHash = Animator.StringToHash("Speed");
@@ -222,17 +228,45 @@ public class HedgehogMovement : MonoBehaviour
             }
 
 
+
+            //SPIN DASH
+            //tá no ground, abaixado e soltou o pulo?
+            if (input.y < 0 && Input.GetButtonDown("Jump") && groundMode == GroundMode.Floor)
+            {
+                animator.SetTrigger("Spindash");
+            }
+            if (input.y < 0 && Input.GetButtonUp("Jump") && groundMode == GroundMode.Floor)
+            {
+                animator.ResetTrigger("Spindash");
+                if (olhandoDireita)
+                {
+                    groundVelocity += 600f;
+                }
+                else
+                {
+                    groundVelocity -= 600f;
+                }
+            }
+
+
             //-----------------------------------------------------------------------------------------------------
             // PULAR
             //-----------------------------------------------------------------------------------------------------
 
-            if (Input.GetButtonDown("Jump") && !lowCeiling)
+            if (Input.GetButtonDown("Jump") && !abaixado && !lowCeiling)
             {
                 float jumpVel = jumpVelocity;
                 velocity.x -= jumpVel * (Mathf.Sin(currentGroundInfo.angle));
                 velocity.y += jumpVel * (Mathf.Cos(currentGroundInfo.angle));
                 grounded = false;
                 pulou = true;
+
+                //LONG JUMP
+                if (Mathf.Abs(groundVelocity) >= fallVelocityThreshold) {
+                    if (input.x > 0) { velocity.x += 150; }
+                    if (input.x < 0) { velocity.x -= 150; }
+                }
+
             }
             else
             {
@@ -633,25 +667,21 @@ public class HedgehogMovement : MonoBehaviour
         if (pulou && !caindo && !grounded)
         {
             animator.SetTrigger("Pulou");
-            backfliping = true;
             animator.speed = duraçãoAnimação / timeToJumpApex;
         }
         else
         {
             animator.ResetTrigger("Pulou");
-            backfliping = false;
             animator.speed = 1;
         }
 
 
-        animator.SetBool("Backflip", backfliping);
         animator.SetBool(caindoHash, caindo);
 
-        animator.SetBool(freandoHash, freando);
-        animator.SetBool(abaixadoHash, abaixado);
-
-        animator.SetBool(empurrandoHash, empurrando);
-        animator.SetBool(grudadoParedeHash, grudadoParede);
+        //animator.SetBool(freandoHash, freando);
+        //animator.SetBool(abaixadoHash, abaixado);
+        //animator.SetBool(empurrandoHash, empurrando);
+        //animator.SetBool(grudadoParedeHash, grudadoParede);
 
         //-----------------------------------------------------------------------------------------------------
         // ROTAÇÃO
