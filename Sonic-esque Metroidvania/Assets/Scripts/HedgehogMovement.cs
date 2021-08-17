@@ -100,9 +100,11 @@ public class HedgehogMovement : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------
     // ANIMAÇÃO
     //-----------------------------------------------------------------------------------------------------
-    //private int standHash;
+    private int standHash;
     private int speedHash;
     private int caindoHash;
+
+    private int groundedHash;
 
     private int freandoHash;
     private int abaixadoHash;
@@ -114,6 +116,7 @@ public class HedgehogMovement : MonoBehaviour
     float timeToJumpApex = 0.5f;
     bool backfliping;
 
+    float tempoPirueta = 0;
 
 
     //SKIN
@@ -126,9 +129,11 @@ public class HedgehogMovement : MonoBehaviour
         standLeftRPos = new Vector2(-standWidthHalf + peleGrossura, 0f);
         standRightRPos = new Vector2(standWidthHalf - peleGrossura, 0f);
 
-        //standHash = Animator.StringToHash("Stand");
+        standHash = Animator.StringToHash("Stand");
         speedHash = Animator.StringToHash("Speed");
         caindoHash = Animator.StringToHash("Caindo");
+
+        groundedHash = Animator.StringToHash("Grounded");
 
         freandoHash = Animator.StringToHash("Freando");
         abaixadoHash = Animator.StringToHash("Abaixado");
@@ -144,13 +149,15 @@ public class HedgehogMovement : MonoBehaviour
     // DEBUG WINDOW
     //-----------------------------------------------------------------------------------------------------
 
-    bool debug = false;
+    bool debug = true;
 
     void OnGUI()
     {
         if (debug)
         {
             GUILayout.BeginArea(new Rect(10, 10, 200, 240), "Stats", "Window");
+            GUILayout.Label("TempoPirueta: " + tempoPirueta);
+
             GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
             GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
             GUILayout.Label("Olhando pra direita: " + (olhandoDireita ? "SIM" : "NÃO"));
@@ -200,6 +207,7 @@ public class HedgehogMovement : MonoBehaviour
         if (grounded)
         {
             
+
             //-----------------------------------------------------------------------------------------------------
             // ABAIXAR e RAMPAS
             //-----------------------------------------------------------------------------------------------------
@@ -233,11 +241,11 @@ public class HedgehogMovement : MonoBehaviour
             //tá no ground, abaixado e soltou o pulo?
             if (input.y < 0 && Input.GetButtonDown("Jump") && groundMode == GroundMode.Floor)
             {
-                animator.SetTrigger("Spindash");
+                animator.Play("Spindash");
             }
             if (input.y < 0 && Input.GetButtonUp("Jump") && groundMode == GroundMode.Floor)
             {
-                animator.ResetTrigger("Spindash");
+                animator.SetTrigger("Stand");
                 if (olhandoDireita)
                 {
                     groundVelocity += 600f;
@@ -260,6 +268,8 @@ public class HedgehogMovement : MonoBehaviour
                 velocity.y += jumpVel * (Mathf.Cos(currentGroundInfo.angle));
                 grounded = false;
                 pulou = true;
+                animator.SetTrigger("Pulou");
+                tempoPirueta = 0.75f;
 
                 //LONG JUMP
                 if (Mathf.Abs(groundVelocity) >= fallVelocityThreshold) {
@@ -529,7 +539,6 @@ public class HedgehogMovement : MonoBehaviour
         }
         */
 
-
         //-----------------------------------------------------------------------------------------------------
         // COLISÃO EM CIMA E EM BAIXO
         //-----------------------------------------------------------------------------------------------------
@@ -595,6 +604,7 @@ public class HedgehogMovement : MonoBehaviour
                     //if (jumped) { transform.position += new Vector3(0f, 5f); }
 
                     pulou = false;
+                    animator.ResetTrigger("Pulou");
                     //rolling = false;
 
                     currentGroundInfo = info;
@@ -657,27 +667,32 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         // ANIMAÇÕES
         //-----------------------------------------------------------------------------------------------------
-        
-        if (!grounded && velocity.y < 0)
-        { caindo = true; }
+
+        // CAIR FALLING
+        if (!grounded && velocity.y < 0 && tempoPirueta == 0)
+        { 
+            caindo = true; 
+        }
         else 
-        { caindo = false; }
-
-        
-        if (pulou && !caindo && !grounded)
-        {
-            animator.SetTrigger("Pulou");
-            animator.speed = duraçãoAnimação / timeToJumpApex;
-        }
-        else
-        {
-            animator.ResetTrigger("Pulou");
-            animator.speed = 1;
+        { 
+            caindo = false; 
         }
 
 
+        if (tempoPirueta > 0)
+        {
+            tempoPirueta -= Time.fixedDeltaTime;
+        }
+        else {
+            tempoPirueta = 0;
+        }
+
+
+        if (grounded && velocity.x == 0) 
+            { animator.SetTrigger("Stand"); }
+        else { animator.ResetTrigger("Stand"); }
         animator.SetBool(caindoHash, caindo);
-
+        animator.SetBool(groundedHash, grounded);
         //animator.SetBool(freandoHash, freando);
         //animator.SetBool(abaixadoHash, abaixado);
         //animator.SetBool(empurrandoHash, empurrando);
