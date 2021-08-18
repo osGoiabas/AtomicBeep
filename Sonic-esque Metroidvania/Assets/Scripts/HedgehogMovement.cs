@@ -112,15 +112,12 @@ public class HedgehogMovement : MonoBehaviour
     private int empurrandoHash;
     private int grudadoParedeHash;
 
-    float duraçãoAnimação = 1f;
-    float timeToJumpApex = 0.5f;
-    bool backfliping;
-
-    float tempoPirueta = 0;
-
+    private bool backfliping = false;
+    private float tempoPirueta = 0;
+    private bool spinReady = false;
 
     //SKIN
-    float peleGrossura = 0.05f;
+    float peleGrossura = 0.01f;
 
     void Awake()
     {
@@ -156,18 +153,18 @@ public class HedgehogMovement : MonoBehaviour
         if (debug)
         {
             GUILayout.BeginArea(new Rect(10, 10, 200, 240), "Stats", "Window");
-            GUILayout.Label("TempoPirueta: " + tempoPirueta);
+
+            //GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
 
             GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
-            GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
+            //GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
             GUILayout.Label("Olhando pra direita: " + (olhandoDireita ? "SIM" : "NÃO"));
-            GUILayout.Label("Collider: " + colliderNome);
             GUILayout.Label("Pulou: " + (pulou ? "SIM" : "NÃO"));
             GUILayout.Label("Caindo: " + (caindo ? "SIM" : "NÃO"));
-            //GUILayout.Label("Empurrando: " + (empurrando ? "SIM" : "NÃO"));
+            GUILayout.Label("Empurrando: " + (empurrando ? "SIM" : "NÃO"));
             GUILayout.Label("Ground Mode: " + (groundMode));
             //GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
-            if (currentGroundInfo != null && currentGroundInfo.valid)
+            if (currentGroundInfo != null && currentGroundInfo.valid && grounded)
             {
                 GUILayout.Label("Ground Speed: " + groundVelocity);
                 GUILayout.Label("Angle (Deg): " + (currentGroundInfo.angle * Mathf.Rad2Deg));
@@ -187,13 +184,14 @@ public class HedgehogMovement : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------
 
     bool olhandoDireita = true;
-    string colliderNome = "NADA";
     void FixedUpdate()
     {        
         if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; }
-        if (Input.GetKeyDown(KeyCode.E)) { estáEmBulletTime = !estáEmBulletTime; }
-
-        BulletTime();
+        if (Input.GetKeyDown(KeyCode.E)) {
+            print("ZA WARUDO!");
+            BulletTime();
+            estáEmBulletTime = !estáEmBulletTime; 
+        }
 
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
@@ -206,18 +204,51 @@ public class HedgehogMovement : MonoBehaviour
 
         if (grounded)
         {
-            
+            //-----------------------------------------------------------------------------------------------------
+            // SPINDASH
+            //-----------------------------------------------------------------------------------------------------
+            //tá parado, grounded, abaixado e apertou pulo?
+            //comece a carregar o spindash
+            if (groundVelocity == 0 && abaixado && Input.GetButton("Jump") && groundMode == GroundMode.Floor)
+            {
+                animator.Play("robot_spindash");
+                spinReady = true;
+            }
+
+            //soltou a seta pra baixo? simbora
+            if (spinReady && !abaixado)
+            {
+                animator.SetTrigger("Stand");
+                if (olhandoDireita)
+                {
+                    groundVelocity += 600f;
+                }
+                else
+                {
+                    groundVelocity -= 600f;
+                }
+                spinReady = false;
+            }
 
             //-----------------------------------------------------------------------------------------------------
-            // ABAIXAR e RAMPAS
+            // RAMPAS
             //-----------------------------------------------------------------------------------------------------
-
-            if (input.y < -0.005f) { abaixado = true; }
-            else { abaixado = false; }
 
             // ADICIONA AO groundVelocity O FATOR DE RAMPA APROPRIADO, AJUSTADO PELO TEMPO QUE PASSOU
-            groundVelocity += (slopeFactor * -Mathf.Sin(currentGroundInfo.angle)) * Time.fixedDeltaTime;
+            /* slow down when going uphill and speed up when going downhill.
+            Fortunately, this is simple to achieve - with something called the Slope Factor. 
+            Just subtract Slope Factor*sin(Ground Angle) from Ground Speed at the beginning of every step.
+            */
+            groundVelocity += slopeFactor * -Mathf.Sin(currentGroundInfo.angle) * Time.fixedDeltaTime;
 
+
+
+            //-----------------------------------------------------------------------------------------------------
+            // ABAIXAR
+            //-----------------------------------------------------------------------------------------------------
+
+            if (input.y < 0) { abaixado = true; }
+            else { abaixado = false; }
 
             //-----------------------------------------------------------------------------------------------------
             // CAIR
@@ -230,31 +261,30 @@ public class HedgehogMovement : MonoBehaviour
             {
                 groundMode = GroundMode.Floor; // VIRE PRO CHÃO
                 grounded = false; // NÃO TÁ NO CHÃO
+                //ESCORREGAR
+
+                /*
+                 Falling and Slipping Down Slopes
+                At this point, slope movement will work rather well, 
+                but it's not enough just to slow the Player down on steep slopes. 
+                They need to slip down when it gets too steep and you are moving too slowly.
+                
+                The angle range of slopes for slipping is when your Ground Angle
+                is within the range 46° to 315° (223~32) ($DF~$20) inclusive.
+                In addition, the game will check if absolute Ground Speed falls below 2.5 ($280).
+
+                So, when these conditions are met, what happens? Well, the Player will slip. 
+                This achieved by detaching the Player from the floor (clearing the grounded state), 
+                setting Ground Speed to 0, and employing the control lock timer.
+                */
+
+                //esse timer também é usado nas molas horizontais
+
                 //hControlLock = true; // TRAVE O CONTROLE NA HORIZONTAL
                 //hControlLockTime = 0.5f;
                 lostFooting = true;
             }
 
-
-
-            //SPIN DASH
-            //tá no ground, abaixado e soltou o pulo?
-            if (input.y < 0 && Input.GetButtonDown("Jump") && groundMode == GroundMode.Floor)
-            {
-                animator.Play("Spindash");
-            }
-            if (input.y < 0 && Input.GetButtonUp("Jump") && groundMode == GroundMode.Floor)
-            {
-                animator.SetTrigger("Stand");
-                if (olhandoDireita)
-                {
-                    groundVelocity += 600f;
-                }
-                else
-                {
-                    groundVelocity -= 600f;
-                }
-            }
 
 
             //-----------------------------------------------------------------------------------------------------
@@ -280,11 +310,14 @@ public class HedgehogMovement : MonoBehaviour
             }
             else
             {
+
+
+
                 //-----------------------------------------------------------------------------------------------------
                 // FRICÇÃO
                 //-----------------------------------------------------------------------------------------------------
 
-                // NÃO HÁ INPUT? aplique fricção.
+                // NÃO HÁ INPUT E/OU ESTÁ ABAIXADO? aplique fricção.
                 if (abaixado || Mathf.Abs(input.x) < 0.005f)
                 {
                     // Mostly because I don't like chaining ternaries 
@@ -464,7 +497,7 @@ public class HedgehogMovement : MonoBehaviour
         }
         else if (leftHit.collider != null)
         {
-            colliderNome = "ESQUERDA";
+            print("BATEU NA ESQUERDA: " + groundMode);
             travaDireção = true;
 
             transform.position = new Vector2(leftHit.point.x + sideRaycastDist, transform.position.y);
@@ -479,7 +512,6 @@ public class HedgehogMovement : MonoBehaviour
         }
         else if (rightHit.collider != null)
         {
-            colliderNome = "DIREITA";
             travaDireção = true;
 
             //if (velocity.x > rightHit.distance - 10f) { velocity.x = rightHit.distance - 10f; }
@@ -501,7 +533,6 @@ public class HedgehogMovement : MonoBehaviour
         { 
             empurrando = false;
             travaDireção = false;
-            colliderNome = "NADA";
         }
 
 
@@ -641,16 +672,7 @@ public class HedgehogMovement : MonoBehaviour
             //currentGroundInfo = null;
             groundMode = GroundMode.Floor;
             lowCeiling = false;
-
-            //isso é pra virar o personagem pra direita ou esquerda, mas eu não uso esse código
-            if (Mathf.Abs(input.x) > 0.005f /*&& !(rolling && pulou)*/)
-            {
-                //Vector3 scale = Vector3.one;
-                //scale.x *= Mathf.Sign(input.x);
-                //transform.localScale = scale;
-            }
         }
-
 
         if (grounded) 
         {
@@ -670,27 +692,20 @@ public class HedgehogMovement : MonoBehaviour
 
         // CAIR FALLING
         if (!grounded && velocity.y < 0 && tempoPirueta == 0)
-        { 
-            caindo = true; 
-        }
-        else 
-        { 
-            caindo = false; 
-        }
+        { caindo = true; }
+        else
+        { caindo = false; }
 
 
         if (tempoPirueta > 0)
-        {
-            tempoPirueta -= Time.fixedDeltaTime;
-        }
-        else {
-            tempoPirueta = 0;
-        }
+        { tempoPirueta -= Time.fixedDeltaTime; }
+        else 
+        { tempoPirueta = 0; }
 
 
-        if (grounded && velocity.x == 0) 
-            { animator.SetTrigger("Stand"); }
-        else { animator.ResetTrigger("Stand"); }
+        if (grounded && !spinReady && velocity.x == 0)
+        { animator.SetTrigger("Stand"); }
+
         animator.SetBool(caindoHash, caindo);
         animator.SetBool(groundedHash, grounded);
         //animator.SetBool(freandoHash, freando);
@@ -701,7 +716,6 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         // ROTAÇÃO
         //-----------------------------------------------------------------------------------------------------
-
         // rotaciona personagem perfeitamente, assim como em Sonic Mania e Freedom Planet
         if (grounded) { transform.rotation = Quaternion.Euler(0f, 0f, characterAngle); }
         // não está no chão? fique em posição de queda normal.
@@ -713,13 +727,14 @@ public class HedgehogMovement : MonoBehaviour
         if (Mathf.Abs(input.x) > 0 && grounded && !freando && !travaDireção)
         {
             if (groundVelocity < 0) { olhandoDireita = false; }
-            else { olhandoDireita = true; }
+            else if (groundVelocity > 0) { olhandoDireita = true; }
         }
 
 
         //-----------------------------------------------------------------------------------------------------
         // FREANDO
         //-----------------------------------------------------------------------------------------------------
+        //nos jogos clássicos frear é meramente visual, a desaceleração é igual sempre        
         /*
         if (grounded)
         {
@@ -792,7 +807,7 @@ public class HedgehogMovement : MonoBehaviour
 
     GroundInfo GroundedCheck(float distance, GroundMode groundMode, out bool groundedLeft, out bool groundedRight)
     {
-        Quaternion rot = Quaternion.Euler(0f, 0f, (90f * (int)groundMode)); // COMO QUE ELE CONVERTE groundMode EM INT?
+        Quaternion rot = Quaternion.Euler(0f, 0f, (90f * (int)groundMode));
         Vector2 dir = rot * Vector2.down;
         Vector2 leftCastPos = rot * leftRaycastPos;
         Vector2 rightCastPos = rot * rightRaycastPos;
@@ -806,9 +821,6 @@ public class HedgehogMovement : MonoBehaviour
 
         Debug.DrawRay(pos + leftCastPos, dir * distance, Color.green);
         Debug.DrawRay(pos + rightCastPos, dir * distance, Color.green);
-
-        //Debug.DrawLine(pos + leftCastPos, pos + leftCastPos + (dir * distance), Color.magenta);
-        //Debug.DrawLine(pos + rightCastPos, pos + rightCastPos + (dir * distance), Color.red);
 
         GroundInfo found = null;
 
@@ -884,7 +896,9 @@ public class HedgehogMovement : MonoBehaviour
                     if (angle < 315f && angle > 225f) { groundMode = GroundMode.LeftWall; }
                     else if (angle > 45f && angle < 180f) { groundMode = GroundMode.RightWall; }
                 }
+                //print("Y antes: " + pos.y);
                 pos.y = info.point.y + heightHalf;
+                //print("Y depois: " + pos.y);
                 break;
             case GroundMode.RightWall:
                 if (angle < 45f && angle > 0f) { groundMode = GroundMode.Floor; }
@@ -914,14 +928,13 @@ public class HedgehogMovement : MonoBehaviour
     // BULLET TIME
     //-----------------------------------------------------------------------------------------------------
 
-    float fatorLentidão = 0.1f; //tempo do unity fica 50% mais lento
+    float fatorLentidão = 0.6f; //tempo do unity fica 50% mais lento
     bool estáEmBulletTime = false;
 
     public void BulletTime()
     {
         if (estáEmBulletTime)
         {
-            print("ZA WARUDO!");
             Time.timeScale = fatorLentidão;
             //jogadorVelocidade /= fatorLentidão; //se o tempo está 50% mais lento, a velocidade do jogador dobra
             Time.fixedDeltaTime = Time.timeScale * 0.02f; //esse valor me parece arbitrário, melhor pesquisar
