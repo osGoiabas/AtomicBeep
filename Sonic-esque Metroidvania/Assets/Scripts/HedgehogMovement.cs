@@ -81,6 +81,8 @@ public class HedgehogMovement : MonoBehaviour
     float fallVelocityThreshold = 180f;
 
     private float groundVelocity;
+    private bool hControlLock = false;
+    private float hControlLockTime = 0f;
     private GroundInfo currentGroundInfo;
     private GroundMode groundMode = GroundMode.Floor;
 
@@ -155,6 +157,8 @@ public class HedgehogMovement : MonoBehaviour
             GUILayout.BeginArea(new Rect(10, 10, 200, 240), "Stats", "Window");
 
             //GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
+            GUILayout.Label("hControlLockTime: " + hControlLockTime);
+            GUILayout.Label("hControlLock: " + (hControlLock ? "SIM" : "NÃO"));
 
             GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
             //GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
@@ -251,7 +255,7 @@ public class HedgehogMovement : MonoBehaviour
             else { abaixado = false; }
 
             //-----------------------------------------------------------------------------------------------------
-            // CAIR
+            // CAIR DA PAREDE/TETO
             //-----------------------------------------------------------------------------------------------------
 
             bool lostFooting = false;
@@ -263,25 +267,9 @@ public class HedgehogMovement : MonoBehaviour
                 grounded = false; // NÃO TÁ NO CHÃO
                 //ESCORREGAR
 
-                /*
-                 Falling and Slipping Down Slopes
-                At this point, slope movement will work rather well, 
-                but it's not enough just to slow the Player down on steep slopes. 
-                They need to slip down when it gets too steep and you are moving too slowly.
-                
-                The angle range of slopes for slipping is when your Ground Angle
-                is within the range 46° to 315° (223~32) ($DF~$20) inclusive.
-                In addition, the game will check if absolute Ground Speed falls below 2.5 ($280).
+                //TRAVE O CONTROLE NA HORIZONTAL
+                traveControleH();                 
 
-                So, when these conditions are met, what happens? Well, the Player will slip. 
-                This achieved by detaching the Player from the floor (clearing the grounded state), 
-                setting Ground Speed to 0, and employing the control lock timer.
-                */
-
-                //esse timer também é usado nas molas horizontais
-
-                //hControlLock = true; // TRAVE O CONTROLE NA HORIZONTAL
-                //hControlLockTime = 0.5f;
                 lostFooting = true;
             }
 
@@ -310,8 +298,16 @@ public class HedgehogMovement : MonoBehaviour
             }
             else
             {
-
-
+                if (hControlLock)
+                {
+                    hControlLockTime -= Time.fixedDeltaTime;
+                    if (hControlLockTime < 0f)
+                    {
+                        hControlLock = false;
+                        hControlLockTime = 0;
+                        print("FIM do control lock");
+                    }
+                }
 
                 //-----------------------------------------------------------------------------------------------------
                 // FRICÇÃO
@@ -343,7 +339,7 @@ public class HedgehogMovement : MonoBehaviour
                 // INPUT = MOVIMENTO!
                 //-----------------------------------------------------------------------------------------------------
 
-                if (Mathf.Abs(input.x) >= 0.005f)
+                if (!hControlLock && Mathf.Abs(input.x) >= 0.005f)
                 {
                     float accel = /*underwater ? uwAcceleration :*/ groundAcceleration;
                     float decel = /*underwater ? uwDeceleration :*/ deceleration;
@@ -497,8 +493,8 @@ public class HedgehogMovement : MonoBehaviour
         }
         else if (leftHit.collider != null)
         {
-            print("BATEU NA ESQUERDA: " + groundMode);
-            travaDireção = true;
+            //print("BATEU NA ESQUERDA: " + groundMode);
+            //traveControleH();
 
             transform.position = new Vector2(leftHit.point.x + sideRaycastDist, transform.position.y);
             if (velocity.x < 0f)
@@ -512,13 +508,13 @@ public class HedgehogMovement : MonoBehaviour
         }
         else if (rightHit.collider != null)
         {
-            travaDireção = true;
+            //traveControleH();
 
             //if (velocity.x > rightHit.distance - 10f) { velocity.x = rightHit.distance - 10f; }
             //velocity.x = rightHit.distance - sideRaycastDist;
             //sideRaycastDist = rightHit.distance;
 
-            
+
             transform.position = new Vector2(rightHit.point.x - sideRaycastDist, transform.position.y);
             if (velocity.x > 0f)
             {
@@ -532,7 +528,7 @@ public class HedgehogMovement : MonoBehaviour
         else 
         { 
             empurrando = false;
-            travaDireção = false;
+            //hControlLock = false;
         }
 
 
@@ -724,7 +720,7 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         // DIREÇÃO
         //-----------------------------------------------------------------------------------------------------
-        if (Mathf.Abs(input.x) > 0 && grounded && !freando && !travaDireção)
+        if (Mathf.Abs(input.x) > 0 && grounded && !freando && !hControlLock)
         {
             if (groundVelocity < 0) { olhandoDireita = false; }
             else if (groundVelocity > 0) { olhandoDireita = true; }
@@ -744,7 +740,7 @@ public class HedgehogMovement : MonoBehaviour
             {
                 //animator.SetTrigger("Freando");
                 freando = true;
-                travaDireção = true;
+                traveControleH();
                 FindObjectOfType<SoundManager>().Play("freando");
             }
             else if (freando && Mathf.Abs(groundVelocity) < freandoLimiteVirar)
@@ -755,11 +751,11 @@ public class HedgehogMovement : MonoBehaviour
                     animator.SetTrigger("FreandoVirar");
                 }
                 freando = false;
-                travaDireção = true;
+                traveControleH();
             }
             else if (groundVelocity == 0 || ((groundVelocity > 0 && input.x > 0) || (groundVelocity < 0 && input.x < 0)))
             {
-                travaDireção = false;
+                hControlLock = false;
             }
         }
         */
@@ -771,7 +767,6 @@ public class HedgehogMovement : MonoBehaviour
     }
 
     bool freando = false;
-    bool travaDireção = false;
     //bool freandoVirar = false;
     float freandoLimiteVirar = 100;
     public AudioSource somFreando;
@@ -891,27 +886,33 @@ public class HedgehogMovement : MonoBehaviour
         switch (groundMode) 
         {
             case GroundMode.Floor:
-                if (Mathf.Abs(groundVelocity) >= fallVelocityThreshold) 
+                if (Mathf.Abs(groundVelocity) >= fallVelocityThreshold)
                 {
-                    if (angle < 315f && angle > 225f) { groundMode = GroundMode.LeftWall; }
-                    else if (angle > 45f && angle < 180f) { groundMode = GroundMode.RightWall; }
+                    if (angle <= 315f && angle > 225f) { groundMode = GroundMode.LeftWall; }
+                    else if (angle > 45f && angle <= 180f) { groundMode = GroundMode.RightWall; }
+                }
+                else {
+                    if (angle > 35f && angle <= 325f && !hControlLock) 
+                    {
+                        traveControleH();                        
+                    }
                 }
                 //print("Y antes: " + pos.y);
                 pos.y = info.point.y + heightHalf;
                 //print("Y depois: " + pos.y);
                 break;
             case GroundMode.RightWall:
-                if (angle < 45f && angle > 0f) { groundMode = GroundMode.Floor; }
-                else if (angle > 135f && angle < 270f) { groundMode = GroundMode.Ceiling; }
+                if (angle <= 45f && angle > 0f) { groundMode = GroundMode.Floor; }
+                else if (angle > 135f && angle <= 270f) { groundMode = GroundMode.Ceiling; }
                 pos.x = info.point.x - heightHalf;
                 break;
             case GroundMode.Ceiling:
-                if (angle < 135f && angle > 45f) { groundMode = GroundMode.RightWall; }
-                else if (angle > 225f && angle < 360f) { groundMode = GroundMode.LeftWall; }
+                if (angle <= 135f && angle > 45f) { groundMode = GroundMode.RightWall; }
+                else if (angle > 225f && angle <= 360f) { groundMode = GroundMode.LeftWall; }
                 pos.y = info.point.y - heightHalf;
                 break;
             case GroundMode.LeftWall:
-                if (angle < 225f && angle > 45f) { groundMode = GroundMode.Ceiling; }
+                if (angle <= 225f && angle > 45f) { groundMode = GroundMode.Ceiling; }
                 else if (angle > 315f) { groundMode = GroundMode.Floor; }
                 pos.x = info.point.x + heightHalf;
                 break;
@@ -921,6 +922,29 @@ public class HedgehogMovement : MonoBehaviour
 
 
         transform.position = pos;
+    }
+
+    /*
+     Falling and Slipping Down Slopes
+    At this point, slope movement will work rather well, 
+    but it's not enough just to slow the Player down on steep slopes. 
+    They need to slip down when it gets too steep and you are moving too slowly.
+
+    The angle range of slopes for slipping is when your Ground Angle
+    is within the range 46° to 315° (223~32) ($DF~$20) inclusive.
+    In addition, the game will check if absolute Ground Speed falls below 2.5 ($280).
+
+    So, when these conditions are met, what happens? Well, the Player will slip. 
+    This achieved by detaching the Player from the floor (clearing the grounded state), 
+    setting Ground Speed to 0, and employing the control lock timer.
+    */
+
+    //esse timer também é usado nas molas horizontais
+    public void traveControleH() {
+        hControlLock = true;
+        print("CONTROL LOCK!");
+        hControlLockTime = 0.5f;
+        //groundVelocity = 0;
     }
 
 
