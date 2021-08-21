@@ -74,6 +74,7 @@ public class HedgehogMovement : MonoBehaviour
     float abaixadoFriction = 337.50f; //84.375f;
     float deceleration = 1800f;
 
+    float peleGrossura = 0.01f;
     float slopeFactor = 450f;
     float sideRaycastOffset = -4f;
     float sideRaycastDist = 10f;
@@ -114,12 +115,17 @@ public class HedgehogMovement : MonoBehaviour
     private int empurrandoHash;
     private int grudadoParedeHash;
 
-    private bool backfliping = false;
+
+    //OUTROS
     private float tempoPirueta = 0;
+
     private bool spinReady = false;
 
-    //SKIN
-    float peleGrossura = 0.01f;
+    bool mudarDireção = false;
+    float mudarDireçãoDelay = 0.5f;
+
+
+
 
     void Awake()
     {
@@ -154,11 +160,13 @@ public class HedgehogMovement : MonoBehaviour
     {
         if (debug)
         {
-            GUILayout.BeginArea(new Rect(10, 10, 200, 240), "Stats", "Window");
+            GUILayout.BeginArea(new Rect(10, 10, 250, 240), "Stats", "Window");
 
             //GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
             GUILayout.Label("hControlLockTime: " + hControlLockTime);
             GUILayout.Label("hControlLock: " + (hControlLock ? "SIM" : "NÃO"));
+
+            GUILayout.Label("mudarDireçãoDelay: " + mudarDireçãoDelay);
 
             GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
             //GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
@@ -215,8 +223,9 @@ public class HedgehogMovement : MonoBehaviour
             //comece a carregar o spindash
             if (groundVelocity == 0 && abaixado && Input.GetButton("Jump") && groundMode == GroundMode.Floor)
             {
-                animator.Play("robot_spindash");
                 spinReady = true;
+                mudarDireção = false;
+                animator.Play("robot_spindash");
             }
 
             //soltou a seta pra baixo? simbora
@@ -291,12 +300,12 @@ public class HedgehogMovement : MonoBehaviour
 
                 //LONG JUMP
                 if (Mathf.Abs(groundVelocity) >= fallVelocityThreshold) {
-                    if (input.x > 0) { velocity.x += 150; }
-                    if (input.x < 0) { velocity.x -= 150; }
+                    if (input.x > 0 && olhandoDireita) { velocity.x += 150; print("LONGJUMP direita!"); }
+                    else if (input.x < 0 && !olhandoDireita) { velocity.x -= 150; print("LONGJUMP esquerda!"); }
                 }
 
             }
-            else
+            else 
             {
                 if (hControlLock)
                 {
@@ -305,7 +314,6 @@ public class HedgehogMovement : MonoBehaviour
                     {
                         hControlLock = false;
                         hControlLockTime = 0;
-                        print("FIM do control lock");
                     }
                 }
 
@@ -720,11 +728,43 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         // DIREÇÃO
         //-----------------------------------------------------------------------------------------------------
-        if (Mathf.Abs(input.x) > 0 && grounded && !freando && !hControlLock)
+
+        if (Mathf.Abs(input.x) > 0.05f && grounded && !freando && !hControlLock)
         {
-            if (groundVelocity < 0) { olhandoDireita = false; }
-            else if (groundVelocity > 0) { olhandoDireita = true; }
+            // indo pra esquerda mas olhando pra direita
+            if (groundVelocity < 0 && olhandoDireita)
+            {
+                mudarDireção = true;
+            }
+            // indo pra direita mas olhando pra esquerda
+            else if (groundVelocity > 0 && !olhandoDireita)
+            {
+                mudarDireção = true;
+            }
+            // se tiver apertado certo
+            else 
+            {
+                mudarDireção = false;
+            }
         }
+        
+        if (mudarDireção && grounded && !hControlLock)
+        {
+            mudarDireçãoDelay -= Time.fixedDeltaTime;
+            if (mudarDireçãoDelay < 0)
+            {
+                mudarDireção = false;
+                mudarDireçãoDelay = 0.5f;
+                olhandoDireita = !olhandoDireita;
+            }
+        }
+        else
+        { 
+            mudarDireçãoDelay = 0.5f;
+        } 
+
+
+        transform.localScale = new Vector3(olhandoDireita ? 1 : -1, 1, 1);
 
 
         //-----------------------------------------------------------------------------------------------------
@@ -759,11 +799,10 @@ public class HedgehogMovement : MonoBehaviour
             }
         }
         */
-        transform.localScale = new Vector3(olhandoDireita ? 1 : -1, 1, 1);
 
-        //#TODO ver pra que serve essa linha
+        //linha que mostra a velocidade do boneco
         Debug.DrawLine(transform.position, new Vector3(transform.position.x + velocity.x / 5,
-                                               transform.position.y + velocity.y / 5, 0), Color.red);
+                                                       transform.position.y + velocity.y / 5, 0), Color.red);
     }
 
     bool freando = false;
@@ -789,7 +828,6 @@ public class HedgehogMovement : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------
     // TETO E PISO
     //-----------------------------------------------------------------------------------------------------
-
 
     private Vector2 leftRaycastPos { get { //if (rolling || jumped) { return spinLeftRPos; } else { 
             return standLeftRPos; //} 
@@ -924,6 +962,10 @@ public class HedgehogMovement : MonoBehaviour
         transform.position = pos;
     }
 
+
+    //-----------------------------------------------------------------------------------------------------
+    // CONTROL LOCK
+    //-----------------------------------------------------------------------------------------------------
     /*
      Falling and Slipping Down Slopes
     At this point, slope movement will work rather well, 
@@ -942,7 +984,6 @@ public class HedgehogMovement : MonoBehaviour
     //esse timer também é usado nas molas horizontais
     public void traveControleH() {
         hControlLock = true;
-        print("CONTROL LOCK!");
         hControlLockTime = 0.5f;
         //groundVelocity = 0;
     }
