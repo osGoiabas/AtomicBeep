@@ -164,16 +164,17 @@ public class HedgehogMovement : MonoBehaviour
 
             //GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
             GUILayout.Label("hControlLockTime: " + hControlLockTime);
-            GUILayout.Label("hControlLock: " + (hControlLock ? "SIM" : "NÃO"));
+            //GUILayout.Label("hControlLock: " + (hControlLock ? "SIM" : "NÃO"));
 
             GUILayout.Label("mudarDireçãoDelay: " + mudarDireçãoDelay);
+            GUILayout.Label("tempoPirueta: " + tempoPirueta);
 
             GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
             //GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
             GUILayout.Label("Olhando pra direita: " + (olhandoDireita ? "SIM" : "NÃO"));
             GUILayout.Label("Pulou: " + (pulou ? "SIM" : "NÃO"));
             GUILayout.Label("Caindo: " + (caindo ? "SIM" : "NÃO"));
-            GUILayout.Label("Empurrando: " + (empurrando ? "SIM" : "NÃO"));
+            // GUILayout.Label("Empurrando: " + (empurrando ? "SIM" : "NÃO"));
             GUILayout.Label("Ground Mode: " + (groundMode));
             //GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
             if (currentGroundInfo != null && currentGroundInfo.valid && grounded)
@@ -295,18 +296,27 @@ public class HedgehogMovement : MonoBehaviour
                 velocity.y += jumpVel * (Mathf.Cos(currentGroundInfo.angle));
                 grounded = false;
                 pulou = true;
-                animator.SetTrigger("Pulou");
-                tempoPirueta = 0.75f;
-
+                
+                if ((velocity.x > 0 && olhandoDireita) || (velocity.x < 0 && !olhandoDireita)) 
+                {
+                    animator.Play("robot_basic_jump");
+                }
+                else 
+                {
+                    animator.Play("robot_backflip_TESTE");
+                    tempoPirueta = 0.75f;
+                }
+                /*
                 //LONG JUMP
                 if (Mathf.Abs(groundVelocity) >= fallVelocityThreshold) {
                     if (input.x > 0 && olhandoDireita) { velocity.x += 150; print("LONGJUMP direita!"); }
                     else if (input.x < 0 && !olhandoDireita) { velocity.x -= 150; print("LONGJUMP esquerda!"); }
-                }
+                }*/
 
             }
             else 
             {
+                //timer do control lock
                 if (hControlLock)
                 {
                     hControlLockTime -= Time.fixedDeltaTime;
