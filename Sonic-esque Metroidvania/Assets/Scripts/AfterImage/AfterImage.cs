@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class AfterImage : MonoBehaviour
 {
-    float ghostDelay = 0.1f;
-    float ghostDelaySeconds = 0.1f;
+    float ghostDelayTotal = 0.5f;
+    float ghostDelaySeconds = 0f;
     public GameObject ghost;
-    public bool makeGhost = true;
+    public bool makeGhost = false;
 
     void Update()
     {
@@ -15,17 +15,21 @@ public class AfterImage : MonoBehaviour
         {
             if (ghostDelaySeconds > 0)
             {
-                ghostDelaySeconds -= Time.deltaTime;
+                ghostDelaySeconds -= Time.unscaledDeltaTime;
             }
             else
             {
                 //criar ghost image
                 GameObject currentGhost = Instantiate(ghost, transform.position, transform.rotation);
+
                 //currentGhost.transform.parent = transform.parent;
                 currentGhost.transform.localScale = transform.parent.localScale;
+
                 Sprite currentSprite = GetComponent<SpriteRenderer>().sprite;
                 currentGhost.GetComponent<SpriteRenderer>().sprite = currentSprite;
-                ghostDelaySeconds = ghostDelay;
+
+                ghostDelaySeconds = ghostDelayTotal;
+
                 Destroy(currentGhost, 0.5f);
             }
         }

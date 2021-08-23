@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.LWRP;
 
 
 
@@ -35,10 +36,7 @@ public class HedgehogMovement : MonoBehaviour
     public bool pulou { get; private set; }
     public bool caindo { get; private set; }
 
-
     public bool abaixado { get; private set; }
-
-
 
     public bool empurrando { get; private set; }
     public bool grudadoParede { get; private set; }
@@ -62,14 +60,18 @@ public class HedgehogMovement : MonoBehaviour
     private Vector2 standLeftRPos;
     private Vector2 standRightRPos;
 
+    RaycastHit2D leftHit;
+    RaycastHit2D rightHit;
 
     //-----------------------------------------------------------------------------------------------------
     // GROUND MOVEMENT
     //-----------------------------------------------------------------------------------------------------
-    [Header("Ground Movement")] //faz um titulozin no inspector, eu acho
+    [Header("Ground Movement")]
     public float groundAcceleration = 168.75f;
     public float groundTopSpeed = 360f;
     public float speedLimit = 960f;
+
+    bool olhandoDireita = true;
 
     float friction = 168.75f;
     float abaixadoFriction = 337.50f; //84.375f;
@@ -99,7 +101,6 @@ public class HedgehogMovement : MonoBehaviour
     float terminalVelocity = 960f;
     //float airDrag = 1f;
 
-
     //-----------------------------------------------------------------------------------------------------
     // ANIMAÇÃO
     //-----------------------------------------------------------------------------------------------------
@@ -110,30 +111,50 @@ public class HedgehogMovement : MonoBehaviour
     private int groundedHash;
 
     private int freandoHash;
-    private int abaixadoHash;
 
     private int empurrandoHash;
     private int grudadoParedeHash;
 
+    //-----------------------------------------------------------------------------------------------------
+    // OUTROS
+    //-----------------------------------------------------------------------------------------------------
+    [Header("Outros")]
+    public ParticleSystem dust;
 
-    //OUTROS
-    private float tempoPirueta = 0;
-
-    private bool spinReady = false;
+    bool spinReady = false;
 
     bool mudarDireção = false;
     float mudarDireçãoDelay = 0.5f;
 
+    float tempoPirueta = 0;
+
     bool doubleJumpReady = false;
     float doubleJumpDelay = 0;
+    float doubleJumpDelayTotal = 0.1f;
 
-    public ParticleSystem dust;
+    float wallJumpDelay = 0;
+    float wallJumpDelayTotal = 0.5f;
 
+    float fatorLentidão = 0.2f;
+    bool estáEmBulletTime = false;
+    AfterImage afterImage;
+    public GameObject luzGlobalBranca;
+    public GameObject luzGlobalAzul;
+
+    //Awake() is called immediately upon the start of the game,
+    //independentemente do script estar ativado ou não.
+
+    //Start() só é chamada quando o script for ativado,
+    //e só será chamada essa única vez por toda a vida do script,
+    //mesmo que ele seja desativado e reativado posteriormente.
+    //Para essa última função, usar OnEnable()
 
 
     void Awake()
     {
-        //waterLevel = GameObject.FindWithTag("WaterLevel").transform;
+        afterImage = gameObject.GetComponentInChildren<AfterImage>();
+        //luzGlobalBranca = GameObject.Find("White Global Light 2D").GetComponent<Light2D>();
+        //luzGlobalAzul = GameObject.Find("Blue Global Light 2D").GetComponent<Light2D>();
 
         standLeftRPos = new Vector2(-standWidthHalf + peleGrossura, 0f);
         standRightRPos = new Vector2(standWidthHalf - peleGrossura, 0f);
@@ -145,35 +166,36 @@ public class HedgehogMovement : MonoBehaviour
         groundedHash = Animator.StringToHash("Grounded");
 
         freandoHash = Animator.StringToHash("Freando");
-        abaixadoHash = Animator.StringToHash("Abaixado");
 
         empurrandoHash = Animator.StringToHash("Empurrando");
         grudadoParedeHash = Animator.StringToHash("Grudado na Parede");
     }
-
-
-
 
     //-----------------------------------------------------------------------------------------------------
     // DEBUG WINDOW
     //-----------------------------------------------------------------------------------------------------
 
     bool debug = true;
-
     void OnGUI()
     {
         if (debug)
         {
             GUILayout.BeginArea(new Rect(10, 10, 220, 240), "Stats", "Window");
 
-            //GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
-            GUILayout.Label("hControlLockTime: " + hControlLockTime);
+            //GUILayout.Label("hControlLockTime: " + hControlLockTime);
             //GUILayout.Label("hControlLock: " + (hControlLock ? "SIM" : "NÃO"));
 
             GUILayout.Label("mudarDireçãoDelay: " + mudarDireçãoDelay);
             //GUILayout.Label("tempoPirueta: " + tempoPirueta);
 
-            GUILayout.Label("doubleJumpDelay: " + doubleJumpDelay);
+            //GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
+
+            //GUILayout.Label("doubleJumpDelay: " + doubleJumpDelay);
+
+            //GUILayout.Label("grudadoParede: " + grudadoParede);
+            GUILayout.Label("wallJumpDelay: " + wallJumpDelay);
+
+            GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
 
             GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
             //GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
@@ -182,7 +204,6 @@ public class HedgehogMovement : MonoBehaviour
             GUILayout.Label("Caindo: " + (caindo ? "SIM" : "NÃO"));
             // GUILayout.Label("Empurrando: " + (empurrando ? "SIM" : "NÃO"));
             GUILayout.Label("Ground Mode: " + (groundMode));
-            //GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
             if (currentGroundInfo != null && currentGroundInfo.valid && grounded)
             {
                 GUILayout.Label("Ground Speed: " + groundVelocity);
@@ -192,38 +213,30 @@ public class HedgehogMovement : MonoBehaviour
         }
     }
 
-
-
-
-
-
-
     //-----------------------------------------------------------------------------------------------------
     // COISAS DO UPDATE
     //-----------------------------------------------------------------------------------------------------
 
-    bool olhandoDireita = true;
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
+        if (Input.GetKeyDown(KeyCode.E)) { BulletTime(); }
+
+        //#TODO colocar input de pulo aqui também
+    }
+
+    //FixedUpdate() is called before each internal physics update
+    //(moving things due to physics, e.g., gravity)
+    //Unity’s fixed timestep defaults to 0.02
+    //This leads to FixedUpdate being called 50 times per second
     void FixedUpdate()
     {
-
         //INPUT
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; }
-        if (Input.GetKeyDown(KeyCode.E)) {
-            print("ZA WARUDO!");
-            BulletTime();
-            estáEmBulletTime = !estáEmBulletTime;
-        }
-
 
         if (doubleJumpDelay > 0) {
             doubleJumpDelay -= Time.fixedDeltaTime;
         }
-        
-        
-        float accelSpeedCap = /*underwater ? uwGroundTopSpeed :*/ groundTopSpeed;
-
-
 
         //-----------------------------------------------------------------------------------------------------
         // ESTÁ NO CHÃO?
@@ -236,10 +249,14 @@ public class HedgehogMovement : MonoBehaviour
             //-----------------------------------------------------------------------------------------------------
             //tá parado, grounded, abaixado e apertou pulo?
             //comece a carregar o spindash
-            if (groundVelocity == 0 && abaixado && Input.GetButton("Jump") && groundMode == GroundMode.Floor)
+            if (groundVelocity == 0 && abaixado && !mudarDireção 
+                && Input.GetButton("Jump") 
+                && groundMode == GroundMode.Floor
+                && leftHit.collider == null 
+                && rightHit.collider == null)
             {
                 spinReady = true;
-                mudarDireção = false;
+                //mudarDireção = false;
                 CreateDust();
                 animator.Play("robot_spindash");
             }
@@ -309,7 +326,7 @@ public class HedgehogMovement : MonoBehaviour
                 grounded = false;
                 pulou = true;
                 doubleJumpReady = true;
-                doubleJumpDelay = 0.1f;
+                doubleJumpDelay = doubleJumpDelayTotal;
 
                 if ((velocity.x > 0 && olhandoDireita) || (velocity.x < 0 && !olhandoDireita))
                 {
@@ -390,9 +407,9 @@ public class HedgehogMovement : MonoBehaviour
                         if (!abaixado && groundVelocity <= 0f) { acceleration = accel; } // ACELERAR
 
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
-                        if (groundVelocity > -accelSpeedCap)
+                        if (groundVelocity > -groundTopSpeed)
                         {
-                            groundVelocity = Mathf.Max(-accelSpeedCap, groundVelocity + (input.x * acceleration) * Time.deltaTime);
+                            groundVelocity = Mathf.Max(-groundTopSpeed, groundVelocity + (input.x * acceleration) * Time.deltaTime);
                         }
                     }
 
@@ -407,9 +424,9 @@ public class HedgehogMovement : MonoBehaviour
                         if (!abaixado && groundVelocity >= 0f) { acceleration = accel; }
 
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
-                        if (groundVelocity < accelSpeedCap)
+                        if (groundVelocity < groundTopSpeed)
                         {
-                            groundVelocity = Mathf.Min(accelSpeedCap, groundVelocity + (input.x * acceleration) * Time.deltaTime);
+                            groundVelocity = Mathf.Min(groundTopSpeed, groundVelocity + (input.x * acceleration) * Time.deltaTime);
                         }
                     }
                 }
@@ -472,10 +489,12 @@ public class HedgehogMovement : MonoBehaviour
                 //-----------------------------------------------------------------------------------------------------
                 // GRAVIDADE E VELOCIDADE TERMINAL
                 //-----------------------------------------------------------------------------------------------------
-                velocity.y = Mathf.Max(velocity.y + (gravity * Time.fixedDeltaTime), -terminalVelocity);
+                if (!grudadoParede) {
+                    velocity.y = Mathf.Max(velocity.y + (gravity * Time.fixedDeltaTime), -terminalVelocity);
+                }
             }
 
-            if (doubleJumpReady && doubleJumpDelay <= 0 && Input.GetButtonDown("Jump") && !lowCeiling)
+            if (doubleJumpReady && doubleJumpDelay <= 0 && Input.GetButtonDown("Jump") && !lowCeiling && !grudadoParede)
             {
                 float jumpVel = jumpVelocity;
                 velocity.y = jumpVel;
@@ -494,10 +513,10 @@ public class HedgehogMovement : MonoBehaviour
             // MOVA-SE, USANDO A airAcceleration AO INVÉS DA ACELERAÇÃO DO CHÃO
             if (Mathf.Abs(input.x) >= 0.005f)
             {
-                if ((input.x < 0f && velocity.x > -accelSpeedCap) || (input.x > 0f && velocity.x < accelSpeedCap))
+                if ((input.x < 0f && velocity.x > -groundTopSpeed) || (input.x > 0f && velocity.x < groundTopSpeed))
                 {
                     float airAcc = /*underwater ? uwAirAcceleration :*/ airAcceleration;
-                    velocity.x = Mathf.Clamp(velocity.x + (input.x * airAcc * Time.fixedDeltaTime), -accelSpeedCap, accelSpeedCap);
+                    velocity.x = Mathf.Clamp(velocity.x + (input.x * airAcc * Time.fixedDeltaTime), -groundTopSpeed, groundTopSpeed);
                 }
             }
         }
@@ -518,9 +537,6 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         // COLISÃO NA DIREITA E NA ESQUERDA
         //-----------------------------------------------------------------------------------------------------
-
-        RaycastHit2D leftHit;
-        RaycastHit2D rightHit;
 
         WallCheck(sideRaycastDist, grounded ? sideRaycastOffset : 0f, out leftHit, out rightHit);
 
@@ -551,7 +567,6 @@ public class HedgehogMovement : MonoBehaviour
             //velocity.x = rightHit.distance - sideRaycastDist;
             //sideRaycastDist = rightHit.distance;
 
-
             transform.position = new Vector2(rightHit.point.x - sideRaycastDist, transform.position.y);
             if (velocity.x > 0f)
             {
@@ -568,45 +583,56 @@ public class HedgehogMovement : MonoBehaviour
             //hControlLock = false;
         }
 
-
         //-----------------------------------------------------------------------------------------------------
-        // GRUDAR NA PAREDE
+        // WALLJUMP: GRUDAR NA PAREDE 
         //-----------------------------------------------------------------------------------------------------
-
-        /*
         if ((leftHit.collider != null || rightHit.collider != null)
              && !grounded
              && groundMode == GroundMode.Floor
-             && (characterAngle == 0 || characterAngle == 180))
+             && ((characterAngle >= 0 && characterAngle < 1)
+             || characterAngle == 180))
         {
             grudadoParede = true;
+            animator.Play("robot_wallgrab");
             velocity.y = 0;
+            doubleJumpReady = true;
+            if (leftHit.collider != null) { olhandoDireita = true; }
+            else if (rightHit.collider != null) { olhandoDireita = false; }
         }
-        else { grudadoParede = false; }
-        */
-        /*
+        else 
+        {
+            grudadoParede = false; 
+            wallJumpDelay = wallJumpDelayTotal;
+        }
+
         //-----------------------------------------------------------------------------------------------------
         // CAIR DA PAREDE
         //-----------------------------------------------------------------------------------------------------
         if (grudadoParede)
         {
-            if (quantoFaltaDesgrudar > 0 && !Input.GetButtonDown("Jump"))
+            if (wallJumpDelay > 0 && !Input.GetButtonDown("Jump"))
             {
-                quantoFaltaDesgrudar -= Time.deltaTime;
+                wallJumpDelay -= Time.deltaTime;
             }
-            else if (quantoFaltaDesgrudar <= 0 || Input.GetButtonDown("Jump"))
+            else if (wallJumpDelay <= 0)
             {
-                if (leftHit.collider != null) { velocity.x += 50; }
-                else if (rightHit.collider != null) { velocity.x -= 50; }
-                quantoFaltaDesgrudar = tempoMáximoGrudado;
+                if (leftHit.collider != null) { velocity.x += 100; }
+                else if (rightHit.collider != null) { velocity.x -= 100; }
+                wallJumpDelay = wallJumpDelayTotal;
+            }
+            else if (Input.GetButtonDown("Jump")) {
+                if (leftHit.collider != null) { velocity.x += 200; }
+                else if (rightHit.collider != null) { velocity.x -= 200; }
+                velocity.y += 300;
+                animator.Play("robot_basic_jump");
             }
         }
-        */
+        //#TODO de fato pular da parede
+        //#TODO deslizar pra cima na parede quando pula do chão grudadinho nela
 
         //-----------------------------------------------------------------------------------------------------
         // COLISÃO EM CIMA E EM BAIXO
         //-----------------------------------------------------------------------------------------------------
-
         bool groundedLeft = false;
         bool groundedRight = false;
 
@@ -617,9 +643,6 @@ public class HedgehogMovement : MonoBehaviour
         if (ceilDirection > 3) { ceilDirection -= 4; } // se groundMode for 3, o teto será 5-4, isto é, 1.
 
         GroundInfo ceil = GroundedCheck(groundRaycastDist, (GroundMode)ceilDirection, out ceilingLeft, out ceilingRight);
-
-
-
 
         if (grounded) // ESTÁ NO CHÃO?
         {
@@ -1018,24 +1041,37 @@ public class HedgehogMovement : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------
     // BULLET TIME
     //-----------------------------------------------------------------------------------------------------
-
-    float fatorLentidão = 0.6f; //tempo do unity fica 50% mais lento
-    bool estáEmBulletTime = false;
-
     public void BulletTime()
     {
+        
+        estáEmBulletTime = !estáEmBulletTime;
         if (estáEmBulletTime)
         {
             Time.timeScale = fatorLentidão;
-            //jogadorVelocidade /= fatorLentidão; //se o tempo está 50% mais lento, a velocidade do jogador dobra
-            Time.fixedDeltaTime = Time.timeScale * 0.02f; //esse valor me parece arbitrário, melhor pesquisar
+            //print("ZA WARUDO! toki wo tomare!");
+            luzGlobalBranca.SetActive(false);
+
+            luzGlobalAzul.SetActive(true);
+            afterImage.makeGhost = true;
+            //se o tempo está 50% mais lento, a velocidade do jogador dobra
+            //jogadorVelocidade /= fatorLentidão;
+
+            //esse valor me parece arbitrário, melhor pesquisar
+            Time.fixedDeltaTime = Time.timeScale * 0.02f; 
         }
         else
         {
             //print("Fim do Bullet Time.");
-            //Time.timeScale += (1f / duraçãoLentidão) * Time.unscaledDeltaTime; //esse deltaTime é absoluto, não fica mais lento
+
+            //esse deltaTime é absoluto, não fica mais lento
+            //Time.timeScale += (1f / duraçãoLentidão) * Time.unscaledDeltaTime;
             Time.timeScale = 1;
-        }
+            //print("toki wa ugoki dasu");
+            afterImage.makeGhost = false;
+            luzGlobalAzul.SetActive(false);
+
+            luzGlobalBranca.SetActive(true);
+        }        
     }
 
     //-----------------------------------------------------------------------------------------------------

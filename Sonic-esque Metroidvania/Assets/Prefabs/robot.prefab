@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 865803412}
   - component: {fileID: 865803411}
   m_Layer: 0
-  m_Name: Dust
+  m_Name: runDust
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4764,6 +4764,7 @@ GameObject:
   - component: {fileID: 4294818185926400826}
   - component: {fileID: 4294818185926400827}
   - component: {fileID: 4294818185926400824}
+  - component: {fileID: 1171797185}
   m_Layer: 0
   m_Name: robot-sprite
   m_TagString: Untagged
@@ -4802,7 +4803,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4853,6 +4854,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1171797185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4294818185926400825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2338a6df9221174d80e1a7002605e2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghost: {fileID: 7157491897491513302, guid: 1b205fefbe74b134aabf5c7fe5918109, type: 3}
+  makeGhost: 0
 --- !u!1 &4294818186568778184
 GameObject:
   m_ObjectHideFlags: 0
@@ -4903,6 +4918,8 @@ MonoBehaviour:
   groundTopSpeed: 360
   speedLimit: 960
   dust: {fileID: 865803412}
+  luzGlobalBranca: {fileID: 0}
+  luzGlobalAzul: {fileID: 0}
   somFreando: {fileID: 0}
   "m\xE1scaraColis\xE3o":
     serializedVersion: 2
