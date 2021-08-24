@@ -51,7 +51,7 @@ public class HedgehogMovement : MonoBehaviour
         }
     }
 
-    float standWidthHalf = 10f;
+    private float standWidthHalf = 10f;
 
     private Vector2 velocity;
     private float characterAngle;
@@ -67,53 +67,53 @@ public class HedgehogMovement : MonoBehaviour
     // GROUND MOVEMENT
     //-----------------------------------------------------------------------------------------------------
     [Header("Ground Movement")]
-    public float groundAcceleration = 168.75f;
-    public float groundTopSpeed = 360f;
-    public float speedLimit = 960f;
+    float groundAcceleration = 168.75f;
+    float groundTopSpeed = 360f;
+    float speedLimit = 960f;
 
     bool olhandoDireita = true;
 
-    float friction = 168.75f;
-    float abaixadoFriction = 337.50f; //84.375f;
-    float deceleration = 1800f;
+    private float friction = 168.75f;
+    private float abaixadoFriction = 337.50f; //84.375f;
+    private float deceleration = 1800f;
 
-    float peleGrossura = 0.01f;
-    float slopeFactor = 450f;
-    float sideRaycastOffset = -4f;
-    float sideRaycastDist = 10f;
-    float groundRaycastDist = 24f;
-    float fallVelocityThreshold = 180f;
+    private float peleGrossura = 0.01f;
+    private float slopeFactor = 450f;
+    private float sideRaycastOffset = -4f;
+    private float sideRaycastDist = 10f;
+    private float groundRaycastDist = 24f;
+    private float fallVelocityThreshold = 180f;
 
-    private float groundVelocity;
-    private bool hControlLock = false;
-    private float hControlLockTime = 0f;
-    private GroundInfo currentGroundInfo;
-    private GroundMode groundMode = GroundMode.Floor;
+    float groundVelocity;
+    bool hControlLock = false;
+    float hControlLockTime = 0f;
+    GroundInfo currentGroundInfo;
+    GroundMode groundMode = GroundMode.Floor;
 
 
     //-----------------------------------------------------------------------------------------------------
     // AIR MOVEMENT
     //-----------------------------------------------------------------------------------------------------   
-    float airAcceleration = 170f; //340f
-    float jumpVelocity = 390f;
-    float jumpReleaseThreshold = 240f;
-    float gravity = -790f;
-    float terminalVelocity = 960f;
-    //float airDrag = 1f;
+    private float airAcceleration = 170f; //340f
+    private float jumpVelocity = 390f;
+    private float jumpReleaseThreshold = 240f;
+    private float gravity = -790f;
+    private float terminalVelocity = 960f;
+    //private float airDrag = 1f;
 
     //-----------------------------------------------------------------------------------------------------
     // ANIMAÇÃO
     //-----------------------------------------------------------------------------------------------------
-    private int standHash;
-    private int speedHash;
-    private int caindoHash;
+    int standHash;
+    int speedHash;
+    int caindoHash;
 
-    private int groundedHash;
+    int groundedHash;
 
-    private int freandoHash;
+    int freandoHash;
 
-    private int empurrandoHash;
-    private int grudadoParedeHash;
+    int empurrandoHash;
+    int grudadoParedeHash;
 
     //-----------------------------------------------------------------------------------------------------
     // OUTROS
@@ -121,23 +121,23 @@ public class HedgehogMovement : MonoBehaviour
     [Header("Outros")]
     public ParticleSystem dust;
 
-    bool spinReady = false;
+    private bool spinReady = false;
 
-    bool mudarDireção = false;
-    float mudarDireçãoDelay = 0.5f;
+    private bool mudarDireção = false;
+    private float mudarDireçãoDelay = 0.5f;
 
-    float tempoPirueta = 0;
+    private float tempoPirueta = 0;
 
-    bool doubleJumpReady = false;
-    float doubleJumpDelay = 0;
-    float doubleJumpDelayTotal = 0.1f;
+    private bool doubleJumpReady = false;
+    private float doubleJumpDelay = 0;
+    private float doubleJumpDelayTotal = 0.1f;
 
-    float wallJumpDelay = 0;
-    float wallJumpDelayTotal = 0.5f;
+    private float wallJumpDelay = 0;
+    private float wallJumpDelayTotal = 0.5f;
 
-    float fatorLentidão = 0.2f;
-    bool estáEmBulletTime = false;
-    AfterImage afterImage;
+    private float fatorLentidão = 0.2f;
+    private bool estáEmBulletTime = false;
+    private AfterImage afterImage;
     public GameObject luzGlobalBranca;
     public GameObject luzGlobalAzul;
 
@@ -175,7 +175,7 @@ public class HedgehogMovement : MonoBehaviour
     // DEBUG WINDOW
     //-----------------------------------------------------------------------------------------------------
 
-    bool debug = true;
+    private bool debug = true;
     void OnGUI()
     {
         if (debug)
