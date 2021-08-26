@@ -192,10 +192,12 @@ public class HedgehogMovement : MonoBehaviour
 
             //GUILayout.Label("doubleJumpDelay: " + doubleJumpDelay);
 
-            //GUILayout.Label("grudadoParede: " + grudadoParede);
+            GUILayout.Label("grudadoParede: " + (grudadoParede ? "SIM" : "NÃO"));
+            GUILayout.Label("collider?: " + (leftHit.collider != null || rightHit.collider != null));
             GUILayout.Label("wallJumpDelay: " + wallJumpDelay);
+            GUILayout.Label("charAngle: " + characterAngle);
 
-            GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
+            //GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
 
             GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
             //GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
@@ -217,25 +219,21 @@ public class HedgehogMovement : MonoBehaviour
     // COISAS DO UPDATE
     //-----------------------------------------------------------------------------------------------------
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
-        if (Input.GetKeyDown(KeyCode.E)) { BulletTime(); }
-
-        //#TODO colocar input de pulo aqui também
-    }
-
     //FixedUpdate() is called before each internal physics update
     //(moving things due to physics, e.g., gravity)
     //Unity’s fixed timestep defaults to 0.02
     //This leads to FixedUpdate being called 50 times per second
-    void FixedUpdate()
+    void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
+        if (Input.GetKeyDown(KeyCode.E)) { BulletTime(); }
+
+
         //INPUT
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
         if (doubleJumpDelay > 0) {
-            doubleJumpDelay -= Time.fixedDeltaTime;
+            doubleJumpDelay -= Time.deltaTime;
         }
 
         //-----------------------------------------------------------------------------------------------------
@@ -284,7 +282,7 @@ public class HedgehogMovement : MonoBehaviour
             Fortunately, this is simple to achieve - with something called the Slope Factor. 
             Just subtract Slope Factor*sin(Ground Angle) from Ground Speed at the beginning of every step.
             */
-            groundVelocity += slopeFactor * -Mathf.Sin(currentGroundInfo.angle) * Time.fixedDeltaTime;
+            groundVelocity += slopeFactor * -Mathf.Sin(currentGroundInfo.angle) * Time.deltaTime;
 
             //-----------------------------------------------------------------------------------------------------
             // ABAIXAR
@@ -352,7 +350,7 @@ public class HedgehogMovement : MonoBehaviour
                 //timer do control lock
                 if (hControlLock)
                 {
-                    hControlLockTime -= Time.fixedDeltaTime;
+                    hControlLockTime -= Time.deltaTime;
                     if (hControlLockTime < 0f)
                     {
                         hControlLock = false;
@@ -375,12 +373,12 @@ public class HedgehogMovement : MonoBehaviour
 
                     if (groundVelocity > 0f)
                     {
-                        groundVelocity -= frc * Time.fixedDeltaTime;
+                        groundVelocity -= frc * Time.deltaTime;
                         if (groundVelocity < 0f) { groundVelocity = 0f; }
                     }
                     else if (groundVelocity < 0f)
                     {
-                        groundVelocity += frc * Time.fixedDeltaTime;
+                        groundVelocity += frc * Time.deltaTime;
                         if (groundVelocity > 0f) { groundVelocity = 0f; }
                     }
                 }
@@ -490,7 +488,7 @@ public class HedgehogMovement : MonoBehaviour
                 // GRAVIDADE E VELOCIDADE TERMINAL
                 //-----------------------------------------------------------------------------------------------------
                 if (!grudadoParede) {
-                    velocity.y = Mathf.Max(velocity.y + (gravity * Time.fixedDeltaTime), -terminalVelocity);
+                    velocity.y = Mathf.Max(velocity.y + (gravity * Time.deltaTime), -terminalVelocity);
                 }
             }
 
@@ -516,7 +514,7 @@ public class HedgehogMovement : MonoBehaviour
                 if ((input.x < 0f && velocity.x > -groundTopSpeed) || (input.x > 0f && velocity.x < groundTopSpeed))
                 {
                     float airAcc = /*underwater ? uwAirAcceleration :*/ airAcceleration;
-                    velocity.x = Mathf.Clamp(velocity.x + (input.x * airAcc * Time.fixedDeltaTime), -groundTopSpeed, groundTopSpeed);
+                    velocity.x = Mathf.Clamp(velocity.x + (input.x * airAcc * Time.deltaTime), -groundTopSpeed, groundTopSpeed);
                 }
             }
         }
@@ -528,7 +526,7 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         // MOVA-SE, DE FATO.
         //-----------------------------------------------------------------------------------------------------
-        transform.position += new Vector3(velocity.x, velocity.y, 0f) * Time.fixedDeltaTime;
+        transform.position += new Vector3(velocity.x, velocity.y, 0f) * Time.deltaTime;
 
         //-----------------------------------------------------------------------------------------------------
         // PAREDES
@@ -562,6 +560,7 @@ public class HedgehogMovement : MonoBehaviour
         else if (rightHit.collider != null)
         {
             //traveControleH();
+            //print("BATEU NA DIREITA: " + groundMode);
 
             //if (velocity.x > rightHit.distance - 10f) { velocity.x = rightHit.distance - 10f; }
             //velocity.x = rightHit.distance - sideRaycastDist;
@@ -589,9 +588,12 @@ public class HedgehogMovement : MonoBehaviour
         if ((leftHit.collider != null || rightHit.collider != null)
              && !grounded
              && groundMode == GroundMode.Floor
-             && ((characterAngle >= 0 && characterAngle < 1)
-             || characterAngle == 180))
+             && ((characterAngle >= 0 && characterAngle <= 5)
+             || (characterAngle >= 355 && characterAngle <= 360) 
+             || (characterAngle >= 175 && characterAngle <= 185)))
         {
+            //print("walljumping!");
+            //ele tá fazendo flickering entre true e false
             grudadoParede = true;
             animator.Play("robot_wallgrab");
             velocity.y = 0;
@@ -754,7 +756,7 @@ public class HedgehogMovement : MonoBehaviour
 
 
         if (tempoPirueta > 0)
-        { tempoPirueta -= Time.fixedDeltaTime; }
+        { tempoPirueta -= Time.deltaTime; }
         else
         { tempoPirueta = 0; }
 
@@ -775,7 +777,7 @@ public class HedgehogMovement : MonoBehaviour
         // rotaciona personagem perfeitamente, assim como em Sonic Mania e Freedom Planet
         if (grounded) { transform.rotation = Quaternion.Euler(0f, 0f, characterAngle); }
         // não está no chão? fique em posição de queda normal.
-        else { transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, 5 * Time.fixedDeltaTime); }
+        else { transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, 5 * Time.deltaTime); }
 
         //-----------------------------------------------------------------------------------------------------
         // DIREÇÃO
@@ -798,14 +800,14 @@ public class HedgehogMovement : MonoBehaviour
 
         if (mudarDireção && grounded)
         {
-            mudarDireçãoDelay -= Time.fixedDeltaTime;
+            mudarDireçãoDelay -= Time.deltaTime;
             if (mudarDireçãoDelay < 0)
             {
                 animator.SetTrigger("Stand");
                 mudarDireção = false;
                 mudarDireçãoDelay = 0.5f;
                 olhandoDireita = !olhandoDireita;
-                print("ACABOU a virada");
+                //print("ACABOU a virada");
             }
         }
         else
@@ -1057,7 +1059,7 @@ public class HedgehogMovement : MonoBehaviour
             //jogadorVelocidade /= fatorLentidão;
 
             //esse valor me parece arbitrário, melhor pesquisar
-            Time.fixedDeltaTime = Time.timeScale * 0.02f; 
+            //Time.fixedDeltaTime = Time.timeScale * 0.02f; 
         }
         else
         {
