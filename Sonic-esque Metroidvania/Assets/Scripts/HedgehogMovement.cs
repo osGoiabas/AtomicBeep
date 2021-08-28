@@ -17,6 +17,8 @@ public class GroundInfo
 
 public class HedgehogMovement : MonoBehaviour
 {
+    #region variáveis
+
     enum GroundMode
     {
         Floor,
@@ -24,9 +26,6 @@ public class HedgehogMovement : MonoBehaviour
         Ceiling,
         LeftWall,
     }
-
-    public Animator animator;
-
 
     //-----------------------------------------------------------------------------------------------------
     // GERAL
@@ -104,6 +103,7 @@ public class HedgehogMovement : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------
     // ANIMAÇÃO
     //-----------------------------------------------------------------------------------------------------
+    public Animator animator;
     int standHash;
     int speedHash;
     int caindoHash;
@@ -132,6 +132,8 @@ public class HedgehogMovement : MonoBehaviour
     private float doubleJumpDelay = 0;
     private float doubleJumpDelayTotal = 0.1f;
 
+    [SerializeField] public Animator asaAnimator;
+
     private float wallJumpDelay = 0;
     private float wallJumpDelayTotal = 0.5f;
 
@@ -141,6 +143,12 @@ public class HedgehogMovement : MonoBehaviour
     public GameObject luzGlobalBranca;
     public GameObject luzGlobalAzul;
 
+    private float coyoteTime = 1f;
+    private float coyoteTimeCounter;
+    #endregion
+
+
+    #region setup
     //Awake() is called immediately upon the start of the game,
     //independentemente do script estar ativado ou não.
 
@@ -148,7 +156,6 @@ public class HedgehogMovement : MonoBehaviour
     //e só será chamada essa única vez por toda a vida do script,
     //mesmo que ele seja desativado e reativado posteriormente.
     //Para essa última função, usar OnEnable()
-
 
     void Awake()
     {
@@ -170,11 +177,9 @@ public class HedgehogMovement : MonoBehaviour
         empurrandoHash = Animator.StringToHash("Empurrando");
         grudadoParedeHash = Animator.StringToHash("Grudado na Parede");
     }
+    #endregion
 
-    //-----------------------------------------------------------------------------------------------------
-    // DEBUG WINDOW
-    //-----------------------------------------------------------------------------------------------------
-
+    #region debugWindow
     private bool debug = true;
     void OnGUI()
     {
@@ -190,6 +195,7 @@ public class HedgehogMovement : MonoBehaviour
 
             //GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
 
+            GUILayout.Label("coyoteTimeCounter: " + coyoteTimeCounter);
             //GUILayout.Label("doubleJumpDelay: " + doubleJumpDelay);
 
             GUILayout.Label("grudadoParede: " + (grudadoParede ? "SIM" : "NÃO"));
@@ -214,15 +220,8 @@ public class HedgehogMovement : MonoBehaviour
             GUILayout.EndArea();
         }
     }
+    #endregion
 
-    //-----------------------------------------------------------------------------------------------------
-    // COISAS DO UPDATE
-    //-----------------------------------------------------------------------------------------------------
-
-    //FixedUpdate() is called before each internal physics update
-    //(moving things due to physics, e.g., gravity)
-    //Unity’s fixed timestep defaults to 0.02
-    //This leads to FixedUpdate being called 50 times per second
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
@@ -316,34 +315,11 @@ public class HedgehogMovement : MonoBehaviour
             // PULAR
             //-----------------------------------------------------------------------------------------------------
 
+            coyoteTimeCounter = coyoteTime;
+
             if (Input.GetButtonDown("Jump") && !abaixado && !lowCeiling)
             {
-                float jumpVel = jumpVelocity;
-                velocity.x -= jumpVel * (Mathf.Sin(currentGroundInfo.angle));
-                velocity.y += jumpVel * (Mathf.Cos(currentGroundInfo.angle));
-                grounded = false;
-                pulou = true;
-                doubleJumpReady = true;
-                doubleJumpDelay = doubleJumpDelayTotal;
-
-                if ((velocity.x > 0 && olhandoDireita) || (velocity.x < 0 && !olhandoDireita))
-                {
-                    animator.Play("robot_basic_jump");
-                }
-                else
-                {
-                    animator.Play("robot_backflip_TESTE");
-                    tempoPirueta = 0.75f;
-                    //#TODO variar tempoPirueta e velocidade da animação baseado na velocidade horizontal
-                }
-
-                /*
-                //LONG JUMP
-                if (Mathf.Abs(groundVelocity) >= fallVelocityThreshold) {
-                    if (input.x > 0 && olhandoDireita) { velocity.x += 150; print("LONGJUMP direita!"); }
-                    else if (input.x < 0 && !olhandoDireita) { velocity.x -= 150; print("LONGJUMP esquerda!"); }
-                }*/
-
+                Pule();
             }
             else
             {
@@ -459,6 +435,15 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         else
         {
+            if (coyoteTimeCounter > 0)
+            {
+                coyoteTimeCounter -= Time.deltaTime;
+            }
+
+            if (coyoteTimeCounter > 0 && Input.GetButtonDown("Jump") && !lowCeiling) {
+                Pule();
+            }
+
             //-----------------------------------------------------------------------------------------------------
             // ALTURA DE PULO VARIÁVEL
             //-----------------------------------------------------------------------------------------------------
@@ -502,6 +487,7 @@ public class HedgehogMovement : MonoBehaviour
 
                 CreateDust();
                 animator.Play("robot_basic_jump");
+                asaAnimator.Play("robot_asa");
             }
 
             //-----------------------------------------------------------------------------------------------------
@@ -735,9 +721,10 @@ public class HedgehogMovement : MonoBehaviour
         {
             StickToGround(currentGroundInfo);
 
+            asaAnimator.Play("robot_asa_capa");
+
             // ANIMAÇÃO
             animator.SetFloat(speedHash, Mathf.Abs(groundVelocity));
-            
 
             // A CABEÇA DO SPRITE ESTÁ DENTRO DO TETO?
             lowCeiling = ceil.valid && transform.position.y > ceil.point.y - 25f;
@@ -762,7 +749,9 @@ public class HedgehogMovement : MonoBehaviour
 
 
         if (grounded && !mudarDireção && !spinReady && velocity.x == 0)
-        { animator.SetTrigger("Stand"); }
+        { 
+            animator.SetTrigger("Stand");
+        }
 
         animator.SetBool(caindoHash, caindo);
         animator.SetBool(groundedHash, grounded);
@@ -860,6 +849,38 @@ public class HedgehogMovement : MonoBehaviour
     //bool freandoVirar = false;
     float freandoLimiteVirar = 100;
     public AudioSource somFreando;
+
+
+
+
+    void Pule() {
+        coyoteTimeCounter = 0;
+        float jumpVel = jumpVelocity;
+        velocity.x -= jumpVel * (Mathf.Sin(currentGroundInfo.angle));
+        velocity.y = jumpVel * (Mathf.Cos(currentGroundInfo.angle));
+        grounded = false;
+        pulou = true;
+        doubleJumpReady = true;
+        doubleJumpDelay = doubleJumpDelayTotal;
+
+        if ((velocity.x > 0 && olhandoDireita) || (velocity.x < 0 && !olhandoDireita))
+        {
+            animator.Play("robot_basic_jump");
+        }
+        else
+        {
+            animator.Play("robot_backflip_TESTE");
+            tempoPirueta = 0.75f;
+            //#TODO variar tempoPirueta e velocidade da animação baseado na velocidade horizontal
+        }
+
+        /*
+        //LONG JUMP
+        if (Mathf.Abs(groundVelocity) >= fallVelocityThreshold) {
+            if (input.x > 0 && olhandoDireita) { velocity.x += 150; print("LONGJUMP direita!"); }
+            else if (input.x < 0 && !olhandoDireita) { velocity.x -= 150; print("LONGJUMP esquerda!"); }
+        }*/
+    }
 
 
 
