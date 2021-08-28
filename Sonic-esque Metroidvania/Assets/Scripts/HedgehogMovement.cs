@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.LWRP;
 
-
-
 public class GroundInfo
 {
     public float height;
@@ -39,17 +37,11 @@ public class HedgehogMovement : MonoBehaviour
 
     public bool empurrando { get; private set; }
     public bool grudadoParede { get; private set; }
+    public bool estáLedgeGrabbing;
 
 
     float standingHeight = 40f;
-    private float heightHalf
-    {
-        get
-        {
-            return standingHeight / 2f; //}
-        }
-    }
-
+    private float heightHalf { get { return standingHeight / 2f; }}
     private float standWidthHalf = 10f;
 
     private Vector2 velocity;
@@ -61,6 +53,9 @@ public class HedgehogMovement : MonoBehaviour
 
     RaycastHit2D leftHit;
     RaycastHit2D rightHit;
+
+    RaycastHit2D ledgeLeft;
+    RaycastHit2D ledgeRight;
 
     //-----------------------------------------------------------------------------------------------------
     // GROUND MOVEMENT
@@ -78,6 +73,8 @@ public class HedgehogMovement : MonoBehaviour
 
     private float peleGrossura = 0.01f;
     private float slopeFactor = 450f;
+
+    private float ledgeHeightOffset = 10f;
     private float sideRaycastOffset = -4f;
     private float sideRaycastDist = 10f;
     private float groundRaycastDist = 24f;
@@ -89,7 +86,6 @@ public class HedgehogMovement : MonoBehaviour
     GroundInfo currentGroundInfo;
     GroundMode groundMode = GroundMode.Floor;
 
-
     //-----------------------------------------------------------------------------------------------------
     // AIR MOVEMENT
     //-----------------------------------------------------------------------------------------------------   
@@ -98,22 +94,19 @@ public class HedgehogMovement : MonoBehaviour
     private float jumpReleaseThreshold = 240f;
     private float gravity = -790f;
     private float terminalVelocity = 960f;
-    //private float airDrag = 1f;
+    //private float airDrag = 1f; //celeste tem muito airDrag, pesquisar
 
     //-----------------------------------------------------------------------------------------------------
     // ANIMAÇÃO
     //-----------------------------------------------------------------------------------------------------
-    public Animator animator;
-    int standHash;
+    [SerializeField] public Animator animator;
     int speedHash;
+    int standHash;
     int caindoHash;
-
     int groundedHash;
 
     int freandoHash;
-
     int empurrandoHash;
-    int grudadoParedeHash;
 
     //-----------------------------------------------------------------------------------------------------
     // OUTROS
@@ -131,11 +124,17 @@ public class HedgehogMovement : MonoBehaviour
     private bool doubleJumpReady = false;
     private float doubleJumpDelay = 0;
     private float doubleJumpDelayTotal = 0.1f;
-
     [SerializeField] public Animator asaAnimator;
 
-    private float wallJumpDelay = 0;
+    private float wallJumpDelay;
     private float wallJumpDelayTotal = 0.5f;
+    private float wallSlideSpeed = 100f;
+
+    Vector2 posLedge1;
+    Vector2 posLedge2;
+    float ledgeClimbTimer;
+    float ledgeClimbTimerTotal = 0.5f;
+    bool estáLedgeClimbing = false;
 
     private float fatorLentidão = 0.2f;
     private bool estáEmBulletTime = false;
@@ -143,10 +142,18 @@ public class HedgehogMovement : MonoBehaviour
     public GameObject luzGlobalBranca;
     public GameObject luzGlobalAzul;
 
-    private float coyoteTime = 1f;
+    private float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
-    #endregion
 
+    private float jumpBuffer = 0.1f;
+    private float jumpBufferCounter;
+
+    [Header("Habilidades")]
+    [SerializeField] private bool pegouSpinDash = false;
+    [SerializeField] private bool pegouWallJump = false;
+    [SerializeField] private bool pegouDoubleJump = false;
+    [SerializeField] private bool pegouBulletTime = false;
+    #endregion
 
     #region setup
     //Awake() is called immediately upon the start of the game,
@@ -175,7 +182,6 @@ public class HedgehogMovement : MonoBehaviour
         freandoHash = Animator.StringToHash("Freando");
 
         empurrandoHash = Animator.StringToHash("Empurrando");
-        grudadoParedeHash = Animator.StringToHash("Grudado na Parede");
     }
     #endregion
 
@@ -185,32 +191,35 @@ public class HedgehogMovement : MonoBehaviour
     {
         if (debug)
         {
-            GUILayout.BeginArea(new Rect(10, 10, 220, 240), "Stats", "Window");
+            GUILayout.BeginArea(new Rect(10, 10, 220, 300), "Stats", "Window");
 
             //GUILayout.Label("hControlLockTime: " + hControlLockTime);
             //GUILayout.Label("hControlLock: " + (hControlLock ? "SIM" : "NÃO"));
 
+            GUILayout.Label("mudarDireção: " + (mudarDireção ? "SIM" : "NÃO"));
             GUILayout.Label("mudarDireçãoDelay: " + mudarDireçãoDelay);
-            //GUILayout.Label("tempoPirueta: " + tempoPirueta);
 
             //GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
-
-            GUILayout.Label("coyoteTimeCounter: " + coyoteTimeCounter);
             //GUILayout.Label("doubleJumpDelay: " + doubleJumpDelay);
+            //GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
 
             GUILayout.Label("grudadoParede: " + (grudadoParede ? "SIM" : "NÃO"));
-            GUILayout.Label("collider?: " + (leftHit.collider != null || rightHit.collider != null));
+            GUILayout.Label("collider?: " + ((leftHit.collider != null || rightHit.collider != null) ? "SIM" : "NÃO"));
             GUILayout.Label("wallJumpDelay: " + wallJumpDelay);
             GUILayout.Label("charAngle: " + characterAngle);
-
-            //GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
 
             GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
             //GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
             GUILayout.Label("Olhando para: " + (olhandoDireita ? "DIREITA" : "ESQUERDA"));
-            GUILayout.Label("Pulou: " + (pulou ? "SIM" : "NÃO"));
             GUILayout.Label("Caindo: " + (caindo ? "SIM" : "NÃO"));
+
+            GUILayout.Label("Pulou: " + (pulou ? "SIM" : "NÃO"));
+            //GUILayout.Label("tempoPirueta: " + tempoPirueta);
+            //GUILayout.Label("coyoteTimeCounter: " + coyoteTimeCounter);
+            //GUILayout.Label("jumpBufferCounter: " + jumpBufferCounter);
+
             // GUILayout.Label("Empurrando: " + (empurrando ? "SIM" : "NÃO"));
+
             GUILayout.Label("Ground Mode: " + (groundMode));
             if (currentGroundInfo != null && currentGroundInfo.valid && grounded)
             {
@@ -225,8 +234,7 @@ public class HedgehogMovement : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
-        if (Input.GetKeyDown(KeyCode.E)) { BulletTime(); }
-
+        if (Input.GetKeyDown(KeyCode.E) && pegouBulletTime) { BulletTime(); }
 
         //INPUT
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
@@ -244,9 +252,11 @@ public class HedgehogMovement : MonoBehaviour
             //-----------------------------------------------------------------------------------------------------
             // SPINDASH
             //-----------------------------------------------------------------------------------------------------
+            #region spinDash
             //tá parado, grounded, abaixado e apertou pulo?
             //comece a carregar o spindash
-            if (groundVelocity == 0 && abaixado && !mudarDireção 
+            if (pegouSpinDash &&
+                groundVelocity == 0 && abaixado && !mudarDireção 
                 && Input.GetButton("Jump") 
                 && groundMode == GroundMode.Floor
                 && leftHit.collider == null 
@@ -272,21 +282,23 @@ public class HedgehogMovement : MonoBehaviour
                 }
                 spinReady = false;
             }
+            #endregion
 
             //-----------------------------------------------------------------------------------------------------
             // RAMPAS
             //-----------------------------------------------------------------------------------------------------
+            #region rampas
             // ADICIONA AO groundVelocity O FATOR DE RAMPA APROPRIADO, AJUSTADO PELO TEMPO QUE PASSOU
             /* slow down when going uphill and speed up when going downhill.
             Fortunately, this is simple to achieve - with something called the Slope Factor. 
             Just subtract Slope Factor*sin(Ground Angle) from Ground Speed at the beginning of every step.
             */
             groundVelocity += slopeFactor * -Mathf.Sin(currentGroundInfo.angle) * Time.deltaTime;
+            #endregion
 
             //-----------------------------------------------------------------------------------------------------
             // ABAIXAR
             //-----------------------------------------------------------------------------------------------------
-
             if (input.y < 0) { abaixado = true; }
             else { abaixado = false; }
 
@@ -316,8 +328,12 @@ public class HedgehogMovement : MonoBehaviour
             //-----------------------------------------------------------------------------------------------------
 
             coyoteTimeCounter = coyoteTime;
+            //jumpBufferCounter = 0;
 
-            if (Input.GetButtonDown("Jump") && !abaixado && !lowCeiling)
+            if (jumpBufferCounter > 0) {
+                Pule();
+            } 
+            else if (Input.GetButtonDown("Jump") && !abaixado && !lowCeiling)
             {
                 Pule();
             }
@@ -375,7 +391,6 @@ public class HedgehogMovement : MonoBehaviour
                     if (input.x < 0f)
                     {
                         float acceleration = 0f;
-                        //if (rolling && groundVelocity > 0f) { acceleration = rollingDeceleration; } else
                         if (!abaixado && groundVelocity > 0f) { acceleration = decel; } // FREAR
                         else
                         if (!abaixado && groundVelocity <= 0f) { acceleration = accel; } // ACELERAR
@@ -436,13 +451,20 @@ public class HedgehogMovement : MonoBehaviour
         else
         {
             if (coyoteTimeCounter > 0)
-            {
                 coyoteTimeCounter -= Time.deltaTime;
-            }
+            else 
+                coyoteTimeCounter = 0;
 
-            if (coyoteTimeCounter > 0 && Input.GetButtonDown("Jump") && !lowCeiling) {
+            if (Input.GetButtonDown("Jump"))
+                jumpBufferCounter = jumpBuffer;
+
+            if (jumpBufferCounter > 0)
+                jumpBufferCounter -= Time.deltaTime;
+            else
+                jumpBufferCounter = 0;
+
+            if (coyoteTimeCounter > 0 && Input.GetButtonDown("Jump") && !lowCeiling) 
                 Pule();
-            }
 
             //-----------------------------------------------------------------------------------------------------
             // ALTURA DE PULO VARIÁVEL
@@ -472,12 +494,21 @@ public class HedgehogMovement : MonoBehaviour
                 //-----------------------------------------------------------------------------------------------------
                 // GRAVIDADE E VELOCIDADE TERMINAL
                 //-----------------------------------------------------------------------------------------------------
-                if (!grudadoParede) {
+                if (!grudadoParede && !estáLedgeGrabbing) {
                     velocity.y = Mathf.Max(velocity.y + (gravity * Time.deltaTime), -terminalVelocity);
                 }
             }
 
-            if (doubleJumpReady && doubleJumpDelay <= 0 && Input.GetButtonDown("Jump") && !lowCeiling && !grudadoParede)
+            //-----------------------------------------------------------------------------------------------------
+            // DOUBLE JUMP
+            //-----------------------------------------------------------------------------------------------------
+            #region doubleJump
+            if (pegouDoubleJump
+                && doubleJumpReady
+                && doubleJumpDelay <= 0
+                && Input.GetButtonDown("Jump")
+                && !lowCeiling
+                && !grudadoParede)
             {
                 float jumpVel = jumpVelocity;
                 velocity.y = jumpVel;
@@ -489,6 +520,7 @@ public class HedgehogMovement : MonoBehaviour
                 animator.Play("robot_basic_jump");
                 asaAnimator.Play("robot_asa");
             }
+            #endregion
 
             //-----------------------------------------------------------------------------------------------------
             // ACELERAR NO AR
@@ -510,19 +542,39 @@ public class HedgehogMovement : MonoBehaviour
         velocity.y = Mathf.Clamp(velocity.y, -speedLimit, speedLimit);
 
         //-----------------------------------------------------------------------------------------------------
-        // MOVA-SE, DE FATO.
+        // MOVA-SE. Digo, mude a posição agora, antes de calcular as colisões
         //-----------------------------------------------------------------------------------------------------
         transform.position += new Vector3(velocity.x, velocity.y, 0f) * Time.deltaTime;
 
         //-----------------------------------------------------------------------------------------------------
         // PAREDES
         //-----------------------------------------------------------------------------------------------------
+        #region paredes
+        WallCheck(sideRaycastDist, grounded ? sideRaycastOffset : -5f, out leftHit, out rightHit);
+        LedgeCheck(sideRaycastDist + 10, ledgeHeightOffset, out ledgeLeft, out ledgeRight);
 
-        //-----------------------------------------------------------------------------------------------------
-        // COLISÃO NA DIREITA E NA ESQUERDA
-        //-----------------------------------------------------------------------------------------------------
 
-        WallCheck(sideRaycastDist, grounded ? sideRaycastOffset : 0f, out leftHit, out rightHit);
+        //IMPLEMENTAR ISSO AQUI DE ALGUM JEITO NAS PAREDES
+        /*
+        
+        float standingHeight = 40f;
+        private float heightHalf { get { return standingHeight / 2f; }}
+        private float standWidthHalf = 10f;
+        
+        private float sideRaycastDist = 10f;
+        private float groundRaycastDist = 24f;
+
+        DA FUNÇÃO GETGROUNDINFO
+        info.height = hit.point.y;
+
+        GroundInfo info = GroundedCheck(groundRaycastDist, GroundMode.Floor, out groundedLeft, out groundedRight);
+        grounded = (groundedLeft || groundedRight)
+                   && velocity.y <= 0f
+                   && transform.position.y <= (info.height + heightHalf);
+
+        tocandoParedeDireita = transform.position.x >= (hit.point.x - larguraHalf);
+
+        */
 
         if (leftHit.collider != null && rightHit.collider != null)
         {
@@ -530,9 +582,6 @@ public class HedgehogMovement : MonoBehaviour
         }
         else if (leftHit.collider != null)
         {
-            //print("BATEU NA ESQUERDA: " + groundMode);
-            //traveControleH();
-
             transform.position = new Vector2(leftHit.point.x + sideRaycastDist, transform.position.y);
             if (velocity.x < 0f)
             {
@@ -545,13 +594,6 @@ public class HedgehogMovement : MonoBehaviour
         }
         else if (rightHit.collider != null)
         {
-            //traveControleH();
-            //print("BATEU NA DIREITA: " + groundMode);
-
-            //if (velocity.x > rightHit.distance - 10f) { velocity.x = rightHit.distance - 10f; }
-            //velocity.x = rightHit.distance - sideRaycastDist;
-            //sideRaycastDist = rightHit.distance;
-
             transform.position = new Vector2(rightHit.point.x - sideRaycastDist, transform.position.y);
             if (velocity.x > 0f)
             {
@@ -565,27 +607,117 @@ public class HedgehogMovement : MonoBehaviour
         else
         {
             empurrando = false;
-            //hControlLock = false;
         }
+        #endregion
+
 
         //-----------------------------------------------------------------------------------------------------
-        // WALLJUMP: GRUDAR NA PAREDE 
+        // LEDGE GRAB e CLIMB
         //-----------------------------------------------------------------------------------------------------
-        if ((leftHit.collider != null || rightHit.collider != null)
-             && !grounded
-             && groundMode == GroundMode.Floor
-             && ((characterAngle >= 0 && characterAngle <= 5)
-             || (characterAngle >= 355 && characterAngle <= 360) 
-             || (characterAngle >= 175 && characterAngle <= 185)))
+        #region ledge
+        if (!grounded && 
+            rightHit.collider != null && ledgeRight.collider == null)
+        {
+            olhandoDireita = true;
+            estáLedgeGrabbing = true;
+        } 
+        else if (!grounded &&
+            leftHit.collider != null && ledgeLeft.collider == null)
+        {
+            olhandoDireita = false;
+            estáLedgeGrabbing = true;
+        }
+        else 
+        {
+            estáLedgeGrabbing = false;
+        }
+
+        if (estáLedgeGrabbing && !estáLedgeClimbing) 
+        {
+            if (!grounded &&
+                rightHit.collider != null && ledgeRight.collider == null) 
+            {
+                velocity.y = 0;
+                posLedge1.y = rightHit.point.y - 1 + (16 - rightHit.point.y % 16);
+                transform.position = new Vector2(transform.position.x, posLedge1.y);
+
+                if (Input.GetButtonDown("Jump"))
+                {
+                    estáLedgeClimbing = true;
+                    ledgeClimbTimer = ledgeClimbTimerTotal;
+                    animator.Play("robot_ledge_climb");
+                }
+                else 
+                {
+                    animator.Play("robot_ledge_grab");
+                }
+            }
+            else if (!grounded &&
+                     leftHit.collider != null && ledgeLeft.collider == null)
+            {
+                velocity.y = 0;
+                posLedge1.y = leftHit.point.y - 1 + (16 - leftHit.point.y % 16);
+                transform.position = new Vector2(transform.position.x, posLedge1.y);
+
+                if (Input.GetButtonDown("Jump"))
+                {
+                    estáLedgeClimbing = true;
+                    ledgeClimbTimer = ledgeClimbTimerTotal;
+                    animator.Play("robot_ledge_climb");
+                }
+                else
+                {
+                    animator.Play("robot_ledge_grab");
+                }
+            }
+
+        }
+
+        if (estáLedgeClimbing)
+        {
+            ledgeClimbTimer -= Time.deltaTime;
+            if (ledgeClimbTimer < 0)
+            {
+                if (rightHit.collider != null && ledgeRight.collider == null)
+                {
+                    posLedge2 = new Vector2(transform.position.x + 22, posLedge1.y + 18);
+                    transform.position = new Vector2(posLedge2.x, posLedge2.y);
+                    estáLedgeClimbing = false;
+                }
+                if (leftHit.collider != null && ledgeLeft.collider == null)
+                {
+                    //ESQUERDA
+                    posLedge2 = new Vector2(transform.position.x - 22, posLedge1.y + 18);
+                    transform.position = posLedge2;
+                    estáLedgeClimbing = false;
+                }
+            }
+        }
+        #endregion 
+
+        //-----------------------------------------------------------------------------------------------------
+        // WALLJUMP e WALLSLIDE: GRUDAR NA PAREDE 
+        //-----------------------------------------------------------------------------------------------------
+        #region wallJump
+        if (pegouWallJump
+            && (leftHit.collider != null || rightHit.collider != null)
+            && !estáLedgeGrabbing
+            && !grounded
+            && groundMode == GroundMode.Floor
+            && ((characterAngle >= 0 && characterAngle <= 5)
+            || (characterAngle >= 355 && characterAngle <= 360) 
+            || (characterAngle >= 175 && characterAngle <= 185)))
         {
             //print("walljumping!");
             //ele tá fazendo flickering entre true e false
             grudadoParede = true;
             animator.Play("robot_wallgrab");
             velocity.y = 0;
+            print("wallgrab!");
             doubleJumpReady = true;
             if (leftHit.collider != null) { olhandoDireita = true; }
             else if (rightHit.collider != null) { olhandoDireita = false; }
+            //#TODO fazer jumpBuffer pro wallJump também, a la Celeste
         }
         else 
         {
@@ -600,12 +732,13 @@ public class HedgehogMovement : MonoBehaviour
         {
             if (wallJumpDelay > 0 && !Input.GetButtonDown("Jump"))
             {
-                wallJumpDelay -= Time.deltaTime;
+                //wallJumpDelay -= Time.deltaTime;
+                transform.position = new Vector2(transform.position.x, transform.position.y - wallSlideSpeed * Time.deltaTime);
             }
-            else if (wallJumpDelay <= 0)
+            else if (wallJumpDelay < 0)
             {
                 if (leftHit.collider != null) { velocity.x += 100; }
-                else if (rightHit.collider != null) { velocity.x -= 100; }
+                else if (rightHit.collider != null) { velocity.x -= 100; print("walljump"); }
                 wallJumpDelay = wallJumpDelayTotal;
             }
             else if (Input.GetButtonDown("Jump")) {
@@ -617,10 +750,12 @@ public class HedgehogMovement : MonoBehaviour
         }
         //#TODO de fato pular da parede
         //#TODO deslizar pra cima na parede quando pula do chão grudadinho nela
+        #endregion
 
         //-----------------------------------------------------------------------------------------------------
         // COLISÃO EM CIMA E EM BAIXO
         //-----------------------------------------------------------------------------------------------------
+        #region cima e baixo
         bool groundedLeft = false;
         bool groundedRight = false;
 
@@ -634,6 +769,7 @@ public class HedgehogMovement : MonoBehaviour
 
         if (grounded) // ESTÁ NO CHÃO?
         {
+            //não sei bem pra que serve essa parte aqui, mas ela corta um frame do delay grouded. Falta cortar mais um.
             currentGroundInfo = GroundedCheck(groundRaycastDist, groundMode, out groundedLeft, out groundedRight);
             grounded = groundedLeft || groundedRight;
             if (!grounded) { return; }
@@ -669,8 +805,8 @@ public class HedgehogMovement : MonoBehaviour
 
                 GroundInfo info = GroundedCheck(groundRaycastDist, GroundMode.Floor, out groundedLeft, out groundedRight);
                 grounded = (groundedLeft || groundedRight)
-                                && velocity.y <= 0f
-                                && transform.position.y <= (info.height + heightHalf);
+                           && velocity.y <= 0f
+                           && transform.position.y <= (info.height + heightHalf);
 
                 // SE SIM, TRANSFORMA A VELOCIDADE NO AR EM VELOCIDADE NO CHÃO 
                 if (grounded)
@@ -679,8 +815,6 @@ public class HedgehogMovement : MonoBehaviour
                     //if (jumped) { transform.position += new Vector3(0f, 5f); }
 
                     pulou = false;
-                    //rolling = false;
-
                     currentGroundInfo = info;
                     groundMode = GroundMode.Floor;
                     float angleDeg = currentGroundInfo.angle * Mathf.Rad2Deg;
@@ -729,7 +863,7 @@ public class HedgehogMovement : MonoBehaviour
             // A CABEÇA DO SPRITE ESTÁ DENTRO DO TETO?
             lowCeiling = ceil.valid && transform.position.y > ceil.point.y - 25f;
         }
-
+        #endregion
 
         //-----------------------------------------------------------------------------------------------------
         // ANIMAÇÕES
@@ -758,7 +892,6 @@ public class HedgehogMovement : MonoBehaviour
         //animator.SetBool(freandoHash, freando);
         //animator.SetBool(abaixadoHash, abaixado);
         //animator.SetBool(empurrandoHash, empurrando);
-        //animator.SetBool(grudadoParedeHash, grudadoParede);
 
         //-----------------------------------------------------------------------------------------------------
         // ROTAÇÃO
@@ -769,9 +902,9 @@ public class HedgehogMovement : MonoBehaviour
         else { transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, 5 * Time.deltaTime); }
 
         //-----------------------------------------------------------------------------------------------------
-        // DIREÇÃO
+        // DIREÇÃO E MUDARDIREÇÃO, VIRAR, TURN
         //-----------------------------------------------------------------------------------------------------
-
+        #region direção
         if (Mathf.Abs(input.x) > 0.05f && grounded && !freando && !spinReady)
         {
             // indo prum lado mas olhando pro outro
@@ -780,11 +913,11 @@ public class HedgehogMovement : MonoBehaviour
                 mudarDireção = true;
                 animator.Play("robot_turn");
             }
-            // se tiver apertado certo
-            else
+            else 
             {
                 mudarDireção = false;
             }
+
         }
 
         if (mudarDireção && grounded)
@@ -806,10 +939,12 @@ public class HedgehogMovement : MonoBehaviour
         }
 
         transform.localScale = new Vector3(olhandoDireita ? 1 : -1, 1, 1);
+        #endregion
 
         //-----------------------------------------------------------------------------------------------------
         // FREANDO
         //-----------------------------------------------------------------------------------------------------
+        #region frear
         //nos jogos clássicos frear é meramente visual, a desaceleração é igual sempre        
         /*
         if (grounded)
@@ -839,27 +974,31 @@ public class HedgehogMovement : MonoBehaviour
             }
         }
         */
+        #endregion
 
         //linha que mostra a velocidade do boneco
         Debug.DrawLine(transform.position, new Vector3(transform.position.x + velocity.x / 5,
                                                        transform.position.y + velocity.y / 5, 0), Color.red);
     }
 
+    [Header ("Frear")]
+    [SerializeField] AudioSource somFreando;
     bool freando = false;
     //bool freandoVirar = false;
-    float freandoLimiteVirar = 100;
-    public AudioSource somFreando;
+    //float freandoLimiteVirar = 100;
 
 
 
-
+    #region pule
     void Pule() {
         coyoteTimeCounter = 0;
+        jumpBufferCounter = 0;
         float jumpVel = jumpVelocity;
         velocity.x -= jumpVel * (Mathf.Sin(currentGroundInfo.angle));
         velocity.y = jumpVel * (Mathf.Cos(currentGroundInfo.angle));
         grounded = false;
         pulou = true;
+        
         doubleJumpReady = true;
         doubleJumpDelay = doubleJumpDelayTotal;
 
@@ -881,11 +1020,9 @@ public class HedgehogMovement : MonoBehaviour
             else if (input.x < 0 && !olhandoDireita) { velocity.x -= 150; print("LONGJUMP esquerda!"); }
         }*/
     }
+    #endregion
 
-
-
-    public LayerMask máscaraColisão;
-
+    [SerializeField] public LayerMask máscaraColisão;
     void WallCheck(float distance, float heightOffset, out RaycastHit2D hitLeft, out RaycastHit2D hitRight)
     {
         Vector2 pos = new Vector2(transform.position.x, transform.position.y + heightOffset);
@@ -897,18 +1034,22 @@ public class HedgehogMovement : MonoBehaviour
         Debug.DrawLine(pos, pos + (Vector2.right * distance), Color.green);
     }
 
+    void LedgeCheck(float ledgeDistance, float ledgeHeightOffset, out RaycastHit2D ledgeLeft, out RaycastHit2D ledgeRight) 
+    {
+        Vector2 pos = new Vector2(transform.position.x, transform.position.y + ledgeHeightOffset);
+
+        ledgeLeft = Physics2D.Raycast(pos, Vector2.left, ledgeDistance, máscaraColisão);
+        ledgeRight = Physics2D.Raycast(pos, Vector2.right, ledgeDistance, máscaraColisão);
+
+        Debug.DrawLine(pos, pos + (Vector2.left * ledgeDistance), Color.blue);
+        Debug.DrawLine(pos, pos + (Vector2.right * ledgeDistance), Color.blue);
+    }
+
     //-----------------------------------------------------------------------------------------------------
     // TETO E PISO
     //-----------------------------------------------------------------------------------------------------
-
-    private Vector2 leftRaycastPos { get { //if (rolling || jumped) { return spinLeftRPos; } else { 
-            return standLeftRPos; //} 
-        }
-    }
-    private Vector2 rightRaycastPos { get { //if (rolling || jumped) { return spinRightRPos; } else { 
-            return standRightRPos; //}
-        }
-    }
+    private Vector2 leftRaycastPos { get { return standLeftRPos; }}
+    private Vector2 rightRaycastPos { get { return standRightRPos; }}
 
     GroundInfo GroundedCheck(float distance, GroundMode groundMode, out bool groundedLeft, out bool groundedRight)
     {
@@ -956,7 +1097,8 @@ public class HedgehogMovement : MonoBehaviour
                     break;
             }
 
-            if (leftCompare >= rightCompare) { found = GetGroundInfo(leftHit); } // checa o lado com valor mais "alto", a depender do ângulo
+            // checa o lado com valor mais "alto", a depender do ângulo
+            if (leftCompare >= rightCompare) { found = GetGroundInfo(leftHit); }
             else { found = GetGroundInfo(rightHit); }
         }
         else if (groundedLeft) {
@@ -1034,10 +1176,10 @@ public class HedgehogMovement : MonoBehaviour
         transform.position = pos;
     }
 
-
     //-----------------------------------------------------------------------------------------------------
     // CONTROL LOCK
     //-----------------------------------------------------------------------------------------------------
+    #region controlLock
     /*
      Falling and Slipping Down Slopes
     At this point, slope movement will work rather well, 
@@ -1059,7 +1201,7 @@ public class HedgehogMovement : MonoBehaviour
         hControlLockTime = 0.5f;
         //groundVelocity = 0;
     }
-
+    #endregion
 
     //-----------------------------------------------------------------------------------------------------
     // BULLET TIME
@@ -1100,7 +1242,6 @@ public class HedgehogMovement : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------
     // PÓ E PARTÍCULAS
     //-----------------------------------------------------------------------------------------------------
-
     void CreateDust() {
         dust.Play();
     }
@@ -1108,7 +1249,6 @@ public class HedgehogMovement : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------
     // MATEMÁTICA
     //-----------------------------------------------------------------------------------------------------
-
     /// <summary>
     /// Converte um Vector2 em um ângulo de 0-360° (anti-horário) com um vetor zerado apontando pra cima.
     /// </summary>

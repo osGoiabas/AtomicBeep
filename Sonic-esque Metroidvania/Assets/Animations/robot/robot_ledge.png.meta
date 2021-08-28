@@ -1,31 +1,31 @@
 fileFormatVersion: 2
-guid: 35d3e4e70aa65e24387ef92bfde526ec
+guid: 7cd83deb7e5629e41a594d5a53c767d8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -9114936496924866847
-    second: knuckles_run_0
+      213: 2820255440989470697
+    second: robot_ledge_0
   - first:
-      213: -5661941043540249716
-    second: knuckles_run_1
+      213: -3643586578909528104
+    second: robot_ledge_1
   - first:
-      213: 9221950753608869713
-    second: knuckles_run_2
+      213: 3651979326336885243
+    second: robot_ledge_2
   - first:
-      213: -1696047898084441128
-    second: knuckles_run_3
+      213: 1621282768819830490
+    second: robot_ledge_3
   - first:
-      213: 4289064266666348138
-    second: knuckles_run_4
+      213: -8417569956096431711
+    second: robot_ledge_4
   - first:
-      213: -8069076518513387332
-    second: knuckles_run_5
+      213: -4731933198122571097
+    second: robot_ledge_5
   - first:
-      213: -8096277698328716109
-    second: knuckles_run_6
+      213: -6910573996004275513
+    second: robot_ledge_6
   - first:
-      213: 2477309155897790882
-    second: knuckles_run_7
+      213: 1589976010622286976
+    second: robot_ledge_7
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -84,7 +84,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 8192
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -96,7 +96,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 8192
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: knuckles_run_0
+      name: robot_ledge_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 48
-        height: 48
+        width: 96
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,41 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cc946c71b11f7c140a31ffdcb6684121
-      internalID: -9114936496924866847
+      spriteID: 8698c4f3dfd77404e8c15b07c29f1fb0
+      internalID: 2820255440989470697
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: knuckles_run_1
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 0
-        width: 48
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 98e3335920d35d142851da59b1b0e6fd
-      internalID: -5661941043540249716
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: knuckles_run_2
+      name: robot_ledge_1
       rect:
         serializedVersion: 2
         x: 96
         y: 0
-        width: 48
-        height: 48
+        width: 96
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -166,41 +145,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 186d756edd4a6b04fbf0618608a614a4
-      internalID: 9221950753608869713
+      spriteID: df404f8ae7b12224a8e8bbe6de6e9513
+      internalID: -3643586578909528104
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: knuckles_run_3
-      rect:
-        serializedVersion: 2
-        x: 144
-        y: 0
-        width: 48
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 966161e75fb82b64994af0fd47702e35
-      internalID: -1696047898084441128
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: knuckles_run_4
+      name: robot_ledge_2
       rect:
         serializedVersion: 2
         x: 192
         y: 0
-        width: 48
-        height: 48
+        width: 96
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -208,41 +166,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 758642a5e8847fc4fa7677389985bbbb
-      internalID: 4289064266666348138
+      spriteID: 2afff6f16687435439ee97d70ca5d99d
+      internalID: 3651979326336885243
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: knuckles_run_5
-      rect:
-        serializedVersion: 2
-        x: 240
-        y: 0
-        width: 48
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: cbd17da2e0a5e7346a13b40c0a2d5889
-      internalID: -8069076518513387332
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: knuckles_run_6
+      name: robot_ledge_3
       rect:
         serializedVersion: 2
         x: 288
         y: 0
-        width: 48
-        height: 48
+        width: 96
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -250,20 +187,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef98cb7d4c65a5948807736c5f757bb2
-      internalID: -8096277698328716109
+      spriteID: 4540dea973ee6df48bde5b46c0f7eaa7
+      internalID: 1621282768819830490
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: knuckles_run_7
+      name: robot_ledge_4
       rect:
         serializedVersion: 2
-        x: 336
+        x: 384
         y: 0
-        width: 48
-        height: 48
+        width: 96
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -271,8 +208,71 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6a8f00a164298ff4c9e9e0932b51665b
-      internalID: 2477309155897790882
+      spriteID: db35f47ff400f49409ee48f9258573ba
+      internalID: -8417569956096431711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: robot_ledge_5
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 0
+        width: 96
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7bd6d579b2af5f438cf02ed0daef9bb
+      internalID: -4731933198122571097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: robot_ledge_6
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 96
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cbcb8c6ca9344c04890b9196b87691ff
+      internalID: -6910573996004275513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: robot_ledge_7
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 0
+        width: 96
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20bf19339e7bc674f90a71965e672a35
+      internalID: 1589976010622286976
       vertices: []
       indices: 
       edges: []
