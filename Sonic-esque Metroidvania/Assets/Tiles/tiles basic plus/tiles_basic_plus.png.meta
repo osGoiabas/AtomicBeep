@@ -354,7 +354,7 @@ TextureImporter:
       213: -7621692831039686330
     second: tiles_basic_plus_116
   externalObjects: {}
-  serializedVersion: 10
+  serializedVersion: 11
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -374,6 +374,8 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -383,8 +385,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -393,7 +395,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 1
@@ -405,9 +407,13 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -3155,6 +3161,124 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      tiles_basic_plus_21: -265162747906889583
+      tiles_basic_plus_77: -2480125337435436493
+      tiles_basic_plus_94: -8936123339773938334
+      tiles_basic_plus_9: 4401529068730023889
+      tiles_basic_plus_58: -3751202034767517425
+      tiles_basic_plus_89: -4149813197536055388
+      tiles_basic_plus_68: -1772252006535112527
+      tiles_basic_plus_100: -1822595879309081692
+      tiles_basic_plus_103: 6730702030561224882
+      tiles_basic_plus_45: -8063761272573783953
+      tiles_basic_plus_50: 5624212244343757126
+      tiles_basic_plus_62: -6873014464322595220
+      tiles_basic_plus_17: 1500788451152034984
+      tiles_basic_plus_25: -4992264623828875320
+      tiles_basic_plus_15: 6233474518088774417
+      tiles_basic_plus_86: 5692966735767311562
+      tiles_basic_plus_2: 605641019703235590
+      tiles_basic_plus_33: -1982320588867642290
+      tiles_basic_plus_107: 4175858247142544001
+      tiles_basic_plus_82: -3852868585609649721
+      tiles_basic_plus_22: -8021893595995882234
+      tiles_basic_plus_37: 1117888241244857310
+      tiles_basic_plus_16: -1532867599853993508
+      tiles_basic_plus_55: -5808899964515897079
+      tiles_basic_plus_5: -8108237718618925017
+      tiles_basic_plus_38: 5827707068231628214
+      tiles_basic_plus_65: 7459043361705889710
+      tiles_basic_plus_98: 7820463462780283438
+      tiles_basic_plus_46: -7610355891311774995
+      tiles_basic_plus_85: -602418466689099477
+      tiles_basic_plus_115: 4756750773199262408
+      tiles_basic_plus_69: -6406610236526814152
+      tiles_basic_plus_28: -4102625532497223199
+      tiles_basic_plus_61: 4563254650944350553
+      tiles_basic_plus_97: 8744309218137199657
+      tiles_basic_plus_79: -2089620921580235714
+      tiles_basic_plus_101: -1001995381543148349
+      tiles_basic_plus_27: -6733666267512025331
+      tiles_basic_plus_90: -443062792799447186
+      tiles_basic_plus_43: 3422889011530352972
+      tiles_basic_plus_11: -4985410984181518833
+      tiles_basic_plus_39: -6095189803185524577
+      tiles_basic_plus_84: -4977639976849402692
+      tiles_basic_plus_4: -8601272129026756145
+      tiles_basic_plus_49: 1083620113872801397
+      tiles_basic_plus_102: -662200082527461676
+      tiles_basic_plus_93: 409831543481069901
+      tiles_basic_plus_104: 7294390247602403339
+      tiles_basic_plus_51: -7191480964382765388
+      tiles_basic_plus_19: 93647930558219745
+      tiles_basic_plus_57: -8749072488475794524
+      tiles_basic_plus_48: -7712336538962645627
+      tiles_basic_plus_0: 779165510019101360
+      tiles_basic_plus_44: 7497016414602680423
+      tiles_basic_plus_8: 9197495844641289266
+      tiles_basic_plus_80: -4460484784241581678
+      tiles_basic_plus_91: 5026296182197920384
+      tiles_basic_plus_76: 6307885444589511072
+      tiles_basic_plus_18: 2220107676340006315
+      tiles_basic_plus_109: -4973440594967722591
+      tiles_basic_plus_81: 5383482389788313990
+      tiles_basic_plus_113: 3737999895559524447
+      tiles_basic_plus_24: 6115490458927810082
+      tiles_basic_plus_73: -471670566257319160
+      tiles_basic_plus_30: -7295311380003243626
+      tiles_basic_plus_35: -2182404710238844252
+      tiles_basic_plus_10: -426967831848180938
+      tiles_basic_plus_67: -4059843645510867474
+      tiles_basic_plus_26: -7414870167484264606
+      tiles_basic_plus_29: 3738164901379664572
+      tiles_basic_plus_74: 6161435331934036473
+      tiles_basic_plus_72: -2119779987912526178
+      tiles_basic_plus_83: 6034754507751933803
+      tiles_basic_plus_7: 24920283942936287
+      tiles_basic_plus_87: -5223298044197610926
+      tiles_basic_plus_34: -2957659914426949606
+      tiles_basic_plus_56: -6127482635776166911
+      tiles_basic_plus_108: -2687699122806498043
+      tiles_basic_plus_12: 1271523892408338430
+      tiles_basic_plus_42: 6832845536965555698
+      tiles_basic_plus_75: -6978911453710073190
+      tiles_basic_plus_36: 2444171941149820264
+      tiles_basic_plus_111: 3894805419106784563
+      tiles_basic_plus_92: 1471259195553351765
+      tiles_basic_plus_1: 1653932179566503443
+      tiles_basic_plus_70: 3993223506902044808
+      tiles_basic_plus_63: -3698931117878242052
+      tiles_basic_plus_31: -2667601665593580595
+      tiles_basic_plus_105: 8819972872684410619
+      tiles_basic_plus_64: 5361823993369128615
+      tiles_basic_plus_99: -8620850406391848260
+      tiles_basic_plus_96: -8759270014313293091
+      tiles_basic_plus_60: -1179722650346449658
+      tiles_basic_plus_95: -8704429026489602971
+      tiles_basic_plus_112: -3017930800388415749
+      tiles_basic_plus_14: 4052688909001323467
+      tiles_basic_plus_52: -5589951184819344788
+      tiles_basic_plus_53: -3229197368080614027
+      tiles_basic_plus_59: -8914676889769528527
+      tiles_basic_plus_71: 3076995927666686278
+      tiles_basic_plus_32: 6415842152805463879
+      tiles_basic_plus_41: -7957391486478218469
+      tiles_basic_plus_110: 7679202830832620134
+      tiles_basic_plus_6: -904953829529736335
+      tiles_basic_plus_78: -7813021185487377182
+      tiles_basic_plus_54: -1088452732006034870
+      tiles_basic_plus_40: -5073634584521096636
+      tiles_basic_plus_47: 3433169741754317677
+      tiles_basic_plus_114: 1265865867182550602
+      tiles_basic_plus_20: 2276414870424388873
+      tiles_basic_plus_116: -7621692831039686330
+      tiles_basic_plus_3: -3874759707605730969
+      tiles_basic_plus_13: -6736203314454369802
+      tiles_basic_plus_88: -7187839030727939571
+      tiles_basic_plus_23: -548994864990831501
+      tiles_basic_plus_106: -7452147659851574153
+      tiles_basic_plus_66: 4731984852362892804
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

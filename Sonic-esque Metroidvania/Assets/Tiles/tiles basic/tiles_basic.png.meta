@@ -162,7 +162,7 @@ TextureImporter:
       213: -7082504346802313529
     second: tiles_basic_52
   externalObjects: {}
-  serializedVersion: 10
+  serializedVersion: 11
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -182,6 +182,8 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -191,8 +193,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -213,9 +215,13 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -1463,6 +1469,60 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      tiles_basic_25: 2877485067251213278
+      tiles_basic_2: -2489225986652239338
+      tiles_basic_9: 8173920732477211612
+      tiles_basic_41: 4613429057910275867
+      tiles_basic_19: -5673871256308503869
+      tiles_basic_12: -4681394290757672925
+      tiles_basic_48: 7365641980639330683
+      tiles_basic_27: 8740434280723533843
+      tiles_basic_0: -8232401602313746139
+      tiles_basic_18: -995982459786496095
+      tiles_basic_47: -2107438042936416826
+      tiles_basic_51: 14211150160897331
+      tiles_basic_26: 1152278993259067225
+      tiles_basic_4: 1676343356452450932
+      tiles_basic_13: -6237088455713343583
+      tiles_basic_24: 130523921211874748
+      tiles_basic_44: -6262464000457316454
+      tiles_basic_14: 6327804244117312925
+      tiles_basic_35: 4305569551156129596
+      tiles_basic_7: -515039822685567329
+      tiles_basic_15: 4790613651960404309
+      tiles_basic_38: 3251100290697304439
+      tiles_basic_21: -3900602551388894544
+      tiles_basic_33: -4514599955861258187
+      tiles_basic_42: 8742451218424524131
+      tiles_basic_3: -1202413018666837433
+      tiles_basic_17: -287605137644589544
+      tiles_basic_49: 4539346253639011892
+      tiles_basic_1: 279547538944848575
+      tiles_basic_46: 1612576083351806748
+      tiles_basic_8: 3900607657330251058
+      tiles_basic_36: 6363186989025651815
+      tiles_basic_29: -6228478016627050755
+      tiles_basic_20: -3479198478473617484
+      tiles_basic_22: 4829182617799677348
+      tiles_basic_39: -5064878798837030140
+      tiles_basic_34: -5925520011668564530
+      tiles_basic_45: -8347854518824185663
+      tiles_basic_52: -7082504346802313529
+      tiles_basic_43: 7999928901435729743
+      tiles_basic_50: -8345824939248082773
+      tiles_basic_6: 7092607779904930015
+      tiles_basic_30: -6654625249085013517
+      tiles_basic_16: 85007448162798368
+      tiles_basic_28: -2701476119862303753
+      tiles_basic_37: -4246620280448654349
+      tiles_basic_11: 6607046358328313821
+      tiles_basic_40: -3558293858940341815
+      tiles_basic_32: -8244320424738543169
+      tiles_basic_5: -894484202978794887
+      tiles_basic_23: -5824177967609206053
+      tiles_basic_10: 6154654279577887736
+      tiles_basic_31: -727924136917893420
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

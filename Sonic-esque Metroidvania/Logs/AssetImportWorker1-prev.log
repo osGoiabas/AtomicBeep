@@ -1,0 +1,203 @@
+Using pre-set license
+Built from '2021.3/staging' branch; Version is '2021.3.5f1 (40eb3a945986) revision 4254522'; Using compiler version '192829333'; Build Type 'Release'
+OS: 'Windows 10  (10.0.19045) 64bit Professional' Language: 'pt' Physical Memory: 7582 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 1
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2021.3.5f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker1
+-projectPath
+C:/Users/Vitor/Documents/Vítor/projetos/Unity Games/Sonic-esque Metroidvania/Sonic-esque Metroidvania
+-logFile
+Logs/AssetImportWorker1.log
+-srvPort
+65390
+Successfully changed project path to: C:/Users/Vitor/Documents/Vítor/projetos/Unity Games/Sonic-esque Metroidvania/Sonic-esque Metroidvania
+C:/Users/Vitor/Documents/Vítor/projetos/Unity Games/Sonic-esque Metroidvania/Sonic-esque Metroidvania
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gfx=262144"
+Refreshing native plugins compatible for Editor in 84.02 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2021.3.5f1 (40eb3a945986)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2021.3.5f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/Vitor/Documents/Vítor/projetos/Unity Games/Sonic-esque Metroidvania/Sonic-esque Metroidvania/Assets
+GfxDevice: creating device client; threaded=0; jobified=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: Intel(R) UHD Graphics 630 (ID=0x9bc8)
+    Vendor:   Intel
+    VRAM:     3791 MB
+    Driver:   27.20.100.9415
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2021.3.5f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2021.3.5f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/2021.3.5f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56592
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2021.3.5f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.130037 seconds.
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 68.45 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.165 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1166ms)
+		BeginReloadAssembly (274ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (2ms)
+		EndReloadAssembly (553ms)
+			LoadAssemblies (270ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (133ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (35ms)
+			SetupLoadedEditorAssemblies (318ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (8ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (69ms)
+				BeforeProcessingInitializeOnLoad (1ms)
+				ProcessInitializeOnLoadAttributes (155ms)
+				ProcessInitializeOnLoadMethodAttributes (85ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.034563 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 76.84 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Package Manager log level set to [2]
+Mono: successfully reloaded assembly
+- Completed reload, in  1.727 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1728ms)
+		BeginReloadAssembly (195ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (21ms)
+		EndReloadAssembly (1386ms)
+			LoadAssemblies (260ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (350ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (66ms)
+			SetupLoadedEditorAssemblies (705ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (5ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (77ms)
+				BeforeProcessingInitializeOnLoad (96ms)
+				ProcessInitializeOnLoadAttributes (264ms)
+				ProcessInitializeOnLoadMethodAttributes (251ms)
+				AfterProcessingInitializeOnLoad (12ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (7ms)
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.08 seconds
+
+=================================================================
+	Native Crash Reporting
+=================================================================
+Got a UNKNOWN while executing native code. This usually indicates
+a fatal error in the mono runtime or one of the native libraries 
+used by your application.
+=================================================================
+
+=================================================================
+	Managed Stacktrace:
+=================================================================
+=================================================================
+Received signal SIGSEGV
+Obtained 46 stack frames
+0x00007ffa8b16fb5c (igd10iumd64) OpenAdapter10_2
+0x00007ffa8b16cdac (igd10iumd64) OpenAdapter10_2
+0x00007ffa8b16cbcd (igd10iumd64) OpenAdapter10_2
+0x00007ffa8b04246f (igd10iumd64) 
+0x00007ffa8b0e58af (igd10iumd64) 
+0x00007ffa8af2ce64 (igd10iumd64) 
+0x00007ffa8af2cdb6 (igd10iumd64) 
+0x00007ffa8af2dbd1 (igd10iumd64) 
+0x00007ffa8afbbd61 (igd10iumd64) 
+0x00007ffa919d0568 (d3d11) D3D11CoreCreateDevice
+0x00007ffa919e697f (d3d11) D3D11CoreCreateDevice
+0x00007ffa919e6cac (d3d11) D3D11CoreCreateDevice
+0x00007ffa919dd6e6 (d3d11) D3D11CoreCreateDevice
+0x00007ffa919e382d (d3d11) D3D11CoreCreateDevice
+0x00007ffa919e3fdc (d3d11) D3D11CoreCreateDevice
+0x00007ffa919f6ea0 (d3d11) D3D11CoreCreateDevice
+0x00007ffa919f6e07 (d3d11) D3D11CoreCreateDevice
+0x00007ffa919f6bd8 (d3d11) D3D11CoreCreateDevice
+0x00007ff687f12dc8 (Unity) D3D11VertexShader::Create
+0x00007ff687f0e328 (Unity) D3D11VertexShader::D3D11VertexShader
+0x00007ff687d1ab8c (Unity) CreateGpuProgram
+0x00007ff687faaf75 (Unity) GfxDeviceClient::CreateGpuProgram
+0x00007ff687bb4f00 (Unity) ShaderLab::SubProgram::Compile
+0x00007ff68888e221 (Unity) FinalizeVariant
+0x00007ff688890548 (Unity) GetSubProgramForShaderSnippet
+0x00007ff687bb5730 (Unity) ShaderLab::Program::CompileShaderSubProgram
+0x00007ff687bb6733 (Unity) ShaderLab::Program::GetMatchingSubProgram
+0x00007ff687bbd25c (Unity) ShaderLab::ShaderState::FindSubProgramsToUse
+0x00007ff687bb0987 (Unity) ShaderLab::Pass::PrepareVariant
+0x00007ff687b9ffeb (Unity) ShaderVariantCollection::WarmupOneShaderImpl
+0x00007ff687ba086a (Unity) ShaderVariantCollection::WarmupShadersImpl
+0x00007ff688899d56 (Unity) WarmupEditorShaders
+0x00007ff6895153be (Unity) Shader::ReloadAllShaders
+0x00007ff6891bef6d (Unity) <lambda_869edb64a32e7d8c8f796914a670ead3>::operator()
+0x00007ff6891fe5a2 (Unity) asio::detail::completion_handler<core::mutable_function<void __cdecl(void)>,asio::io_context::basic_executor_type<std::allocator<void>,0> >::do_complete
+0x00007ff6891eab8e (Unity) asio::detail::win_iocp_io_context::do_one
+0x00007ff6891ec84e (Unity) asio::detail::win_iocp_io_context::run
+0x00007ff6891fcc1e (Unity) IOService::Run
+0x00007ff6891cfcaf (Unity) AssetImportWorkerClient::Run
+0x00007ff68919a533 (Unity) RunAssetImportWorkerClientV2
+0x00007ff68919a5bb (Unity) RunAssetImporterV2
+0x00007ff6889c42f4 (Unity) Application::InitializeProject
+0x00007ff688e1f5b8 (Unity) WinMain
+0x00007ff68a1528be (Unity) __scrt_common_main_seh
+0x00007ffa97417614 (KERNEL32) BaseThreadInitThunk
+0x00007ffa97f226f1 (ntdll) RtlUserThreadStart
+

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering.LWRP;
+//using UnityEngine.Experimental.Rendering.LWRP;
 
 public class GroundInfo
 {
@@ -41,7 +41,7 @@ public class HedgehogMovement : MonoBehaviour
 
 
     float standingHeight = 40f;
-    private float heightHalf { get { return standingHeight / 2f; }}
+    private float heightHalf = 20f;
     private float standWidthHalf = 10f;
 
     private Vector2 velocity;
@@ -61,17 +61,17 @@ public class HedgehogMovement : MonoBehaviour
     // GROUND MOVEMENT
     //-----------------------------------------------------------------------------------------------------
     [Header("Ground Movement")]
-    float groundAcceleration = 168.75f;
-    float groundTopSpeed = 360f;
-    float speedLimit = 960f;
+    float groundAcceleration = 300f; //168.75f;
+    float groundTopSpeed = 300f; //360f;
+    float speedLimit = 500f; //960f;
 
     bool olhandoDireita = true;
 
-    private float friction = 168.75f;
-    private float abaixadoFriction = 337.50f; //84.375f;
-    private float deceleration = 1800f;
+    private float friction = 500f; //168.75f;
+    private float abaixadoFriction = 350f; //84.375f;
+    private float deceleration = 2999f; //1800f;
 
-    private float peleGrossura = 0.01f;
+    private float peleGrossura = 0.05f;
     private float slopeFactor = 450f;
 
     private float ledgeHeightOffset = 10f;
@@ -80,7 +80,7 @@ public class HedgehogMovement : MonoBehaviour
     private float groundRaycastDist = 24f;
     private float fallVelocityThreshold = 180f;
 
-    float groundVelocity;
+    float groundVelocity = 0f;
     bool hControlLock = false;
     float hControlLockTime = 0f;
     GroundInfo currentGroundInfo;
@@ -89,12 +89,12 @@ public class HedgehogMovement : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------
     // AIR MOVEMENT
     //-----------------------------------------------------------------------------------------------------   
-    private float airAcceleration = 170f; //340f
-    private float jumpVelocity = 390f;
+    private float airAcceleration = 150f; //340f
+    private float jumpVelocity = 400f; //390f;
     private float jumpReleaseThreshold = 240f;
-    private float gravity = -790f;
+    private float gravity = -750f; //-790f;
     private float terminalVelocity = 960f;
-    //private float airDrag = 1f; //celeste tem muito airDrag, pesquisar
+    //private float airDrag = 0.5f; //1f; //celeste tem muito airDrag, pesquisar
 
     //-----------------------------------------------------------------------------------------------------
     // ANIMAÇÃO
@@ -129,6 +129,9 @@ public class HedgehogMovement : MonoBehaviour
     private float wallJumpDelay;
     private float wallJumpDelayTotal = 0.5f;
     private float wallSlideSpeed = 100f;
+
+    bool tocandoParedeEsquerda;
+    bool tocandoParedeDireita;
 
     Vector2 posLedge1;
     Vector2 posLedge2;
@@ -167,6 +170,7 @@ public class HedgehogMovement : MonoBehaviour
     void Awake()
     {
         afterImage = gameObject.GetComponentInChildren<AfterImage>();
+        afterImage.makeGhost = false;
         //luzGlobalBranca = GameObject.Find("White Global Light 2D").GetComponent<Light2D>();
         //luzGlobalAzul = GameObject.Find("Blue Global Light 2D").GetComponent<Light2D>();
 
@@ -198,19 +202,22 @@ public class HedgehogMovement : MonoBehaviour
 
             GUILayout.Label("mudarDireção: " + (mudarDireção ? "SIM" : "NÃO"));
             GUILayout.Label("mudarDireçãoDelay: " + mudarDireçãoDelay);
+            GUILayout.Label("Olhando para: " + (olhandoDireita ? "DIREITA" : "ESQUERDA"));
 
             //GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
             //GUILayout.Label("doubleJumpDelay: " + doubleJumpDelay);
             //GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
 
-            GUILayout.Label("grudadoParede: " + (grudadoParede ? "SIM" : "NÃO"));
+            //GUILayout.Label("grudadoParede: " + (grudadoParede ? "SIM" : "NÃO"));
             GUILayout.Label("collider?: " + ((leftHit.collider != null || rightHit.collider != null) ? "SIM" : "NÃO"));
-            GUILayout.Label("wallJumpDelay: " + wallJumpDelay);
-            GUILayout.Label("charAngle: " + characterAngle);
+            //GUILayout.Label("wallJumpDelay: " + wallJumpDelay);
 
+            GUILayout.Label("tocandoParedeEsquerda: " + tocandoParedeEsquerda);
+            GUILayout.Label("tocandoParedeDireita: " + tocandoParedeDireita);
+            
+            GUILayout.Label("charAngle: " + characterAngle);
             GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
             //GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
-            GUILayout.Label("Olhando para: " + (olhandoDireita ? "DIREITA" : "ESQUERDA"));
             GUILayout.Label("Caindo: " + (caindo ? "SIM" : "NÃO"));
 
             GUILayout.Label("Pulou: " + (pulou ? "SIM" : "NÃO"));
@@ -231,7 +238,7 @@ public class HedgehogMovement : MonoBehaviour
     }
     #endregion
 
-    void Update()
+    void FixedUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
         if (Input.GetKeyDown(KeyCode.E) && pegouBulletTime) { BulletTime(); }
@@ -327,13 +334,15 @@ public class HedgehogMovement : MonoBehaviour
             // PULAR
             //-----------------------------------------------------------------------------------------------------
 
+
+
             coyoteTimeCounter = coyoteTime;
             //jumpBufferCounter = 0;
 
             if (jumpBufferCounter > 0) {
                 Pule();
             } 
-            else if (Input.GetButtonDown("Jump") && !abaixado && !lowCeiling)
+            else if (input.y > 0.005f && !abaixado && !lowCeiling)
             {
                 Pule();
             }
@@ -380,7 +389,8 @@ public class HedgehogMovement : MonoBehaviour
                 // INPUT = MOVIMENTO!
                 //-----------------------------------------------------------------------------------------------------
 
-                if (!hControlLock && Mathf.Abs(input.x) >= 0.005f)
+               
+                if (!hControlLock && Mathf.Abs(input.x) >= 0.005f && !abaixado)
                 {
                     float accel = /*underwater ? uwAcceleration :*/ groundAcceleration;
                     float decel = /*underwater ? uwDeceleration :*/ deceleration;
@@ -391,31 +401,33 @@ public class HedgehogMovement : MonoBehaviour
                     if (input.x < 0f)
                     {
                         float acceleration = 0f;
-                        if (!abaixado && groundVelocity > 0f) { acceleration = decel; } // FREAR
-                        else
-                        if (!abaixado && groundVelocity <= 0f) { acceleration = accel; } // ACELERAR
+                        if (groundVelocity > 0.005f) 
+                        { acceleration = decel; } // FREAR
+                        else 
+                        { acceleration = accel; } // ACELERAR
 
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
                         if (groundVelocity > -groundTopSpeed)
                         {
-                            groundVelocity = Mathf.Max(-groundTopSpeed, groundVelocity + (input.x * acceleration) * Time.deltaTime);
+                            groundVelocity = Mathf.Max(-groundTopSpeed, groundVelocity + (input.x * acceleration) * Time.fixedDeltaTime);
                         }
                     }
 
                     //-----------------------------------------------------------------------------------------------------
                     // DIREITA
                     //-----------------------------------------------------------------------------------------------------
-                    else
+                    else if (input.x > 0f)
                     {
                         float acceleration = 0f;
-                        if (!abaixado && groundVelocity < 0f) { acceleration = decel; }
-                        else
-                        if (!abaixado && groundVelocity >= 0f) { acceleration = accel; }
+                        if (groundVelocity < -0.005f) 
+                        { acceleration = decel; } // FREAR
+                        else 
+                        { acceleration = accel; } // ACELERAR
 
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
                         if (groundVelocity < groundTopSpeed)
                         {
-                            groundVelocity = Mathf.Min(groundTopSpeed, groundVelocity + (input.x * acceleration) * Time.deltaTime);
+                            groundVelocity = Mathf.Min(groundTopSpeed, groundVelocity + (input.x * acceleration) * Time.fixedDeltaTime);
                         }
                     }
                 }
@@ -428,10 +440,11 @@ public class HedgehogMovement : MonoBehaviour
                 if (groundVelocity > speedLimit) { groundVelocity = speedLimit; }
                 else if (groundVelocity < -speedLimit) { groundVelocity = -speedLimit; }
 
+
+
                 //-----------------------------------------------------------------------------------------------------
                 // APLICA groundVelocity À VELOCIDADE DO PERSONAGEM, LEVANDO EM CONTA O ÂNGULO DO CHÃO 
                 //-----------------------------------------------------------------------------------------------------
-
                 velocity = new Vector2(groundVelocity * Mathf.Cos(currentGroundInfo.angle),
                                        groundVelocity * Mathf.Sin(currentGroundInfo.angle));
 
@@ -455,7 +468,7 @@ public class HedgehogMovement : MonoBehaviour
             else 
                 coyoteTimeCounter = 0;
 
-            if (Input.GetButtonDown("Jump"))
+            if (input.y > 0.005f)
                 jumpBufferCounter = jumpBuffer;
 
             if (jumpBufferCounter > 0)
@@ -463,7 +476,7 @@ public class HedgehogMovement : MonoBehaviour
             else
                 jumpBufferCounter = 0;
 
-            if (coyoteTimeCounter > 0 && Input.GetButtonDown("Jump") && !lowCeiling) 
+            if (coyoteTimeCounter > 0 && input.y > 0.005f && !lowCeiling) 
                 Pule();
 
             //-----------------------------------------------------------------------------------------------------
@@ -485,8 +498,8 @@ public class HedgehogMovement : MonoBehaviour
                 // RESISTÊNCIA DO AR
                 //-----------------------------------------------------------------------------------------------------
                 // POR QUE ESSES VALORES???
-                /*
-                if (velocity.y > 0f && velocity.y < 4f && Mathf.Abs(velocity.x) > 7.5f)
+                
+                /*if (velocity.y > 0f && velocity.y < 4f && Mathf.Abs(velocity.x) > 7.5f)
                 {
                     velocity.x *= airDrag; //airDrag atual é 1f, então esse trecho todo é inútil
                 }*/
@@ -506,7 +519,7 @@ public class HedgehogMovement : MonoBehaviour
             if (pegouDoubleJump
                 && doubleJumpReady
                 && doubleJumpDelay <= 0
-                && Input.GetButtonDown("Jump")
+                && input.y > 0.005f
                 && !lowCeiling
                 && !grudadoParede)
             {
@@ -544,14 +557,17 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         // MOVA-SE. Digo, mude a posição agora, antes de calcular as colisões
         //-----------------------------------------------------------------------------------------------------
+
+        
+
         transform.position += new Vector3(velocity.x, velocity.y, 0f) * Time.deltaTime;
 
         //-----------------------------------------------------------------------------------------------------
         // PAREDES
         //-----------------------------------------------------------------------------------------------------
         #region paredes
-        WallCheck(sideRaycastDist, grounded ? sideRaycastOffset : -5f, out leftHit, out rightHit);
-        LedgeCheck(sideRaycastDist + 10, ledgeHeightOffset, out ledgeLeft, out ledgeRight);
+        WallCheck(sideRaycastDist + peleGrossura, grounded ? sideRaycastOffset : 0f, out leftHit, out rightHit);
+        //LedgeCheck(sideRaycastDist + 10, ledgeHeightOffset, out ledgeLeft, out ledgeRight);
 
 
         //IMPLEMENTAR ISSO AQUI DE ALGUM JEITO NAS PAREDES
@@ -561,7 +577,7 @@ public class HedgehogMovement : MonoBehaviour
         private float heightHalf { get { return standingHeight / 2f; }}
         private float standWidthHalf = 10f;
         
-        private float sideRaycastDist = 10f;
+        private float sideRaycastDist = 14f;
         private float groundRaycastDist = 24f;
 
         DA FUNÇÃO GETGROUNDINFO
@@ -572,9 +588,35 @@ public class HedgehogMovement : MonoBehaviour
                    && velocity.y <= 0f
                    && transform.position.y <= (info.height + heightHalf);
 
-        tocandoParedeDireita = transform.position.x >= (hit.point.x - larguraHalf);
+        daí tem um if grounded que chama a StickToGround
+        
+        //se o groundmode for Floor, 
+        pos.y = info.point.y + heightHalf;
 
+
+
+        // ABORDAGEM NOVA
+
+        bool tocandoParedeEsquerda = transform.position.x <= (leftHit.point.x + standWidthHalf);
+        bool tocandoParedeDireita = transform.position.x >= (rightHit.point.x - standWidthHalf);
+        
+        if (tocandoParedeEsquerda)
+        transform.position = new Vector2 (leftHit.point.x + standWidthHalf, transform.position.y);
+        if (tocandoParedeDireita)
+        transform.position = new Vector2 (rightHit.point.x - standWidthHalf, transform.position.y);
         */
+
+
+
+
+        //esses daqui não funcionam e não faço ideia do porquê
+        //há algo de errado com a conta, ela não dá resultados consistentes.
+        //tocandoParedeEsquerda = transform.position.x <= (leftHit.point.x + standWidthHalf);
+        //tocandoParedeDireita = transform.position.x >= (rightHit.point.x - standWidthHalf);
+
+        //print("se posX for maior, colide: " + transform.position.x);
+        //print("direitaDist: " + (rightHit.point.x - standWidthHalf));
+
 
         if (leftHit.collider != null && rightHit.collider != null)
         {
@@ -582,39 +624,44 @@ public class HedgehogMovement : MonoBehaviour
         }
         else if (leftHit.collider != null)
         {
-            transform.position = new Vector2(leftHit.point.x + sideRaycastDist, transform.position.y);
+            tocandoParedeEsquerda = true;
+            transform.position = new Vector2(leftHit.point.x + standWidthHalf, transform.position.y);
             if (velocity.x < 0f)
             {
                 velocity.x = 0f;
                 groundVelocity = 0f;
-                if (grounded && (characterAngle == 0 || characterAngle == 180)) { empurrando = true; }
-                else { empurrando = false; }
+                //if (grounded && (characterAngle == 0 || characterAngle == 180)) { empurrando = true; }
+                //else { empurrando = false; }
             }
-            else if (velocity.x == 0) { empurrando = false; }
+            //else if (velocity.x == 0) { empurrando = false; }
         }
         else if (rightHit.collider != null)
         {
-            transform.position = new Vector2(rightHit.point.x - sideRaycastDist, transform.position.y);
+            tocandoParedeDireita = true;
+            transform.position = new Vector2(rightHit.point.x - standWidthHalf, transform.position.y);
             if (velocity.x > 0f)
             {
                 velocity.x = 0f;
                 groundVelocity = 0f;
-                if (grounded && (characterAngle == 0 || characterAngle == 180)) { empurrando = true; }
-                else { empurrando = false; }
+                //if (grounded && (characterAngle == 0 || characterAngle == 180)) { empurrando = true; }
+                //else { empurrando = false; }
             }
-            else if (velocity.x == 0) { empurrando = false; }
+            //else if (velocity.x == 0) { empurrando = false; }
         }
         else
         {
-            empurrando = false;
+            tocandoParedeEsquerda = false;
+            tocandoParedeDireita = false;
+            //empurrando = false;
         }
         #endregion
 
 
         //-----------------------------------------------------------------------------------------------------
-        // LEDGE GRAB e CLIMB
+        // LEDGE GRAB e CLIMB                   [INATIVO]
         //-----------------------------------------------------------------------------------------------------
-        #region ledge
+        #region ledge + walljump + slide
+        /*
         if (!grounded && 
             rightHit.collider != null && ledgeRight.collider == null)
         {
@@ -641,7 +688,7 @@ public class HedgehogMovement : MonoBehaviour
                 posLedge1.y = rightHit.point.y - 1 + (16 - rightHit.point.y % 16);
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
-                if (Input.GetButtonDown("Jump"))
+                if (input.y > 0.005f)
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
@@ -659,7 +706,7 @@ public class HedgehogMovement : MonoBehaviour
                 posLedge1.y = leftHit.point.y - 1 + (16 - leftHit.point.y % 16);
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
-                if (Input.GetButtonDown("Jump"))
+                if (input.y > 0.005f)
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
@@ -708,12 +755,10 @@ public class HedgehogMovement : MonoBehaviour
             || (characterAngle >= 355 && characterAngle <= 360) 
             || (characterAngle >= 175 && characterAngle <= 185)))
         {
-            //print("walljumping!");
-            //ele tá fazendo flickering entre true e false
+            //ele tá fazendo flickering entre true e false, culpa da parede
             grudadoParede = true;
             animator.Play("robot_wallgrab");
             velocity.y = 0;
-            print("wallgrab!");
             doubleJumpReady = true;
             if (leftHit.collider != null) { olhandoDireita = true; }
             else if (rightHit.collider != null) { olhandoDireita = false; }
@@ -730,7 +775,7 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         if (grudadoParede)
         {
-            if (wallJumpDelay > 0 && !Input.GetButtonDown("Jump"))
+            if (wallJumpDelay > 0 && !input.y > 0.005f)
             {
                 //wallJumpDelay -= Time.deltaTime;
                 transform.position = new Vector2(transform.position.x, transform.position.y - wallSlideSpeed * Time.deltaTime);
@@ -741,13 +786,14 @@ public class HedgehogMovement : MonoBehaviour
                 else if (rightHit.collider != null) { velocity.x -= 100; print("walljump"); }
                 wallJumpDelay = wallJumpDelayTotal;
             }
-            else if (Input.GetButtonDown("Jump")) {
+            else if (input.y > 0.005f) {
                 if (leftHit.collider != null) { velocity.x += 200; }
                 else if (rightHit.collider != null) { velocity.x -= 200; }
                 velocity.y += 300;
                 animator.Play("robot_basic_jump");
             }
         }
+        */
         //#TODO de fato pular da parede
         //#TODO deslizar pra cima na parede quando pula do chão grudadinho nela
         #endregion
@@ -855,7 +901,7 @@ public class HedgehogMovement : MonoBehaviour
         {
             StickToGround(currentGroundInfo);
 
-            asaAnimator.Play("robot_asa_capa");
+            //asaAnimator.Play("robot_asa_capa");
 
             // ANIMAÇÃO
             animator.SetFloat(speedHash, Mathf.Abs(groundVelocity));
@@ -902,7 +948,7 @@ public class HedgehogMovement : MonoBehaviour
         else { transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, 5 * Time.deltaTime); }
 
         //-----------------------------------------------------------------------------------------------------
-        // DIREÇÃO E MUDARDIREÇÃO, VIRAR, TURN
+        // DIREÇÃO E MUDARDIREÇÃO, VIRAR, TURN      
         //-----------------------------------------------------------------------------------------------------
         #region direção
         if (Mathf.Abs(input.x) > 0.05f && grounded && !freando && !spinReady)
@@ -1030,10 +1076,11 @@ public class HedgehogMovement : MonoBehaviour
         hitLeft = Physics2D.Raycast(pos, Vector2.left, distance, máscaraColisão);
         hitRight = Physics2D.Raycast(pos, Vector2.right, distance, máscaraColisão);
 
-        Debug.DrawLine(pos, pos + (Vector2.left * distance), Color.green);
-        Debug.DrawLine(pos, pos + (Vector2.right * distance), Color.green);
+        Debug.DrawLine(pos, pos + (Vector2.left * distance), Color.blue);
+        Debug.DrawLine(pos, pos + (Vector2.right * distance), Color.blue);
     }
 
+    /*
     void LedgeCheck(float ledgeDistance, float ledgeHeightOffset, out RaycastHit2D ledgeLeft, out RaycastHit2D ledgeRight) 
     {
         Vector2 pos = new Vector2(transform.position.x, transform.position.y + ledgeHeightOffset);
@@ -1044,6 +1091,7 @@ public class HedgehogMovement : MonoBehaviour
         Debug.DrawLine(pos, pos + (Vector2.left * ledgeDistance), Color.blue);
         Debug.DrawLine(pos, pos + (Vector2.right * ledgeDistance), Color.blue);
     }
+    */
 
     //-----------------------------------------------------------------------------------------------------
     // TETO E PISO
@@ -1149,9 +1197,7 @@ public class HedgehogMovement : MonoBehaviour
                         traveControleH();
                     }
                 }
-                //print("Y antes: " + pos.y);
                 pos.y = info.point.y + heightHalf;
-                //print("Y depois: " + pos.y);
                 break;
             case GroundMode.RightWall:
                 if (angle <= 45f && angle > 0f) { groundMode = GroundMode.Floor; }
@@ -1243,7 +1289,7 @@ public class HedgehogMovement : MonoBehaviour
     // PÓ E PARTÍCULAS
     //-----------------------------------------------------------------------------------------------------
     void CreateDust() {
-        dust.Play();
+        //climbdust.Play();
     }
 
     //-----------------------------------------------------------------------------------------------------
