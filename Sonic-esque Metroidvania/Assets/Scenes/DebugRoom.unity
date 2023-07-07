@@ -46395,7 +46395,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1602343560
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -46482,7 +46482,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1602343559}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 277, y: 32, z: 0}
+  m_LocalPosition: {x: 277, y: 38.4, z: 0}
   m_LocalScale: {x: 12.340309, y: 78.34541, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -46697,12 +46697,12 @@ PrefabInstance:
     - target: {fileID: 4294818186568778186, guid: d6cd53e012a1b974987cf9be634df92d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 153.2
+      value: -21
       objectReference: {fileID: 0}
     - target: {fileID: 4294818186568778186, guid: d6cd53e012a1b974987cf9be634df92d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.7
+      value: -24
       objectReference: {fileID: 0}
     - target: {fileID: 4294818186568778186, guid: d6cd53e012a1b974987cf9be634df92d,
         type: 3}
@@ -46757,7 +46757,7 @@ PrefabInstance:
     - target: {fileID: 4294818186568778187, guid: d6cd53e012a1b974987cf9be634df92d,
         type: 3}
       propertyPath: pegouWallJump
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4294818186568778187, guid: d6cd53e012a1b974987cf9be634df92d,
         type: 3}
