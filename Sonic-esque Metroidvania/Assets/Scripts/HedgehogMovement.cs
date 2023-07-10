@@ -244,15 +244,12 @@ public class HedgehogMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        //INPUT
+        Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
         if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
         if (Input.GetKeyDown(KeyCode.E) && pegouBulletTime) { BulletTime(); }
 
-        if (Input.GetButtonDown("Jump")) {
-            print("pulou!");
-        }
-
-        //INPUT
-        Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
         if (doubleJumpDelay > 0) {
             doubleJumpDelay -= Time.deltaTime;
@@ -264,6 +261,11 @@ public class HedgehogMovement : MonoBehaviour
 
         if (grounded)
         {
+
+            if (input.y > 0.005f)
+            {
+                print("pulou!");
+            }
             //-----------------------------------------------------------------------------------------------------
             // SPINDASH
             //-----------------------------------------------------------------------------------------------------
@@ -349,7 +351,7 @@ public class HedgehogMovement : MonoBehaviour
             if (jumpBufferCounter > 0) {
                 Pule();
             } 
-            else if (Input.GetButtonDown("Jump") && !abaixado && !lowCeiling && !estáLedgeClimbing)
+            else if (input.y > 0.005f && !abaixado && !lowCeiling && !estáLedgeClimbing)
             {
                 Pule();
             }
@@ -475,7 +477,7 @@ public class HedgehogMovement : MonoBehaviour
             else 
                 coyoteTimeCounter = 0;
 
-            if (Input.GetButtonDown("Jump"))
+            if (input.y > 0.005f)
                 jumpBufferCounter = jumpBuffer;
 
             if (jumpBufferCounter > 0)
@@ -483,7 +485,7 @@ public class HedgehogMovement : MonoBehaviour
             else
                 jumpBufferCounter = 0;
 
-            if (coyoteTimeCounter > 0 && Input.GetButtonDown("Jump") && !lowCeiling) 
+            if (coyoteTimeCounter > 0 && input.y > 0.005f && !lowCeiling) 
                 Pule();
 
             //-----------------------------------------------------------------------------------------------------
@@ -526,7 +528,7 @@ public class HedgehogMovement : MonoBehaviour
             if (pegouDoubleJump
                 && doubleJumpReady
                 && doubleJumpDelay <= 0
-                && Input.GetButtonDown("Jump")
+                && input.y > 0.005f
                 && !lowCeiling
                 && !grudadoParede)
             {
@@ -693,7 +695,7 @@ public class HedgehogMovement : MonoBehaviour
                 posLedge1.y = rightHit.point.y - 1 + (16 - rightHit.point.y % 16);
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
-                if (Input.GetButtonDown("Jump"))
+                if (input.y > 0.005f || input.x > 0.005f)
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
@@ -711,7 +713,7 @@ public class HedgehogMovement : MonoBehaviour
                 posLedge1.y = leftHit.point.y - 1 + (16 - leftHit.point.y % 16);
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
-                if (Input.GetButtonDown("Jump"))
+                if (input.y > 0.005f || input.x < 0.005f)
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
@@ -745,14 +747,15 @@ public class HedgehogMovement : MonoBehaviour
                 }
             }
         }
-        
-        #endregion 
+
+        #endregion
         //-----------------------------------------------------------------------------------------------------
         // WALLJUMP e WALLSLIDE: GRUDAR NA PAREDE 
         //-----------------------------------------------------------------------------------------------------
         #region wallJump
         if (pegouWallJump
             /*&& Input.GetKey(KeyCode.Q)*/
+            && Mathf.Abs(input.x) > 0.005f
             && (leftHit.collider != null || rightHit.collider != null)
             && !estáLedgeGrabbing
             && !grounded
@@ -782,7 +785,7 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         if (grudadoParede)
         {
-            if (wallJumpDelay > 0 && !(Input.GetButtonDown("Jump")))
+            if (wallJumpDelay > 0 && !(input.y > 0.005f))
             {
                 //wallJumpDelay -= Time.deltaTime;
                 transform.position = new Vector2(transform.position.x, transform.position.y - wallSlideSpeed * Time.deltaTime);
@@ -793,7 +796,7 @@ public class HedgehogMovement : MonoBehaviour
                 else if (rightHit.collider != null) { velocity.x -= 100; }
                 wallJumpDelay = wallJumpDelayTotal;
             }
-            else if (Input.GetButtonDown("Jump")) {
+            else if (input.y > 0.005f) {
                 if (leftHit.collider != null) { velocity.x += 200; }
                 else if (rightHit.collider != null) { velocity.x -= 200; }
                 velocity.y += 300;
@@ -911,7 +914,20 @@ public class HedgehogMovement : MonoBehaviour
             //asaAnimator.Play("robot_asa_capa");
 
             // ANIMAÇÃO
+
+            if (Mathf.Abs(groundVelocity) > 0.005f)
+            {
+
+                animator.SetBool("Movendo", true);
+            }
+            else {
+                animator.SetBool("Movendo", false);
+            }
+
+
             animator.SetFloat(speedHash, Mathf.Abs(groundVelocity));
+          
+            
 
             // A CABEÇA DO SPRITE ESTÁ DENTRO DO TETO?
             lowCeiling = ceil.valid && transform.position.y > ceil.point.y - 25f;
@@ -968,7 +984,8 @@ public class HedgehogMovement : MonoBehaviour
             if ((input.x < 0.05f && olhandoDireita) || (input.x > 0.05f && !olhandoDireita))
             {
                 mudandoDireção = true;
-                animator.Play("robot_turn");
+                //animator.Play("robot_turn");
+                animator.Play("beep_brake");
             } 
         }
 
@@ -977,7 +994,8 @@ public class HedgehogMovement : MonoBehaviour
             mudandoDireçãoTimer -= Time.deltaTime;
             if (mudandoDireçãoTimer < 0)
             {
-                animator.SetTrigger("Stand");
+                animator.Play("beep_turn");
+                //animator.SetTrigger("Stand");
                 mudandoDireção = false;
                 mudandoDireçãoTimer = mudandoDireçãoDelay;
                 olhandoDireita = !olhandoDireita;
