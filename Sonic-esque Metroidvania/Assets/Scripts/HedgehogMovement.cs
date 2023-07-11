@@ -40,7 +40,7 @@ public class HedgehogMovement : MonoBehaviour
     public bool estáLedgeGrabbing;
 
 
-    float standingHeight = 40f;
+    //float standingHeight = 40f;
     private float heightHalf = 20f;
     private float standWidthHalf = 10f;
 
@@ -134,9 +134,6 @@ public class HedgehogMovement : MonoBehaviour
     private float wallJumpDelayTotal = 0.5f;
     private float wallSlideSpeed = 100f;
 
-    bool tocandoParedeEsquerda;
-    bool tocandoParedeDireita;
-
     Vector2 posLedge1;
     Vector2 posLedge2;
     float ledgeClimbTimer;
@@ -215,8 +212,6 @@ public class HedgehogMovement : MonoBehaviour
             //GUILayout.Label("grudadoParede: " + (grudadoParede ? "SIM" : "NÃO"));
             //GUILayout.Label("wallJumpDelay: " + wallJumpDelay);
 
-            //GUILayout.Label("tocandoParedeEsquerda: " + tocandoParedeEsquerda);
-            //GUILayout.Label("tocandoParedeDireita: " + tocandoParedeDireita);
             //GUILayout.Label("collider?: " + ((leftHit.collider != null || rightHit.collider != null) ? "SIM" : "NÃO"));
 
             //GUILayout.Label("charAngle: " + characterAngle);
@@ -224,10 +219,18 @@ public class HedgehogMovement : MonoBehaviour
             //GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
             //GUILayout.Label("Caindo: " + (caindo ? "SIM" : "NÃO"));
 
+
+            GUILayout.Label("lowCeiling: " + (lowCeiling ? "SIM" : "NÃO"));
             GUILayout.Label("Pulou: " + (pulou ? "SIM" : "NÃO"));
             GUILayout.Label("tempoPirueta: " + tempoPirueta);
             GUILayout.Label("coyoteTimeCounter: " + coyoteTimeCounter);
             GUILayout.Label("jumpBufferCounter: " + jumpBufferCounter);
+
+
+            GUILayout.Label("abaixado: " + (abaixado ? "SIM" : "NÃO"));
+            GUILayout.Label("estáLedgeClimbing: " + (estáLedgeClimbing ? "SIM" : "NÃO"));
+
+            
 
             // GUILayout.Label("Empurrando: " + (empurrando ? "SIM" : "NÃO"));
 
@@ -246,6 +249,7 @@ public class HedgehogMovement : MonoBehaviour
     {
         //INPUT
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        
 
         if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
         if (Input.GetKeyDown(KeyCode.E) && pegouBulletTime) { BulletTime(); }
@@ -261,10 +265,10 @@ public class HedgehogMovement : MonoBehaviour
 
         if (grounded)
         {
-
-            if (input.y > 0.005f)
+            //input.y > 0.05f
+            if (Input.GetButton("Jump"))
             {
-                print("pulou!");
+                //print("apertou jump!");
             }
             //-----------------------------------------------------------------------------------------------------
             // SPINDASH
@@ -272,9 +276,11 @@ public class HedgehogMovement : MonoBehaviour
             #region spinDash
             //tá parado, grounded, abaixado e apertou pulo?
             //comece a carregar o spindash
-            if (pegouSpinDash &&
-                groundVelocity == 0 && abaixado && !mudandoDireção 
-                && Input.GetButton("Jump") 
+            if (pegouSpinDash 
+                && groundVelocity == 0
+                && !mudandoDireção
+                && Input.GetButton("Jump") && abaixado
+                //&& Input.GetKeyDown(KeyCode.Q)
                 && groundMode == GroundMode.Floor
                 && leftHit.collider == null 
                 && rightHit.collider == null)
@@ -346,12 +352,11 @@ public class HedgehogMovement : MonoBehaviour
 
 
             coyoteTimeCounter = coyoteTime;
-            //jumpBufferCounter = 0;
 
             if (jumpBufferCounter > 0) {
                 Pule();
             } 
-            else if (input.y > 0.005f && !abaixado && !lowCeiling && !estáLedgeClimbing)
+            else if (Input.GetButton("Jump") && !abaixado && !lowCeiling && !estáLedgeClimbing)
             {
                 Pule();
             }
@@ -477,7 +482,7 @@ public class HedgehogMovement : MonoBehaviour
             else 
                 coyoteTimeCounter = 0;
 
-            if (input.y > 0.005f)
+            if (Input.GetButton("Jump"))
                 jumpBufferCounter = jumpBuffer;
 
             if (jumpBufferCounter > 0)
@@ -485,7 +490,7 @@ public class HedgehogMovement : MonoBehaviour
             else
                 jumpBufferCounter = 0;
 
-            if (coyoteTimeCounter > 0 && input.y > 0.005f && !lowCeiling) 
+            if (coyoteTimeCounter > 0 && Input.GetButton("Jump") && !lowCeiling) 
                 Pule();
 
             //-----------------------------------------------------------------------------------------------------
@@ -495,11 +500,12 @@ public class HedgehogMovement : MonoBehaviour
             //define valor máximo do pulo
             float jumpReleaThreshold = /*underwater ? uwJumpReleaseThreshold :*/ jumpReleaseThreshold;
 
-            // JÁ PULOU, SOLTOU O BOTÃO E A VELOCIDADE VERTICAL A SER APLICADA PASSOU DO LIMITE MÁXIMO?
+            // JÁ PULOU, SOLTOU O BOTÃO, ESTÁ NO AR E A VELOCIDADE VERTICAL A SER APLICADA PASSOU DO LIMITE MÁXIMO?
             // VOLTA A APLICAR SÓ O MÁXIMO (a gravidade eventualmente o puxará pra baixo)
             if (pulou && velocity.y > jumpReleaThreshold && Input.GetButtonUp("Jump"))
             {
                 velocity.y = jumpReleaThreshold;
+                print("velocity.y = jumpReleaThreshold: " + velocity.y);    
             }
             else
             {
@@ -528,7 +534,7 @@ public class HedgehogMovement : MonoBehaviour
             if (pegouDoubleJump
                 && doubleJumpReady
                 && doubleJumpDelay <= 0
-                && input.y > 0.005f
+                && Input.GetButton("Jump")
                 && !lowCeiling
                 && !grudadoParede)
             {
@@ -540,7 +546,7 @@ public class HedgehogMovement : MonoBehaviour
 
                 CreateDust();
                 animator.Play("robot_basic_jump");
-                asaAnimator.Play("robot_asa");
+                //asaAnimator.Play("robot_asa");
             }
             #endregion
 
@@ -566,10 +572,8 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         // MOVA-SE. Digo, mude a posição agora, antes de calcular as colisões
         //-----------------------------------------------------------------------------------------------------
-
-        
-
         transform.position += new Vector3(velocity.x, velocity.y, 0f) * Time.deltaTime;
+
 
         //-----------------------------------------------------------------------------------------------------
         // PAREDES
@@ -578,62 +582,12 @@ public class HedgehogMovement : MonoBehaviour
         WallCheck(sideRaycastDist + peleGrossura, grounded ? sideRaycastOffset : 0f, out leftHit, out rightHit);
         LedgeCheck(sideRaycastDist + 10, ledgeHeightOffset, out ledgeLeft, out ledgeRight);
 
-
-        //IMPLEMENTAR ISSO AQUI DE ALGUM JEITO NAS PAREDES
-        /*
-        
-        float standingHeight = 40f;
-        private float heightHalf { get { return standingHeight / 2f; }}
-        private float standWidthHalf = 10f;
-        
-        private float sideRaycastDist = 14f;
-        private float groundRaycastDist = 24f;
-
-        DA FUNÇÃO GETGROUNDINFO
-        info.height = hit.point.y;
-
-        GroundInfo info = GroundedCheck(groundRaycastDist, GroundMode.Floor, out groundedLeft, out groundedRight);
-        grounded = (groundedLeft || groundedRight)
-                   && velocity.y <= 0f
-                   && transform.position.y <= (info.height + heightHalf);
-
-        daí tem um if grounded que chama a StickToGround
-        
-        //se o groundmode for Floor, 
-        pos.y = info.point.y + heightHalf;
-
-
-
-        // ABORDAGEM NOVA
-
-        bool tocandoParedeEsquerda = transform.position.x <= (leftHit.point.x + standWidthHalf);
-        bool tocandoParedeDireita = transform.position.x >= (rightHit.point.x - standWidthHalf);
-        
-        if (tocandoParedeEsquerda)
-        transform.position = new Vector2 (leftHit.point.x + standWidthHalf, transform.position.y);
-        if (tocandoParedeDireita)
-        transform.position = new Vector2 (rightHit.point.x - standWidthHalf, transform.position.y);
-        */
-
-
-
-
-        //esses daqui não funcionam e não faço ideia do porquê
-        //há algo de errado com a conta, ela não dá resultados consistentes.
-        //tocandoParedeEsquerda = transform.position.x <= (leftHit.point.x + standWidthHalf);
-        //tocandoParedeDireita = transform.position.x >= (rightHit.point.x - standWidthHalf);
-
-        //print("se posX for maior, colide: " + transform.position.x);
-        //print("direitaDist: " + (rightHit.point.x - standWidthHalf));
-
-
         if (leftHit.collider != null && rightHit.collider != null)
         {
             Debug.Log("GOT SQUASHED"); // Got squashed
         }
         else if (leftHit.collider != null)
         {
-            tocandoParedeEsquerda = true;
             transform.position = new Vector2(leftHit.point.x + standWidthHalf, transform.position.y);
             if (velocity.x < 0f)
             {
@@ -646,7 +600,6 @@ public class HedgehogMovement : MonoBehaviour
         }
         else if (rightHit.collider != null)
         {
-            tocandoParedeDireita = true;
             transform.position = new Vector2(rightHit.point.x - standWidthHalf, transform.position.y);
             if (velocity.x > 0f)
             {
@@ -659,8 +612,6 @@ public class HedgehogMovement : MonoBehaviour
         }
         else
         {
-            tocandoParedeEsquerda = false;
-            tocandoParedeDireita = false;
             //empurrando = false;
         }
         #endregion
@@ -684,6 +635,7 @@ public class HedgehogMovement : MonoBehaviour
         else 
         {
             estáLedgeGrabbing = false;
+            estáLedgeClimbing = false;
         }
 
         if (estáLedgeGrabbing && !estáLedgeClimbing) 
@@ -695,7 +647,7 @@ public class HedgehogMovement : MonoBehaviour
                 posLedge1.y = rightHit.point.y - 1 + (16 - rightHit.point.y % 16);
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
-                if (input.y > 0.005f || input.x > 0.005f)
+                if (Input.GetButton("Jump") || input.x > 0.05f)
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
@@ -713,7 +665,7 @@ public class HedgehogMovement : MonoBehaviour
                 posLedge1.y = leftHit.point.y - 1 + (16 - leftHit.point.y % 16);
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
-                if (input.y > 0.005f || input.x < 0.005f)
+                if (Input.GetButton("Jump") || input.x < -0.05f)
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
@@ -750,12 +702,12 @@ public class HedgehogMovement : MonoBehaviour
 
         #endregion
         //-----------------------------------------------------------------------------------------------------
-        // WALLJUMP e WALLSLIDE: GRUDAR NA PAREDE 
+        // WALLSLIDE: GRUDAR NA PAREDE 
         //-----------------------------------------------------------------------------------------------------
         #region wallJump
         if (pegouWallJump
-            /*&& Input.GetKey(KeyCode.Q)*/
-            && Mathf.Abs(input.x) > 0.005f
+            //&& Input.GetKey(KeyCode.Q)
+            //&& Mathf.Abs(input.x) > 0.005f
             && (leftHit.collider != null || rightHit.collider != null)
             && !estáLedgeGrabbing
             && !grounded
@@ -764,15 +716,12 @@ public class HedgehogMovement : MonoBehaviour
             || (characterAngle >= 355 && characterAngle <= 360) 
             || (characterAngle >= 175 && characterAngle <= 185)))
         {
-            //ele tá fazendo flickering entre true e false, culpa da parede
             grudadoParede = true;
-            print("wallgrabbing!");
             animator.Play("robot_wallgrab");
             velocity.y = 0;
             doubleJumpReady = true;
             if (leftHit.collider != null) { olhandoDireita = true; }
             else if (rightHit.collider != null) { olhandoDireita = false; }
-            //#TODO fazer jumpBuffer pro wallJump também, a la Celeste
         }
         else 
         {
@@ -781,11 +730,11 @@ public class HedgehogMovement : MonoBehaviour
         }
 
         //-----------------------------------------------------------------------------------------------------
-        // CAIR DA PAREDE
+        // CAIR DA PAREDE ou PULAR DA PAREDE / DAR WALLJUMP
         //-----------------------------------------------------------------------------------------------------
         if (grudadoParede)
         {
-            if (wallJumpDelay > 0 && !(input.y > 0.005f))
+            if (wallJumpDelay > 0 && !(Input.GetButton("Jump")))
             {
                 //wallJumpDelay -= Time.deltaTime;
                 transform.position = new Vector2(transform.position.x, transform.position.y - wallSlideSpeed * Time.deltaTime);
@@ -796,16 +745,16 @@ public class HedgehogMovement : MonoBehaviour
                 else if (rightHit.collider != null) { velocity.x -= 100; }
                 wallJumpDelay = wallJumpDelayTotal;
             }
-            else if (input.y > 0.005f) {
+            else if (Input.GetButton("Jump")) {
                 if (leftHit.collider != null) { velocity.x += 200; }
                 else if (rightHit.collider != null) { velocity.x -= 200; }
                 velocity.y += 300;
                 animator.Play("robot_basic_jump");
             }
         }
-        
-        //#TODO de fato pular da parede
-        //#TODO deslizar pra cima na parede quando pula do chão grudadinho nela
+
+        //#TODO fazer jumpBuffer pro wallJump também, a la Celeste, prov será com outro Raycast, 2 pixels mais longo ou algo do tipo
+        //#TODO deslizar pra cima na parede quando pula do chão grudadinho nela, a la Fancy Pants
         #endregion
 
         //-----------------------------------------------------------------------------------------------------
@@ -1063,11 +1012,17 @@ public class HedgehogMovement : MonoBehaviour
         coyoteTimeCounter = 0;
         jumpBufferCounter = 0;
         float jumpVel = jumpVelocity;
+
+
+        print("velocity.y: " + velocity.y);
+
         velocity.x -= jumpVel * (Mathf.Sin(currentGroundInfo.angle));
         velocity.y = jumpVel * (Mathf.Cos(currentGroundInfo.angle));
         grounded = false;
         pulou = true;
-        
+
+        print("velocity.y: " + velocity.y);
+
         doubleJumpReady = true;
         doubleJumpDelay = doubleJumpDelayTotal;
 
