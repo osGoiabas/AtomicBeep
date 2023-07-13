@@ -65,6 +65,7 @@ public class HedgehogMovement : MonoBehaviour
     float groundAcceleration = 300f; //168.75f;
     float groundTopSpeed = 300f; //360f;
     float speedLimit = 650f; //960f; //MAIS RÁPIDO QUE 600 ELE FICA TRAVANDO NAS CURVAS ÀS VEZES, ACHO QUE É BUG DA UNITY
+    float velocidadePura; //só usada para debug e pra checar se é pra makeGhost
 
     bool olhandoDireita = true;
 
@@ -133,7 +134,7 @@ public class HedgehogMovement : MonoBehaviour
 
     private float wallJumpDelay;
     private float wallJumpDelayTotal = 0.5f;
-    private float wallSlideSpeed = 75f;
+    private float wallSlideSpeed = 100f;
 
     Vector2 posLedge1;
     Vector2 posLedge2;
@@ -228,8 +229,11 @@ public class HedgehogMovement : MonoBehaviour
 
             //GUILayout.Label("abaixado: " + (abaixado ? "SIM" : "NÃO"));
             //GUILayout.Label("estáLedgeClimbing: " + (estáLedgeClimbing ? "SIM" : "NÃO"));
-      
+
             // GUILayout.Label("empurrando: " + (empurrando ? "SIM" : "NÃO"));
+
+            GUILayout.Label("velocidadePura: " + velocidadePura);
+            
 
             GUILayout.Label("Ground Mode: " + (groundMode));
             if (currentGroundInfo != null && currentGroundInfo.valid && grounded)
@@ -467,6 +471,21 @@ public class HedgehogMovement : MonoBehaviour
                 velocity = new Vector2(groundVelocity * Mathf.Cos(currentGroundInfo.angle),
                                        groundVelocity * Mathf.Sin(currentGroundInfo.angle));
 
+
+                velocidadePura = Vector3.Distance(transform.position, 
+                                                  new Vector3(transform.position.x + velocity.x,
+                                                              transform.position.y + velocity.y, 0));
+
+                //if (Mathf.Abs(groundVelocity) > groundTopSpeed)
+                if (velocidadePura > groundTopSpeed)                        
+                {
+                    afterImage.makeGhost = true;
+                }
+                else 
+                {
+                    afterImage.makeGhost = false;
+                }
+
                 //-----------------------------------------------------------------------------------------------------
                 // DESGRUDOU DO TETO/PAREDE? ENTÃO RESETA O MOVIMENTO.
                 //-----------------------------------------------------------------------------------------------------
@@ -550,7 +569,9 @@ public class HedgehogMovement : MonoBehaviour
                 doubleJumpReady = false;
 
                 CreateDust();
-                animator.Play("robot_basic_jump");
+                //animator.Play("robot_basic_jump");
+                //animator.Play("beep_jump_loop");  
+                animator.SetTrigger("Pulou");
                 //asaAnimator.Play("robot_asa");
             }
             #endregion
@@ -723,10 +744,23 @@ public class HedgehogMovement : MonoBehaviour
         {
             grudadoParede = true;
             animator.Play("robot_wallgrab");
-            velocity.y = 0;
             doubleJumpReady = true;
             if (leftHit.collider != null) { olhandoDireita = true; }
             else if (rightHit.collider != null) { olhandoDireita = false; }
+
+            //velocity.y = 0;
+            if (velocity.y > 0)
+            {
+                velocity.y -= friction * Time.deltaTime;
+            }
+            else 
+            { 
+                velocity.y = 0;
+            }
+
+
+                        
+
         }
         else 
         {
@@ -739,7 +773,7 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         if (grudadoParede)
         {
-            if (wallJumpDelay > 0 && !(Input.GetButton("Jump")))
+            if (wallJumpDelay > 0 && !(Input.GetButton("Jump")) && velocity.y <= 0)
             {
                 //wallJumpDelay -= Time.deltaTime;
                 transform.position = new Vector2(transform.position.x, transform.position.y - wallSlideSpeed * Time.deltaTime);
@@ -750,11 +784,14 @@ public class HedgehogMovement : MonoBehaviour
                 else if (rightHit.collider != null) { velocity.x -= 100; }
                 wallJumpDelay = wallJumpDelayTotal;
             }
-            else if (Input.GetButton("Jump")) {
+            else if (Input.GetButton("Jump"))
+            {
                 if (leftHit.collider != null) { velocity.x += 200; }
                 else if (rightHit.collider != null) { velocity.x -= 200; }
                 velocity.y += 300;
-                animator.Play("robot_basic_jump");
+                //animator.Play("robot_basic_jump");
+                //animator.Play("beep_jump_loop");
+                animator.SetTrigger("Pulou");
             }
         }
 
@@ -893,8 +930,11 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
 
         // CAIR FALLING
-        if (!grounded && velocity.y < 0 && tempoPirueta == 0)
-        { caindo = true; }
+        if (!grudadoParede && !grounded && velocity.y < 0 && tempoPirueta == 0)
+        { 
+            caindo = true;
+            animator.SetTrigger("Caindo");
+        }
         else
         { caindo = false; }
 
@@ -1036,7 +1076,9 @@ public class HedgehogMovement : MonoBehaviour
 
         if ((velocity.x > 0 && olhandoDireita) || (velocity.x < 0 && !olhandoDireita) || Mathf.Abs(velocity.x) <= 0.05f)
         {
-            animator.Play("robot_basic_jump");
+            //animator.Play("robot_basic_jump");
+            //animator.Play("beep_jump_loop");
+            animator.SetTrigger("Pulou");
         }
         else
         {

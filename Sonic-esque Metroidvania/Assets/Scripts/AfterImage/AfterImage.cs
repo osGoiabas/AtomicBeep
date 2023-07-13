@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AfterImage : MonoBehaviour
 {
-    float ghostDelayTotal = 0.5f;
+    float ghostDelayTotal = 0.1f;
     float ghostDelaySeconds = 0f;
     public GameObject ghost;
     public bool makeGhost = false;

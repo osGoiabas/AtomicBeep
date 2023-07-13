@@ -284,7 +284,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!68 &61212772
 EdgeCollider2D:
@@ -687,6 +687,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &540856499 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4294818186568778184, guid: d6cd53e012a1b974987cf9be634df92d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1916071118}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1087346673
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -700,7 +706,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1171797185, guid: d6cd53e012a1b974987cf9be634df92d, type: 3}
       propertyPath: makeGhost
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1307756009, guid: d6cd53e012a1b974987cf9be634df92d, type: 3}
       propertyPath: m_IsActive
@@ -749,17 +755,17 @@ PrefabInstance:
     - target: {fileID: 4294818186568778186, guid: d6cd53e012a1b974987cf9be634df92d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4294818186568778186, guid: d6cd53e012a1b974987cf9be634df92d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -21
+      value: 1207
       objectReference: {fileID: 0}
     - target: {fileID: 4294818186568778186, guid: d6cd53e012a1b974987cf9be634df92d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -24
+      value: -366
       objectReference: {fileID: 0}
     - target: {fileID: 4294818186568778186, guid: d6cd53e012a1b974987cf9be634df92d,
         type: 3}
@@ -976,7 +982,7 @@ Transform:
   m_Children:
   - {fileID: 1323098312}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1201648855
 GameObject:
@@ -46139,7 +46145,7 @@ Transform:
   - {fileID: 400917896}
   - {fileID: 1157694292}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1547212617
 SpriteRenderer:
@@ -46415,7 +46421,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!68 &1578729392
 EdgeCollider2D:
@@ -46627,14 +46633,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1619060827 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4294818186568778184, guid: d6cd53e012a1b974987cf9be634df92d,
-    type: 3}
-  m_PrefabInstance: {fileID: 1916071118}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1863917406
 GameObject:
   m_ObjectHideFlags: 0
@@ -46810,7 +46810,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1171797185, guid: d6cd53e012a1b974987cf9be634df92d, type: 3}
       propertyPath: makeGhost
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1307756009, guid: d6cd53e012a1b974987cf9be634df92d, type: 3}
       propertyPath: m_IsActive
@@ -46848,12 +46848,12 @@ PrefabInstance:
     - target: {fileID: 4294818186568778186, guid: d6cd53e012a1b974987cf9be634df92d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1204
+      value: 1179
       objectReference: {fileID: 0}
     - target: {fileID: 4294818186568778186, guid: d6cd53e012a1b974987cf9be634df92d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -368
+      value: -381
       objectReference: {fileID: 0}
     - target: {fileID: 4294818186568778186, guid: d6cd53e012a1b974987cf9be634df92d,
         type: 3}
@@ -47103,7 +47103,7 @@ PrefabInstance:
         type: 3}
       propertyPath: personagem
       value: 
-      objectReference: {fileID: 1619060827}
+      objectReference: {fileID: 540856499}
     - target: {fileID: 3412505675213317603, guid: 7be8c6d9ffe58a44ca18e25dfa6a78b8,
         type: 3}
       propertyPath: m_BackGroundColor.b
