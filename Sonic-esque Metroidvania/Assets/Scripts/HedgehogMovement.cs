@@ -39,6 +39,7 @@ public class HedgehogMovement : MonoBehaviour
     public bool grudadoParede { get; private set; }
     public bool estáLedgeGrabbing;
 
+    public bool lostFooting = false;
 
     //float standingHeight = 40f;
     private float heightHalf = 20f;
@@ -132,7 +133,7 @@ public class HedgehogMovement : MonoBehaviour
 
     private float wallJumpDelay;
     private float wallJumpDelayTotal = 0.5f;
-    private float wallSlideSpeed = 100f;
+    private float wallSlideSpeed = 75f;
 
     Vector2 posLedge1;
     Vector2 posLedge2;
@@ -198,6 +199,7 @@ public class HedgehogMovement : MonoBehaviour
         {
             GUILayout.BeginArea(new Rect(10, 10, 220, 300), "Stats", "Window");
 
+            //GUILayout.Label("lostFooting: " + (lostFooting ? "SIM" : "NÃO"));
             //GUILayout.Label("hControlLockTimer: " + hControlLockTimer);
             //GUILayout.Label("hControlLock: " + (hControlLock ? "SIM" : "NÃO"));
 
@@ -205,34 +207,29 @@ public class HedgehogMovement : MonoBehaviour
             //GUILayout.Label("mudandoDireçãoTimer: " + mudandoDireçãoTimer);
             //GUILayout.Label("Olhando para: " + (olhandoDireita ? "DIREITA" : "ESQUERDA"));
 
-            //GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
+            GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
             //GUILayout.Label("doubleJumpDelay: " + doubleJumpDelay);
             //GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
 
             //GUILayout.Label("grudadoParede: " + (grudadoParede ? "SIM" : "NÃO"));
             //GUILayout.Label("wallJumpDelay: " + wallJumpDelay);
-
-            //GUILayout.Label("collider?: " + ((leftHit.collider != null || rightHit.collider != null) ? "SIM" : "NÃO"));
+            //GUILayout.Label("colliderParede?: " + ((leftHit.collider != null || rightHit.collider != null) ? "SIM" : "NÃO"));
 
             //GUILayout.Label("charAngle: " + characterAngle);
             GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
             //GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
-            //GUILayout.Label("Caindo: " + (caindo ? "SIM" : "NÃO"));
+            GUILayout.Label("Caindo: " + (caindo ? "SIM" : "NÃO"));
 
-
-            GUILayout.Label("lowCeiling: " + (lowCeiling ? "SIM" : "NÃO"));
+            //GUILayout.Label("lowCeiling: " + (lowCeiling ? "SIM" : "NÃO"));
             GUILayout.Label("Pulou: " + (pulou ? "SIM" : "NÃO"));
             GUILayout.Label("tempoPirueta: " + tempoPirueta);
             GUILayout.Label("coyoteTimeCounter: " + coyoteTimeCounter);
             GUILayout.Label("jumpBufferCounter: " + jumpBufferCounter);
 
-
-            GUILayout.Label("abaixado: " + (abaixado ? "SIM" : "NÃO"));
-            GUILayout.Label("estáLedgeClimbing: " + (estáLedgeClimbing ? "SIM" : "NÃO"));
-
-            
-
-            // GUILayout.Label("Empurrando: " + (empurrando ? "SIM" : "NÃO"));
+            //GUILayout.Label("abaixado: " + (abaixado ? "SIM" : "NÃO"));
+            //GUILayout.Label("estáLedgeClimbing: " + (estáLedgeClimbing ? "SIM" : "NÃO"));
+      
+            // GUILayout.Label("empurrando: " + (empurrando ? "SIM" : "NÃO"));
 
             GUILayout.Label("Ground Mode: " + (groundMode));
             if (currentGroundInfo != null && currentGroundInfo.valid && grounded)
@@ -329,18 +326,26 @@ public class HedgehogMovement : MonoBehaviour
             // CAIR DA PAREDE/TETO
             //-----------------------------------------------------------------------------------------------------
 
-            bool lostFooting = false;
+            lostFooting = false;
 
             // SE NÃO ESTÁ NO FLOOR, MAS NÃO TEM VELOCIDADE PRA CORRER NA PAREDE/TETO
             if (groundMode != GroundMode.Floor && Mathf.Abs(groundVelocity) < fallVelocityThreshold)
             {
+                if (pegouWallJump && (groundMode == GroundMode.LeftWall || groundMode == GroundMode.RightWall))
+                {
+                    characterAngle = 0;
+                    transform.rotation = Quaternion.identity;
+                    if (olhandoDireita) { transform.position += new Vector3(10f, 0f, 0f); } 
+                    else { transform.position -= new Vector3(10f, 0f, 0f); }
+                }
+                else 
+                {
+                    //TRAVE O CONTROLE NA HORIZONTAL
+                    TraveControleH();
+                    lostFooting = true;
+                }
                 groundMode = GroundMode.Floor; // VIRE PRO CHÃO
                 grounded = false; // NÃO TÁ NO CHÃO
-
-                //TRAVE O CONTROLE NA HORIZONTAL
-                TraveControleH();
-
-                lostFooting = true;
             }
 
 
@@ -353,10 +358,10 @@ public class HedgehogMovement : MonoBehaviour
 
             coyoteTimeCounter = coyoteTime;
 
-            if (jumpBufferCounter > 0) {
+            if (!spinReady && jumpBufferCounter > 0) {
                 Pule();
             } 
-            else if (Input.GetButton("Jump") && !abaixado && !lowCeiling && !estáLedgeClimbing)
+            else if (Input.GetButton("Jump") && !abaixado && !lowCeiling && !estáLedgeClimbing && !spinReady)
             {
                 Pule();
             }
@@ -490,7 +495,7 @@ public class HedgehogMovement : MonoBehaviour
             else
                 jumpBufferCounter = 0;
 
-            if (coyoteTimeCounter > 0 && Input.GetButton("Jump") && !lowCeiling) 
+            if (coyoteTimeCounter > 0 && Input.GetButton("Jump") && !lowCeiling && !spinReady) 
                 Pule();
 
             //-----------------------------------------------------------------------------------------------------
@@ -912,12 +917,15 @@ public class HedgehogMovement : MonoBehaviour
         //animator.SetBool(empurrandoHash, empurrando);
 
         //-----------------------------------------------------------------------------------------------------
-        // ROTAÇÃO
+        // ROTAÇÃO ROTATE
         //-----------------------------------------------------------------------------------------------------
-        // rotaciona personagem perfeitamente, assim como em Sonic Mania e Freedom Planet
-        if (grounded) { transform.rotation = Quaternion.Euler(0f, 0f, characterAngle); }
-        // não está no chão? fique em posição de queda normal.
-        else { 
+        if (grounded) 
+        {
+            // rotaciona personagem perfeitamente, como em Sonic Mania e Freedom Planet, não em frações de 45º
+            transform.rotation = Quaternion.Euler(0f, 0f, characterAngle); 
+        }
+        else // não está no chão? fique em posição de queda normal.
+        { 
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, 5 * Time.deltaTime);
             characterAngle = 0;
         }
@@ -1231,7 +1239,7 @@ public class HedgehogMovement : MonoBehaviour
     public void TraveControleH() {
         hControlLock = true;
         hControlLockTimer = hControlLockTime;
-        groundVelocity = 0;
+        groundVelocity /= 2;
     }
 
     public void Escorregar(string intensidade) {
