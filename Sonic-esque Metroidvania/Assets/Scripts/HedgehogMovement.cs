@@ -673,6 +673,8 @@ public class HedgehogMovement : MonoBehaviour
                 posLedge1.y = rightHit.point.y - 1 + (16 - rightHit.point.y % 16);
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
+                olhandoDireita = false;
+
                 if (Input.GetButton("Jump") || input.x > 0.05f)
                 {
                     estáLedgeClimbing = true;
@@ -681,7 +683,8 @@ public class HedgehogMovement : MonoBehaviour
                 }
                 else 
                 {
-                    animator.Play("robot_ledge_grab");
+                    //animator.Play("robot_ledge_grab");
+                    animator.Play("beep_wall_slide_STILL");
                 }
             }
             else if (!grounded &&
@@ -691,6 +694,8 @@ public class HedgehogMovement : MonoBehaviour
                 posLedge1.y = leftHit.point.y - 1 + (16 - leftHit.point.y % 16);
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
+                olhandoDireita = true;
+
                 if (Input.GetButton("Jump") || input.x < -0.05f)
                 {
                     estáLedgeClimbing = true;
@@ -699,7 +704,8 @@ public class HedgehogMovement : MonoBehaviour
                 }
                 else
                 {
-                    animator.Play("robot_ledge_grab");
+                    //animator.Play("robot_ledge_grab");
+                    animator.Play("beep_wall_slide_STILL");
                 }
             }
 
@@ -743,7 +749,8 @@ public class HedgehogMovement : MonoBehaviour
             || (characterAngle >= 175 && characterAngle <= 185)))
         {
             grudadoParede = true;
-            animator.Play("robot_wallgrab");
+            //animator.Play("robot_wallgrab");
+            animator.Play("beep_wall_slide_STILL");
             doubleJumpReady = true;
             if (leftHit.collider != null) { olhandoDireita = true; }
             else if (rightHit.collider != null) { olhandoDireita = false; }
