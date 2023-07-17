@@ -30,14 +30,16 @@ public class HedgehogMovement : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------
 
     public bool grounded { get; private set; }
-    public bool pulou { get; private set; }
-    public bool caindo { get; private set; }
+    public bool estáCaindo { get; private set; }
+    public bool estáPulando { get; private set; }
+    public bool estáPulandoNormal { get; private set; }
+    public bool estáPiruetando { get; private set; }
 
     public bool abaixado { get; private set; }
 
     public bool empurrando { get; private set; }
-    public bool grudadoParede { get; private set; }
-    public bool estáLedgeGrabbing;
+    public bool estáWallSliding { get; private set; }
+    public bool estáLedgeGrabbing { get; private set; }
 
     public bool lostFooting = false;
 
@@ -107,8 +109,15 @@ public class HedgehogMovement : MonoBehaviour
     [SerializeField] public Animator animator;
     int speedHash;
     int standHash;
-    int caindoHash;
     int groundedHash;
+
+    int caindoHash;
+    int pulandoNormalHash;
+    int piruetandoHash;
+
+    int spinReadyHash;
+
+    int wallSlidingHash;
 
     int freandoHash;
     int empurrandoHash;
@@ -130,7 +139,6 @@ public class HedgehogMovement : MonoBehaviour
     private bool doubleJumpReady = false;
     private float doubleJumpDelay = 0;
     private float doubleJumpDelayTotal = 0.1f;
-    [SerializeField] public Animator asaAnimator;
 
     private float wallJumpDelay;
     private float wallJumpDelayTotal = 0.5f;
@@ -182,9 +190,15 @@ public class HedgehogMovement : MonoBehaviour
 
         standHash = Animator.StringToHash("Stand");
         speedHash = Animator.StringToHash("Speed");
-        caindoHash = Animator.StringToHash("Caindo");
-
         groundedHash = Animator.StringToHash("Grounded");
+
+        caindoHash = Animator.StringToHash("Caindo");
+        pulandoNormalHash = Animator.StringToHash("PulandoNormal");
+        piruetandoHash = Animator.StringToHash("Piruetando");
+
+        spinReadyHash = Animator.StringToHash("SpinReady");
+
+        wallSlidingHash = Animator.StringToHash("WallSliding");
 
         freandoHash = Animator.StringToHash("Freando");
 
@@ -212,17 +226,19 @@ public class HedgehogMovement : MonoBehaviour
             //GUILayout.Label("doubleJumpDelay: " + doubleJumpDelay);
             //GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
 
-            //GUILayout.Label("grudadoParede: " + (grudadoParede ? "SIM" : "NÃO"));
+            //GUILayout.Label("estáWallSliding: " + (estáWallSliding ? "SIM" : "NÃO"));
             //GUILayout.Label("wallJumpDelay: " + wallJumpDelay);
             //GUILayout.Label("colliderParede?: " + ((leftHit.collider != null || rightHit.collider != null) ? "SIM" : "NÃO"));
 
             //GUILayout.Label("charAngle: " + characterAngle);
             GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
             //GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
-            GUILayout.Label("Caindo: " + (caindo ? "SIM" : "NÃO"));
+            GUILayout.Label("estáCaindo: " + (estáCaindo ? "SIM" : "NÃO"));
 
             //GUILayout.Label("lowCeiling: " + (lowCeiling ? "SIM" : "NÃO"));
-            GUILayout.Label("Pulou: " + (pulou ? "SIM" : "NÃO"));
+            GUILayout.Label("estáPulando: " + (estáPulando ? "SIM" : "NÃO"));
+            //GUILayout.Label("estáPulandoNormal: " + (estáPulandoNormal ? "SIM" : "NÃO"));
+            //GUILayout.Label("estáPiruentado: " + (estáPiruentado ? "SIM" : "NÃO"));
             GUILayout.Label("tempoPirueta: " + tempoPirueta);
             GUILayout.Label("coyoteTimeCounter: " + coyoteTimeCounter);
             GUILayout.Label("jumpBufferCounter: " + jumpBufferCounter);
@@ -289,13 +305,11 @@ public class HedgehogMovement : MonoBehaviour
                 spinReady = true;
                 //mudandoDireção = false;
                 CreateDust();
-                animator.Play("robot_spindash");
             }
 
             //soltou a seta pra baixo? simbora
             if (spinReady && !abaixado)
             {
-                animator.SetTrigger("Stand");
                 if (olhandoDireita)
                 {
                     groundVelocity += dashSpeed;
@@ -526,7 +540,7 @@ public class HedgehogMovement : MonoBehaviour
 
             // JÁ PULOU, SOLTOU O BOTÃO, ESTÁ NO AR E A VELOCIDADE VERTICAL A SER APLICADA PASSOU DO LIMITE MÁXIMO?
             // VOLTA A APLICAR SÓ O MÁXIMO (a gravidade eventualmente o puxará pra baixo)
-            if (pulou && velocity.y > jumpReleaThreshold && Input.GetButtonUp("Jump"))
+            if (estáPulando && velocity.y > jumpReleaThreshold && Input.GetButtonUp("Jump"))
             {
                 velocity.y = jumpReleaThreshold;
                 print("velocity.y = jumpReleaThreshold: " + velocity.y);    
@@ -546,7 +560,7 @@ public class HedgehogMovement : MonoBehaviour
                 //-----------------------------------------------------------------------------------------------------
                 // GRAVIDADE E VELOCIDADE TERMINAL
                 //-----------------------------------------------------------------------------------------------------
-                if (!grudadoParede && !estáLedgeGrabbing) {
+                if (!estáWallSliding && !estáLedgeGrabbing) {
                     velocity.y = Mathf.Max(velocity.y + (gravity * Time.deltaTime), -terminalVelocity);
                 }
             }
@@ -560,19 +574,15 @@ public class HedgehogMovement : MonoBehaviour
                 && doubleJumpDelay <= 0
                 && Input.GetButton("Jump")
                 && !lowCeiling
-                && !grudadoParede)
+                && !estáWallSliding)
             {
                 float jumpVel = jumpVelocity;
                 velocity.y = jumpVel;
                 grounded = false;
-                pulou = true;
+                estáPulando = true;
+                estáPulandoNormal = true;
                 doubleJumpReady = false;
-
                 CreateDust();
-                //animator.Play("robot_basic_jump");
-                //animator.Play("beep_jump_loop");  
-                animator.SetTrigger("Pulou");
-                //asaAnimator.Play("robot_asa");
             }
             #endregion
 
@@ -673,7 +683,7 @@ public class HedgehogMovement : MonoBehaviour
                 posLedge1.y = rightHit.point.y - 1 + (16 - rightHit.point.y % 16);
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
-                olhandoDireita = false;
+                //olhandoDireita = false;
 
                 if (Input.GetButton("Jump") || input.x > 0.05f)
                 {
@@ -683,8 +693,7 @@ public class HedgehogMovement : MonoBehaviour
                 }
                 else 
                 {
-                    //animator.Play("robot_ledge_grab");
-                    animator.Play("beep_wall_slide_STILL");
+                    animator.Play("robot_ledge_grab");
                 }
             }
             else if (!grounded &&
@@ -694,7 +703,7 @@ public class HedgehogMovement : MonoBehaviour
                 posLedge1.y = leftHit.point.y - 1 + (16 - leftHit.point.y % 16);
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
-                olhandoDireita = true;
+                //olhandoDireita = true;
 
                 if (Input.GetButton("Jump") || input.x < -0.05f)
                 {
@@ -704,8 +713,7 @@ public class HedgehogMovement : MonoBehaviour
                 }
                 else
                 {
-                    //animator.Play("robot_ledge_grab");
-                    animator.Play("beep_wall_slide_STILL");
+                    animator.Play("robot_ledge_grab");
                 }
             }
 
@@ -738,8 +746,6 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         #region wallJump
         if (pegouWallJump
-            //&& Input.GetKey(KeyCode.Q)
-            //&& Mathf.Abs(input.x) > 0.005f
             && (leftHit.collider != null || rightHit.collider != null)
             && !estáLedgeGrabbing
             && !grounded
@@ -748,14 +754,11 @@ public class HedgehogMovement : MonoBehaviour
             || (characterAngle >= 355 && characterAngle <= 360) 
             || (characterAngle >= 175 && characterAngle <= 185)))
         {
-            grudadoParede = true;
-            //animator.Play("robot_wallgrab");
-            animator.Play("beep_wall_slide_STILL");
+            estáWallSliding = true;
             doubleJumpReady = true;
             if (leftHit.collider != null) { olhandoDireita = true; }
             else if (rightHit.collider != null) { olhandoDireita = false; }
 
-            //velocity.y = 0;
             if (velocity.y > 0)
             {
                 velocity.y -= friction * Time.deltaTime;
@@ -764,21 +767,17 @@ public class HedgehogMovement : MonoBehaviour
             { 
                 velocity.y = 0;
             }
-
-
-                        
-
         }
         else 
         {
-            grudadoParede = false; 
+            estáWallSliding = false; 
             wallJumpDelay = wallJumpDelayTotal;
         }
 
         //-----------------------------------------------------------------------------------------------------
         // CAIR DA PAREDE ou PULAR DA PAREDE / DAR WALLJUMP
         //-----------------------------------------------------------------------------------------------------
-        if (grudadoParede)
+        if (estáWallSliding)
         {
             if (wallJumpDelay > 0 && !(Input.GetButton("Jump")) && velocity.y <= 0)
             {
@@ -796,9 +795,7 @@ public class HedgehogMovement : MonoBehaviour
                 if (leftHit.collider != null) { velocity.x += 200; }
                 else if (rightHit.collider != null) { velocity.x -= 200; }
                 velocity.y += 300;
-                //animator.Play("robot_basic_jump");
-                //animator.Play("beep_jump_loop");
-                animator.SetTrigger("Pulou");
+                estáPulandoNormal = true;
             }
         }
 
@@ -853,6 +850,8 @@ public class HedgehogMovement : MonoBehaviour
             }
             else // TETO NÃO É VÁLIDO OU SONIC TÁ CAINDO 
             {
+
+
                 //-----------------------------------------------------------------------------------------------------
                 // ATERRISSAR / LANDING (VERIFICA SE JÁ TOCOU NO CHÃO)
                 //-----------------------------------------------------------------------------------------------------
@@ -862,13 +861,12 @@ public class HedgehogMovement : MonoBehaviour
                            && velocity.y <= 0f
                            && transform.position.y <= (info.height + heightHalf);
 
+
                 // SE SIM, TRANSFORMA A VELOCIDADE NO AR EM VELOCIDADE NO CHÃO 
                 if (grounded)
                 {
-                    // If in a roll jump, add 5 to position upon landing
-                    //if (jumped) { transform.position += new Vector3(0f, 5f); }
+                    estáPulando = false;
 
-                    pulou = false;
                     currentGroundInfo = info;
                     groundMode = GroundMode.Floor;
                     float angleDeg = currentGroundInfo.angle * Mathf.Rad2Deg;
@@ -909,8 +907,6 @@ public class HedgehogMovement : MonoBehaviour
         {
             StickToGround(currentGroundInfo);
 
-            //asaAnimator.Play("robot_asa_capa");
-
             // ANIMAÇÃO
 
             if (Mathf.Abs(groundVelocity) > 0.005f)
@@ -937,13 +933,20 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
 
         // CAIR FALLING
-        if (!grudadoParede && !grounded && velocity.y < 0 && tempoPirueta == 0)
-        { 
-            caindo = true;
-            animator.SetTrigger("Caindo");
-        }
+        if (!estáWallSliding && !grounded && velocity.y < 0 && tempoPirueta == 0)
+        { estáCaindo = true; }
         else
-        { caindo = false; }
+        { estáCaindo = false; }
+
+        if (estáPulandoNormal || estáPiruetando)
+            estáPulando = true;
+
+        if (estáCaindo || estáWallSliding)
+            estáPulando = false;
+
+        if (!estáPulando)
+            estáPulandoNormal = false;
+            estáPiruetando = false;
 
 
         if (tempoPirueta > 0)
@@ -957,8 +960,13 @@ public class HedgehogMovement : MonoBehaviour
             animator.SetTrigger("Stand");
         }
 
-        animator.SetBool(caindoHash, caindo);
-        animator.SetBool(groundedHash, grounded);
+        //animator.SetBool(groundedHash, grounded);
+        animator.SetBool(pulandoNormalHash, estáPulandoNormal);
+        animator.SetBool(piruetandoHash, estáPiruetando);
+        animator.SetBool(caindoHash, estáCaindo);        
+        animator.SetBool(wallSlidingHash, estáWallSliding);
+        animator.SetBool(spinReadyHash, spinReady);
+        
         //animator.SetBool(freandoHash, freando);
         //animator.SetBool(abaixadoHash, abaixado);
         //animator.SetBool(empurrandoHash, empurrando);
@@ -1074,7 +1082,7 @@ public class HedgehogMovement : MonoBehaviour
         velocity.x -= jumpVel * (Mathf.Sin(currentGroundInfo.angle));
         velocity.y = jumpVel * (Mathf.Cos(currentGroundInfo.angle));
         grounded = false;
-        pulou = true;
+        estáPulando = true;
 
         print("velocity.y: " + velocity.y);
 
@@ -1083,13 +1091,14 @@ public class HedgehogMovement : MonoBehaviour
 
         if ((velocity.x > 0 && olhandoDireita) || (velocity.x < 0 && !olhandoDireita) || Mathf.Abs(velocity.x) <= 0.05f)
         {
-            //animator.Play("robot_basic_jump");
-            //animator.Play("beep_jump_loop");
-            animator.SetTrigger("Pulou");
+            estáPulandoNormal = true;
+            estáPiruetando = false;
         }
         else
         {
-            animator.Play("robot_backflip_TESTE");
+            estáPulandoNormal = false;
+            estáPiruetando = true;
+            //animator.Play("robot_backflip_TESTE");
             tempoPirueta = 0.75f;
             //#TODO variar tempoPirueta e velocidade da animação baseado na velocidade horizontal
         }
