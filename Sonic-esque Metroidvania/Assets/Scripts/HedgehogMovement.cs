@@ -118,8 +118,11 @@ public class HedgehogMovement : MonoBehaviour
     int spinReadyHash;
 
     int wallSlidingHash;
+    int ledgeGrabHash;
+    int ledgeClimbHash;
 
-    int freandoHash;
+    int brakeHash;
+    int freandoAgachadoHash;
     int empurrandoHash;
 
     //-----------------------------------------------------------------------------------------------------
@@ -130,9 +133,9 @@ public class HedgehogMovement : MonoBehaviour
 
     private bool spinReady = false;
 
-    private bool mudandoDireção = false;
-    private float mudandoDireçãoDelay = 0.3f;
-    private float mudandoDireçãoTimer;
+    private bool mudarDireção = false;
+    private float mudarDireçãoDelay = 0.3f;
+    private float mudarDireçãoTimer;
 
     private float tempoPirueta = 0;
 
@@ -199,8 +202,11 @@ public class HedgehogMovement : MonoBehaviour
         spinReadyHash = Animator.StringToHash("SpinReady");
 
         wallSlidingHash = Animator.StringToHash("WallSliding");
+        ledgeGrabHash = Animator.StringToHash("LedgeGrabbing"); 
+        ledgeClimbHash = Animator.StringToHash("LedgeClimbing");
 
-        freandoHash = Animator.StringToHash("Freando");
+        brakeHash = Animator.StringToHash("Brake");
+        freandoAgachadoHash = Animator.StringToHash("freandoAgachado");
 
         empurrandoHash = Animator.StringToHash("Empurrando");
     }
@@ -218,8 +224,8 @@ public class HedgehogMovement : MonoBehaviour
             //GUILayout.Label("hControlLockTimer: " + hControlLockTimer);
             //GUILayout.Label("hControlLock: " + (hControlLock ? "SIM" : "NÃO"));
 
-            //GUILayout.Label("mudandoDireção: " + (mudandoDireção ? "SIM" : "NÃO"));
-            //GUILayout.Label("mudandoDireçãoTimer: " + mudandoDireçãoTimer);
+            //GUILayout.Label("mudarDireção: " + (mudarDireção ? "SIM" : "NÃO"));
+            //GUILayout.Label("mudarDireçãoTimer: " + mudarDireçãoTimer);
             //GUILayout.Label("Olhando para: " + (olhandoDireita ? "DIREITA" : "ESQUERDA"));
 
             GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
@@ -232,7 +238,7 @@ public class HedgehogMovement : MonoBehaviour
 
             //GUILayout.Label("charAngle: " + characterAngle);
             GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
-            //GUILayout.Label("Freando: " + (freando ? "SIM" : "NÃO"));
+            //GUILayout.Label("freandoAgachado: " + (freandoAgachado ? "SIM" : "NÃO"));
             GUILayout.Label("estáCaindo: " + (estáCaindo ? "SIM" : "NÃO"));
 
             //GUILayout.Label("lowCeiling: " + (lowCeiling ? "SIM" : "NÃO"));
@@ -295,7 +301,7 @@ public class HedgehogMovement : MonoBehaviour
             //comece a carregar o spindash
             if (pegouSpinDash 
                 && groundVelocity == 0
-                && !mudandoDireção
+                && !mudarDireção
                 && Input.GetButton("Jump") && abaixado
                 //&& Input.GetKeyDown(KeyCode.Q)
                 && groundMode == GroundMode.Floor
@@ -303,7 +309,7 @@ public class HedgehogMovement : MonoBehaviour
                 && rightHit.collider == null)
             {
                 spinReady = true;
-                //mudandoDireção = false;
+                //mudarDireção = false;
                 CreateDust();
             }
 
@@ -491,7 +497,7 @@ public class HedgehogMovement : MonoBehaviour
                                                               transform.position.y + velocity.y, 0));
 
                 //if (Mathf.Abs(groundVelocity) > groundTopSpeed)
-                if (velocidadePura > groundTopSpeed)                        
+                if (velocidadePura > groundTopSpeed + 1f)                        
                 {
                     afterImage.makeGhost = true;
                 }
@@ -689,11 +695,10 @@ public class HedgehogMovement : MonoBehaviour
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
-                    animator.Play("robot_ledge_climb");
                 }
-                else 
+                else
                 {
-                    animator.Play("robot_ledge_grab");
+                    estáLedgeClimbing = false;
                 }
             }
             else if (!grounded &&
@@ -709,11 +714,10 @@ public class HedgehogMovement : MonoBehaviour
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
-                    animator.Play("robot_ledge_climb");
                 }
                 else
                 {
-                    animator.Play("robot_ledge_grab");
+                    estáLedgeClimbing = false;
                 }
             }
 
@@ -795,6 +799,7 @@ public class HedgehogMovement : MonoBehaviour
                 if (leftHit.collider != null) { velocity.x += 200; }
                 else if (rightHit.collider != null) { velocity.x -= 200; }
                 velocity.y += 300;
+                estáWallSliding = false;
                 estáPulandoNormal = true;
             }
         }
@@ -903,25 +908,16 @@ public class HedgehogMovement : MonoBehaviour
             lowCeiling = false;
         }
 
+        // o certo é não precisar disso, mas enfim
+        if (estáPulandoNormal || estáPiruetando)
+        estáPulando = true;
+
         if (grounded)
         {
             StickToGround(currentGroundInfo);
 
             // ANIMAÇÃO
-
-            if (Mathf.Abs(groundVelocity) > 0.005f)
-            {
-
-                animator.SetBool("Movendo", true);
-            }
-            else {
-                animator.SetBool("Movendo", false);
-            }
-
-
             animator.SetFloat(speedHash, Mathf.Abs(groundVelocity));
-          
-            
 
             // A CABEÇA DO SPRITE ESTÁ DENTRO DO TETO?
             lowCeiling = ceil.valid && transform.position.y > ceil.point.y - 25f;
@@ -938,36 +934,43 @@ public class HedgehogMovement : MonoBehaviour
         else
         { estáCaindo = false; }
 
-        if (estáPulandoNormal || estáPiruetando)
-            estáPulando = true;
-
-        if (estáCaindo || estáWallSliding)
+        if (grounded || estáCaindo || estáWallSliding || estáLedgeGrabbing || estáLedgeClimbing)
             estáPulando = false;
 
-        if (!estáPulando)
+        if (!estáPulando) {
             estáPulandoNormal = false;
             estáPiruetando = false;
+            tempoPirueta = 0;
+        }
 
 
-        if (tempoPirueta > 0)
-        { tempoPirueta -= Time.deltaTime; }
+        if (tempoPirueta > 0) { 
+            tempoPirueta -= Time.deltaTime;
+            estáPiruetando = true;
+        }
         else
         { tempoPirueta = 0; }
 
 
-        if (grounded && !mudandoDireção && !spinReady && velocity.x == 0)
+
+        if (grounded && !mudarDireção && !spinReady && velocity.x == 0)
         { 
-            animator.SetTrigger("Stand");
+            //animator.SetTrigger("Stand");
         }
 
         //animator.SetBool(groundedHash, grounded);
         animator.SetBool(pulandoNormalHash, estáPulandoNormal);
         animator.SetBool(piruetandoHash, estáPiruetando);
         animator.SetBool(caindoHash, estáCaindo);        
+
         animator.SetBool(wallSlidingHash, estáWallSliding);
+        animator.SetBool(ledgeGrabHash, estáLedgeGrabbing);
+        animator.SetBool(ledgeClimbHash, estáLedgeClimbing);
+
         animator.SetBool(spinReadyHash, spinReady);
-        
-        //animator.SetBool(freandoHash, freando);
+
+        animator.SetBool(brakeHash, mudarDireção);
+        //animator.SetBool(freandoAgachadoHash, freandoAgachado);
         //animator.SetBool(abaixadoHash, abaixado);
         //animator.SetBool(empurrandoHash, empurrando);
 
@@ -986,67 +989,64 @@ public class HedgehogMovement : MonoBehaviour
         }
 
         //-----------------------------------------------------------------------------------------------------
-        // DIREÇÃO E mudandoDireção, VIRAR, TURN      
+        // DIREÇÃO E mudarDireção, VIRAR, TURN      
         //-----------------------------------------------------------------------------------------------------
         #region direção
 
-        if (Mathf.Abs(input.x) > 0.05f && grounded && !freando && !spinReady)
+        if (Mathf.Abs(input.x) > 0.05f && grounded && !freandoAgachado && !spinReady)
         {
             // indo prum lado mas olhando pro outro
             if ((input.x < 0.05f && olhandoDireita) || (input.x > 0.05f && !olhandoDireita))
             {
-                mudandoDireção = true;
-                //animator.Play("robot_turn");
-                animator.Play("beep_brake");
+                mudarDireção = true;
             } 
         }
 
-        if (mudandoDireção && grounded)
+        if (mudarDireção && grounded)
         {
-            mudandoDireçãoTimer -= Time.deltaTime;
-            if (mudandoDireçãoTimer < 0)
+            mudarDireçãoTimer -= Time.deltaTime;
+            if (mudarDireçãoTimer < 0)
             {
-                animator.Play("beep_turn");
-                //animator.SetTrigger("Stand");
-                mudandoDireção = false;
-                mudandoDireçãoTimer = mudandoDireçãoDelay;
+                animator.SetTrigger("BrakeEnd");
+                mudarDireção = false;
+                mudarDireçãoTimer = mudarDireçãoDelay;
                 olhandoDireita = !olhandoDireita;
             }
         }
         else
         {
-            mudandoDireção = false;
-            mudandoDireçãoTimer = mudandoDireçãoDelay;
+            mudarDireção = false;
+            mudarDireçãoTimer = mudarDireçãoDelay;
         }
 
         transform.localScale = new Vector3(olhandoDireita ? 1 : -1, 1, 1);
         #endregion
 
         //-----------------------------------------------------------------------------------------------------
-        // FREANDO
+        // freandoAgachado
         //-----------------------------------------------------------------------------------------------------
         #region frear
         //nos jogos clássicos frear é meramente visual, a desaceleração é igual sempre        
         /*
         if (grounded)
         {
-            if (freando == false && Mathf.Abs(groundVelocity) >= freandoLimiteVirar
+            if (freandoAgachado == false && Mathf.Abs(groundVelocity) >= freandoAgachadoLimiteVirar
                                  && ((groundVelocity < 0 && input.x > 0) ||
                                      (groundVelocity > 0 && input.x < 0)))
             {
-                //animator.SetTrigger("Freando");
-                freando = true;
+                //animator.SetTrigger("freandoAgachado");
+                freandoAgachado = true;
                 TraveControleH();
-                FindObjectOfType<SoundManager>().Play("freando");
+                FindObjectOfType<SoundManager>().Play("freandoAgachado");
             }
-            else if (freando && Mathf.Abs(groundVelocity) < freandoLimiteVirar)
+            else if (freandoAgachado && Mathf.Abs(groundVelocity) < freandoAgachadoLimiteVirar)
             {
                 if (Mathf.Abs(input.x) > 0.05f)
                 {
                     olhandoDireita = !olhandoDireita;
-                    animator.SetTrigger("FreandoVirar");
+                    animator.SetTrigger("freandoAgachadoVirar");
                 }
-                freando = false;
+                freandoAgachado = false;
                 TraveControleH();
             }
             else if (groundVelocity == 0 || ((groundVelocity > 0 && input.x > 0) || (groundVelocity < 0 && input.x < 0)))
@@ -1063,10 +1063,10 @@ public class HedgehogMovement : MonoBehaviour
     }
 
     [Header ("Frear")]
-    [SerializeField] AudioSource somFreando;
-    bool freando = false;
-    //bool freandoVirar = false;
-    //float freandoLimiteVirar = 100;
+    [SerializeField] AudioSource somfreandoAgachado;
+    bool freandoAgachado = false;
+    //bool freandoAgachadoVirar = false;
+    //float freandoAgachadoLimiteVirar = 100;
 
 
 
@@ -1098,7 +1098,6 @@ public class HedgehogMovement : MonoBehaviour
         {
             estáPulandoNormal = false;
             estáPiruetando = true;
-            //animator.Play("robot_backflip_TESTE");
             tempoPirueta = 0.75f;
             //#TODO variar tempoPirueta e velocidade da animação baseado na velocidade horizontal
         }
