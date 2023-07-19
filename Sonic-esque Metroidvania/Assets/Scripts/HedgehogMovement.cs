@@ -29,6 +29,8 @@ public class HedgehogMovement : MonoBehaviour
     // GERAL
     //-----------------------------------------------------------------------------------------------------
 
+    [SerializeField] private GameInput gameInput;
+
     public bool grounded { get; private set; }
     public bool estáCaindo { get; private set; }
     public bool estáPulando { get; private set; }
@@ -272,7 +274,9 @@ public class HedgehogMovement : MonoBehaviour
     {
         //INPUT
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        
+        //print("input clássico: " + input);
+        Vector2 inputVector = gameInput.GetMovementVector();
+
 
         if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
         if (Input.GetKeyDown(KeyCode.E) && pegouBulletTime) { BulletTime(); }
@@ -288,11 +292,6 @@ public class HedgehogMovement : MonoBehaviour
 
         if (grounded)
         {
-            //input.y > 0.05f
-            if (Input.GetButton("Jump"))
-            {
-                //print("apertou jump!");
-            }
             //-----------------------------------------------------------------------------------------------------
             // SPINDASH
             //-----------------------------------------------------------------------------------------------------
@@ -763,6 +762,8 @@ public class HedgehogMovement : MonoBehaviour
             if (leftHit.collider != null) { olhandoDireita = true; }
             else if (rightHit.collider != null) { olhandoDireita = false; }
 
+            velocity.y -= friction * Time.deltaTime;
+            /*
             if (velocity.y > 0)
             {
                 velocity.y -= friction * Time.deltaTime;
@@ -770,7 +771,7 @@ public class HedgehogMovement : MonoBehaviour
             else 
             { 
                 velocity.y = 0;
-            }
+            }*/
         }
         else 
         {
@@ -781,7 +782,7 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         // CAIR DA PAREDE ou PULAR DA PAREDE / DAR WALLJUMP
         //-----------------------------------------------------------------------------------------------------
-        if (estáWallSliding)
+        if (estáWallSliding && !grounded)
         {
             if (wallJumpDelay > 0 && !(Input.GetButton("Jump")) && velocity.y <= 0)
             {
@@ -789,7 +790,7 @@ public class HedgehogMovement : MonoBehaviour
                 transform.position = new Vector2(transform.position.x, transform.position.y - wallSlideSpeed * Time.deltaTime);
             }
             else if (wallJumpDelay < 0)
-            {
+            { // solta ele da parede se o tempo acabar; cód está atualmente INATIVO
                 if (leftHit.collider != null) { velocity.x += 100; }
                 else if (rightHit.collider != null) { velocity.x -= 100; }
                 wallJumpDelay = wallJumpDelayTotal;
@@ -801,6 +802,8 @@ public class HedgehogMovement : MonoBehaviour
                 velocity.y += 300;
                 estáWallSliding = false;
                 estáPulandoNormal = true;
+                
+                //print(velocity.y);
             }
         }
 
@@ -1077,14 +1080,14 @@ public class HedgehogMovement : MonoBehaviour
         float jumpVel = jumpVelocity;
 
 
-        print("velocity.y: " + velocity.y);
+        //print("velocity.y: " + velocity.y);
 
         velocity.x -= jumpVel * (Mathf.Sin(currentGroundInfo.angle));
         velocity.y = jumpVel * (Mathf.Cos(currentGroundInfo.angle));
         grounded = false;
         estáPulando = true;
 
-        print("velocity.y: " + velocity.y);
+        //print("velocity.y: " + velocity.y);
 
         doubleJumpReady = true;
         doubleJumpDelay = doubleJumpDelayTotal;
