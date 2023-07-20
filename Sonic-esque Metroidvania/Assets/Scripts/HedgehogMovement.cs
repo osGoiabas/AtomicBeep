@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //using UnityEngine.Experimental.Rendering.LWRP;
@@ -270,6 +271,24 @@ public class HedgehogMovement : MonoBehaviour
     }
     #endregion
 
+    private void Start() {
+        gameInput.OnPulo += GameInput_OnPulo;
+    }
+    private void GameInput_OnPulo(object sender, System.EventArgs e) { 
+        Debug.Log("PRESSED JUMP!");
+
+        if (grounded && !spinReady && jumpBufferCounter > 0)
+            Pule();
+        else if (grounded && !abaixado && !lowCeiling && !estáLedgeClimbing && !spinReady)
+            Pule();
+        else if (!grounded && coyoteTimeCounter > 0 && !lowCeiling && !spinReady)
+            Pule();
+
+        //if (Input.GetButton("Jump"))
+        if (!grounded)
+            jumpBufferCounter = jumpBuffer;
+    }
+
     void FixedUpdate()
     {
         //INPUT
@@ -381,14 +400,15 @@ public class HedgehogMovement : MonoBehaviour
 
             coyoteTimeCounter = coyoteTime;
 
-            if (!spinReady && jumpBufferCounter > 0) {
-                Pule();
-            } 
-            else if (Input.GetButton("Jump") && !abaixado && !lowCeiling && !estáLedgeClimbing && !spinReady)
+            if (!estáPulando)
+            /*if (!spinReady && jumpBufferCounter > 0)
             {
                 Pule();
             }
-            else
+            else if (Input.GetButton("Jump") && !abaixado && !lowCeiling && !estáLedgeClimbing && !spinReady)
+            {
+                Pule();
+            } else*/
             {
                 //timer do control lock
                 if (hControlLock)
@@ -431,7 +451,7 @@ public class HedgehogMovement : MonoBehaviour
                 // INPUT = MOVIMENTO!
                 //-----------------------------------------------------------------------------------------------------
 
-               
+
                 if (!hControlLock && Mathf.Abs(input.x) >= 0.005f && !abaixado)
                 {
                     float accel = /*underwater ? uwAcceleration :*/ groundAcceleration;
@@ -443,9 +463,9 @@ public class HedgehogMovement : MonoBehaviour
                     if (input.x < 0f)
                     {
                         float acceleration = 0f;
-                        if (groundVelocity > 0.005f) 
+                        if (groundVelocity > 0.005f)
                         { acceleration = decel; } // FREAR
-                        else 
+                        else
                         { acceleration = accel; } // ACELERAR
 
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
@@ -461,9 +481,9 @@ public class HedgehogMovement : MonoBehaviour
                     else if (input.x > 0f)
                     {
                         float acceleration = 0f;
-                        if (groundVelocity < -0.005f) 
+                        if (groundVelocity < -0.005f)
                         { acceleration = decel; } // FREAR
-                        else 
+                        else
                         { acceleration = accel; } // ACELERAR
 
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
@@ -491,16 +511,16 @@ public class HedgehogMovement : MonoBehaviour
                                        groundVelocity * Mathf.Sin(currentGroundInfo.angle));
 
 
-                velocidadePura = Vector3.Distance(transform.position, 
+                velocidadePura = Vector3.Distance(transform.position,
                                                   new Vector3(transform.position.x + velocity.x,
                                                               transform.position.y + velocity.y, 0));
 
                 //if (Mathf.Abs(groundVelocity) > groundTopSpeed)
-                if (velocidadePura > groundTopSpeed + 1f)                        
+                if (velocidadePura > groundTopSpeed + 1f)
                 {
                     afterImage.makeGhost = true;
                 }
-                else 
+                else
                 {
                     afterImage.makeGhost = false;
                 }
@@ -525,16 +545,14 @@ public class HedgehogMovement : MonoBehaviour
             else 
                 coyoteTimeCounter = 0;
 
-            if (Input.GetButton("Jump"))
-                jumpBufferCounter = jumpBuffer;
+            //if (Input.GetButton("Jump"))
+              //  jumpBufferCounter = jumpBuffer;
 
             if (jumpBufferCounter > 0)
                 jumpBufferCounter -= Time.deltaTime;
             else
                 jumpBufferCounter = 0;
 
-            if (coyoteTimeCounter > 0 && Input.GetButton("Jump") && !lowCeiling && !spinReady) 
-                Pule();
 
             //-----------------------------------------------------------------------------------------------------
             // ALTURA DE PULO VARIÁVEL
