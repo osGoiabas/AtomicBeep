@@ -244,6 +244,8 @@ public class HedgehogMovement : MonoBehaviour
             //GUILayout.Label("freandoAgachado: " + (freandoAgachado ? "SIM" : "NÃO"));
             GUILayout.Label("estáCaindo: " + (estáCaindo ? "SIM" : "NÃO"));
 
+
+            GUILayout.Label("apertouBotãoPulo: " + (gameInput.checkApertouBotãoPulo() == true ? "SIM" : "NÃO"));
             //GUILayout.Label("lowCeiling: " + (lowCeiling ? "SIM" : "NÃO"));
             GUILayout.Label("estáPulando: " + (estáPulando ? "SIM" : "NÃO"));
             //GUILayout.Label("estáPulandoNormal: " + (estáPulandoNormal ? "SIM" : "NÃO"));
@@ -317,10 +319,12 @@ public class HedgehogMovement : MonoBehaviour
             #region spinDash
             //tá parado, grounded, abaixado e apertou pulo?
             //comece a carregar o spindash
-            if (pegouSpinDash 
+            if (pegouSpinDash
                 && groundVelocity == 0
                 && !mudarDireção
-                && Input.GetButton("Jump") && abaixado
+                && Input.GetButton("Jump")
+                //&& gameInput.checkApertouBotãoPulo() == true NÃO FUNCIONA
+                && abaixado
                 //&& Input.GetKeyDown(KeyCode.Q)
                 && groundMode == GroundMode.Floor
                 && leftHit.collider == null 
