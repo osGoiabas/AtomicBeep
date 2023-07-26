@@ -1,0 +1,3049 @@
+fileFormatVersion: 2
+guid: 1d7928007b2ffe545976956b88b501eb
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -48, y: -48}
+        - {x: -48, y: 48}
+        - {x: 48, y: 32}
+        - {x: 48, y: -48}
+      tessellationDetail: 0
+      bones: []
+      spriteID: acc1e63c128ee1540a421f5d21dd8fa2
+      internalID: 1257568105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_1
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 1320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ca3e5c823e5cb840a4b8050e2dcbfd2
+      internalID: 1804492690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_2
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02790355979de3a4790f0b455455c5ff
+      internalID: 890363311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_3
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 1320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f22d80b7ffab4843ab46fd141e4c76b
+      internalID: -611644780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_4
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2ba153dca835194f8cf009d35637ade
+      internalID: 2119355653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_5
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 1320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0dcad552418b8c419550497363634ed
+      internalID: -597442562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_6
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 1320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2a7556bc7b7c3d49832867951331416
+      internalID: -1138945478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_7
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 1320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 668bbb18016cfe04aac9b0f459d0348f
+      internalID: -1747208055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_8
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff9d9a2e9959fd64ca7848ca841934de
+      internalID: 1665672638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_9
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 1320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64d374ad5beb82d449c3900a1e985b22
+      internalID: 34935694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_10
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 1320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e01c8d38c3cb7254c9d889c7e4bb7319
+      internalID: 994404680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_11
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 1320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8cd79d00dc833b1409858c9c01a81d83
+      internalID: 1164319341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1965e5359c00ae04fb5fec0a1be46544
+      internalID: 457465678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_13
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 1224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a1e213d7d2a9a642b3d98b529d2b7f3
+      internalID: 1034826627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_14
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a5877f45c073fc44aa018425efd8cd0
+      internalID: -2000138432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_15
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 1224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b134e93395552541b53afe6cf7ca6a1
+      internalID: 1253905853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_16
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f69ab4b287e3a414c8a3fef4e7ae9034
+      internalID: 1677934473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_17
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 1224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 281e708dba3f8764cacaad90f7d6ad99
+      internalID: 1296216290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_18
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 1224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df4210853f38ab74785acb73a86cbec5
+      internalID: -436409621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_19
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 1224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee4c38e774a48ab4fb1f66ff2b6206e1
+      internalID: -1064028408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_20
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c4a94147645a9f48a2984d7e2843fec
+      internalID: -1235344255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_21
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 1224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c535d6049939b394c8c97be3217cb188
+      internalID: 1701455371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_22
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 1224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35df3c8a9c1322e48ae0b9626026a4f7
+      internalID: -346299792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_23
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 1224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4cdf6e2e5aa24d44496323000f1b81c3
+      internalID: -1071600891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9fae8d79b75c07488820d56d06a93bc
+      internalID: 586124515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_25
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 1128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 979964325807978479e11599d7fcf5d0
+      internalID: -1050605770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_26
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd6b0d8f2d861b042839cc04c84a4f4f
+      internalID: -1123776635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_27
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 1128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31a94a5bda20e5145af425cee132383d
+      internalID: 1302314197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_28
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ad9f03574017704f8fafdf23e7cdc83
+      internalID: -1019449155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_29
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 1128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74d0a9edd5659464692cd7c333882cb3
+      internalID: 475491339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_30
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 1128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc7279c28d1634d4fb8d672bda5797a3
+      internalID: 1861794807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_31
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 1128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 732dd1e230e3726458cf551d08b5abbd
+      internalID: 1274994249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_32
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4c37a1c615b94244985e14e02b30267
+      internalID: 100523261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_33
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 1128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2b0892ff68f16d409cb79b12247d65c
+      internalID: -1845049511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_34
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 1128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 618f4c1e8a426da418a46ae103e39205
+      internalID: -9784317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_35
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 1128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb469cad7b567084a93f4aeca3114209
+      internalID: -1310512223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_36
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1032
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 593876d77538ae343b60bf1bbd734f1a
+      internalID: -205200830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_37
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 1032
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f35aba4d8ba603a4b8b484df43446743
+      internalID: -667766144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_38
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1032
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69e25d01fa557db4598875f19b59f171
+      internalID: 670842609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_39
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 1032
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4306b3925ce003c4fa845c50dc54a3e9
+      internalID: 620942615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_40
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1032
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d69ab4263db6b704eb8b8ba840c61d04
+      internalID: -1824619080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_41
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 1032
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4676c521dc78ebd45a71d1ceffee8c8b
+      internalID: -1410364065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_42
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 1032
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -48, y: -48}
+        - {x: -48, y: 19}
+        - {x: -45, y: 5}
+        - {x: -41, y: -8}
+        - {x: -34, y: -20}
+        - {x: -23, y: -31}
+        - {x: -12, y: -39}
+        - {x: 2, y: -45}
+        - {x: 21, y: -48}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fd239b20b450e64ebae39c1de96e445
+      internalID: 1728244703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_43
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 1032
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84f462791ac9f5745a2e0507712855d0
+      internalID: 1192479495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_44
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1032
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b10b2563b6e23c94b899090016691968
+      internalID: 1434310658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_45
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 1032
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ce02442fc5d10f4da0419f260ec482b
+      internalID: -541013913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_46
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 1032
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8820dfa1e599e143893141b6a6c418d
+      internalID: 1567373422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_47
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 1032
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0113cc9975a668e48bef9fef0e1a260e
+      internalID: -273157145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 936
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f35ef0b3c94f12c4580ae4e2f509a151
+      internalID: -166994831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_49
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 936
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f155ff73d87b544a9bc3d8324403b12
+      internalID: 252553400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_50
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 936
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8c74dc16ce84344b922a0a9dd7ac5a1
+      internalID: -1806736885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_51
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 936
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b65597309c20104d9fff984026f9584
+      internalID: -1325619055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_52
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 936
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -48, y: -48}
+        - {x: -48, y: 48}
+        - {x: -42, y: 19}
+        - {x: -36, y: 3}
+        - {x: -28, y: -10}
+        - {x: -14, y: -25}
+        - {x: 0, y: -34}
+        - {x: 6, y: -37}
+        - {x: 23, y: -43}
+        - {x: 48, y: -48}
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff15b58a82e924c4f9caad440bc75aba
+      internalID: -1372979920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_53
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 936
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5dc8a87b0f315354db85db5514a2e1c5
+      internalID: 362121361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_54
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 936
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fab321523ab241a43a2c93b6adb7dab5
+      internalID: 1720564317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_55
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 936
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76bc24edd5fc172409d1defdea889589
+      internalID: 844461192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_56
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 936
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bec172bcc2a8e074795653832539153f
+      internalID: -25591070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_57
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 936
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c554a76c9c94c147bc3f22ed2b38580
+      internalID: -1538247842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_58
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 840
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -48, y: -48}
+        - {x: -48, y: 48}
+        - {x: 8, y: 48}
+        - {x: 48, y: 41}
+        - {x: 48, y: -48}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ff62d98c02f112428831dce2a223601
+      internalID: -1393964278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_59
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 840
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -48, y: -48}
+        - {x: -48, y: 41}
+        - {x: -40, y: 40}
+        - {x: -16, y: 32}
+        - {x: 48, y: 0}
+        - {x: 48, y: -48}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f0a810eae8e5ed4faa29778525ab92c
+      internalID: 1491724927
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_60
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 840
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -48, y: -48}
+        - {x: -48, y: 0}
+        - {x: 16, y: -32}
+        - {x: 40, y: -40}
+        - {x: 48, y: -42}
+        - {x: 48, y: -48}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d226dc84575aff48ab301e49901bd51
+      internalID: 524809036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_61
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 840
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -48, y: -48}
+        - {x: -48, y: -42}
+        - {x: -9, y: -48}
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4c90ae5531a68d4aafabc0e6abb6b9f
+      internalID: -2004449013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_62
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 840
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0da187fd3300fb47ba56c7a0ded6fb2
+      internalID: 1937251172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_63
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 840
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7fa2ca366689a9439c4052d27bd0776
+      internalID: 2125436242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_64
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 840
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 482ece7a61be3a44ca2e72ddd2ca0eee
+      internalID: -1568867661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_65
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 840
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7489ca1d5d3aeb44bfadc67a1291443
+      internalID: 1518669082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_66
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 744
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66e9a8824a5f92b4a8f5754198e85142
+      internalID: -1725333407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_67
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 744
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0edc2f328adc82488a3641ff7ef0a69
+      internalID: -614766716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_68
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 744
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e417a4529b5228a42aa1ca89f853fccf
+      internalID: -1738803550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_69
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 744
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a5c772f21f96ea4d973270bea2d8ea9
+      internalID: -2070212832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_70
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 744
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e1c815342d875d42bf2954b643fea17
+      internalID: -993293028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_71
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 744
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6b354d8f87df1445b53c8f8163a50f6
+      internalID: 1282386029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_72
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 648
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0611b2470097b74fa788fe8ae4d3bea
+      internalID: -872807217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_73
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 648
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 271a9d9c31a375742b82f6581a20b431
+      internalID: 2047844074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_74
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 648
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -36, y: -48}
+        - {x: 0, y: -39}
+        - {x: 24, y: -31}
+        - {x: 48, y: -19}
+        - {x: 48, y: -48}
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6352f8de43060c41baa892e0e646ffc
+      internalID: -674770529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_75
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 648
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -48, y: -48}
+        - {x: -48, y: -19}
+        - {x: -32, y: -11}
+        - {x: 0, y: -3}
+        - {x: 18, y: 0}
+        - {x: 48, y: 0}
+        - {x: 48, y: -48}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 533c8364c3716f94c9a4cb8cf4de9780
+      internalID: -1853893122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_76
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 648
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -48, y: -48}
+        - {x: -48, y: 0}
+        - {x: -19, y: 0}
+        - {x: 0, y: -3}
+        - {x: 32, y: -11}
+        - {x: 48, y: -19}
+        - {x: 48, y: -48}
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec0352bff4e93704cb802ae3f24660ad
+      internalID: 464317866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_77
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 648
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -48, y: -48}
+        - {x: -48, y: -19}
+        - {x: -24, y: -31}
+        - {x: 0, y: -39}
+        - {x: 36, y: -48}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e43f21a9e42ba04f9778640e77273e7
+      internalID: -1310100143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_78
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 648
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6f28f5dae55ece488ed096ee98faf8d
+      internalID: -1521834915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_79
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 648
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dac80e0ee70b16a40943ecdd2d98cf8f
+      internalID: -1239010995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_80
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 552
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3c7c96d69d1e3244b4ea81bd29f5ec0
+      internalID: 1310313084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_81
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 552
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2edb847ea7d0584cbf6d84720e807ea
+      internalID: 493244243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_82
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 552
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51c29d1e5629a1e43bf0e923e34e2c24
+      internalID: -249355179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_83
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 552
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 575281633895eb44a84623fe0707f7b3
+      internalID: 1734893488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_84
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 552
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4926ae2a892a8e642847fa431aafcdb0
+      internalID: 436919223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_85
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 552
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b04d5a543c363a14091b5e843f1daff1
+      internalID: -533800273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_86
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 552
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbdfe2dc40b8acf44929e85583968f2a
+      internalID: 686419991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_87
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 552
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bdacd0a502763014a9ce046213981219
+      internalID: -1324382940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_88
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 552
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 306ebfeec4b6242469b13b202390b933
+      internalID: 2039377175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_89
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 552
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8efd5a364fa0c94ca16da36c04f69f9
+      internalID: -1683057975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_90
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 456
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da276d823cf9ec44aa12e6b79f2e5169
+      internalID: -439696271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_91
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 456
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c13ffc85e09c05e4dbc0aa17b6050150
+      internalID: 1246593136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_92
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 456
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6379047043a7f7042845f7bd0861590a
+      internalID: -333932032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_93
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 456
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8f52c11628eda945b20db24905db533
+      internalID: -413712499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_94
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 456
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7497ceeda5428604e9cafdab315715ca
+      internalID: 1772507812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_95
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 456
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d85a61c8d0ae32c44b512b625e62f665
+      internalID: 114407301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_96
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 456
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03cbcfc20dada314595775428f1da7a0
+      internalID: 437245001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_97
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 456
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82b00e2d17e808b48b6522ab3c69e1e6
+      internalID: 1882490426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_98
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 360
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6fe4a2cab81a61645b3d3e36e78d5491
+      internalID: -1554366710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_99
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 360
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e2a16875b11af7498c7ef007812d8db
+      internalID: -1422800513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_100
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 360
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef24a6c913e61a547abbac3a4e2cef26
+      internalID: 456353720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_101
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 360
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59e5517183fb6624d8e29018849e4f65
+      internalID: -369366672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_102
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 360
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11bf054bbccf30f46845969994da614c
+      internalID: 1776825201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_103
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 360
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3576a7dfb43618c4480eeee18837b802
+      internalID: 395281952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_104
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 360
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df667f674f4d1124e91769f0cd171242
+      internalID: 206481847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_105
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 360
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8736ff082f8dfe4cb07be72b414ffcc
+      internalID: -2129546372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_106
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 264
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6edc2b039eae3b4eb0d0066b9bda88f
+      internalID: 470502887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_107
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 264
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d816b5ad442134d4c8728cc9ff99cf54
+      internalID: -591832258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_108
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 264
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 159337af09b2dd24faff38f0c568f315
+      internalID: 2110851986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_109
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 264
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ea935a70634de54bb161cf323f8e937
+      internalID: -390829520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_110
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 264
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce63329e85c2b8e4384e86a965f01574
+      internalID: 972351805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_111
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 264
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a82718d8da0959f4f9360ef8bea3dd8d
+      internalID: -1146894297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_112
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 264
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94718148a3f0ea5408e96593e1a512df
+      internalID: 590849145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_113
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 264
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4de64fd8cf40c2e4ca07d60e81366bef
+      internalID: -515929860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_114
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 168
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3ecfa4f6f4d9844e9c10deba8694056
+      internalID: -856704472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_115
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 168
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8251fa71d31f7d4dadd0502d14c6eee
+      internalID: -1382894420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_116
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 168
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4539d22a4ccabaf4ca2680b95ed8e68c
+      internalID: -1208207143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_117
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 168
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 686b5ab5fec4d37499a3b29ab75cae91
+      internalID: 1984613471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_118
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 168
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce0a45706588f554ca6042ef54056b4b
+      internalID: 94100467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_119
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 168
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c777ddd52716584d84988ae842299e9
+      internalID: 606805678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_120
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 168
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a8921b82b63ef24c83e59619810272f
+      internalID: 1215736834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_121
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 168
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e556eae8b0110c34b992f1219b87f602
+      internalID: -1622769293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_122
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 72
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31dac3c153c5591458b02a01deaa3ca1
+      internalID: 921483838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_123
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 72
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97dcf4b5b4717d04db617ba6b1f36d30
+      internalID: 522170420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_124
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 72
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50a299db199be2945add31019484569b
+      internalID: -761643528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_125
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 72
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a2e969a5cb1f7a4eadb695523b51efa
+      internalID: -1092053228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_126
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 72
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8405297010793344d880523a6a5e4e1e
+      internalID: -872735714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_127
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 72
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01bd5b2291f377341ac6a925220add86
+      internalID: 1207096870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_128
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 72
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2cc54aefd49c1e4eac3352480520d2a
+      internalID: 1264150787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sonic_GBA_Template_129
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 72
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0de2b321d6f3e974f8762a8f69dc160b
+      internalID: -202370488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Sonic_GBA_Template_49: 252553400
+      Sonic_GBA_Template_120: 1215736834
+      Sonic_GBA_Template_47: -273157145
+      Sonic_GBA_Template_48: -166994831
+      Sonic_GBA_Template_22: -346299792
+      Sonic_GBA_Template_121: -1622769293
+      Sonic_GBA_Template_81: 493244243
+      Sonic_GBA_Template_87: -1324382940
+      Sonic_GBA_Template_89: -1683057975
+      Sonic_GBA_Template_73: 2047844074
+      Sonic_GBA_Template_19: -1064028408
+      Sonic_GBA_Template_35: -1310512223
+      Sonic_GBA_Template_83: 1734893488
+      Sonic_GBA_Template_29: 475491339
+      Sonic_GBA_Template_32: 100523261
+      Sonic_GBA_Template_20: -1235344255
+      Sonic_GBA_Template_56: -25591070
+      Sonic_GBA_Template_67: -614766716
+      Sonic_GBA_Template_31: 1274994249
+      Sonic_GBA_Template_17: 1296216290
+      Sonic_GBA_Template_57: -1538247842
+      Sonic_GBA_Template_114: -856704472
+      Sonic_GBA_Template_9: 34935694
+      Sonic_GBA_Template_66: -1725333407
+      Sonic_GBA_Template_100: 456353720
+      Sonic_GBA_Template_79: -1239010995
+      Sonic_GBA_Template_59: 1491724927
+      Sonic_GBA_Template_113: -515929860
+      Sonic_GBA_Template_5: -597442562
+      Sonic_GBA_Template_86: 686419991
+      Sonic_GBA_Template_119: 606805678
+      Sonic_GBA_Template_126: -872735714
+      Sonic_GBA_Template_15: 1253905853
+      Sonic_GBA_Template_74: -674770529
+      Sonic_GBA_Template_62: 1937251172
+      Sonic_GBA_Template_64: -1568867661
+      Sonic_GBA_Template_27: 1302314197
+      Sonic_GBA_Template_21: 1701455371
+      Sonic_GBA_Template_97: 1882490426
+      Sonic_GBA_Template_70: -993293028
+      Sonic_GBA_Template_40: -1824619080
+      Sonic_GBA_Template_104: 206481847
+      Sonic_GBA_Template_68: -1738803550
+      Sonic_GBA_Template_72: -872807217
+      Sonic_GBA_Template_78: -1521834915
+      Sonic_GBA_Template_116: -1208207143
+      Sonic_GBA_Template_3: -611644780
+      Sonic_GBA_Template_60: 524809036
+      Sonic_GBA_Template_124: -761643528
+      Sonic_GBA_Template_107: -591832258
+      Sonic_GBA_Template_6: -1138945478
+      Sonic_GBA_Template_110: 972351805
+      Sonic_GBA_Template_80: 1310313084
+      Sonic_GBA_Template_91: 1246593136
+      Sonic_GBA_Template_94: 1772507812
+      Sonic_GBA_Template_12: 457465678
+      Sonic_GBA_Template_69: -2070212832
+      Sonic_GBA_Template_2: 890363311
+      Sonic_GBA_Template_1: 1804492690
+      Sonic_GBA_Template_13: 1034826627
+      Sonic_GBA_Template_33: -1845049511
+      Sonic_GBA_Template_38: 670842609
+      Sonic_GBA_Template_53: 362121361
+      Sonic_GBA_Template_85: -533800273
+      Sonic_GBA_Template_63: 2125436242
+      Sonic_GBA_Template_102: 1776825201
+      Sonic_GBA_Template_101: -369366672
+      Sonic_GBA_Template_42: 1728244703
+      Sonic_GBA_Template_117: 1984613471
+      Sonic_GBA_Template_95: 114407301
+      Sonic_GBA_Template_0: 1257568105
+      Sonic_GBA_Template_28: -1019449155
+      Sonic_GBA_Template_30: 1861794807
+      Sonic_GBA_Template_65: 1518669082
+      Sonic_GBA_Template_52: -1372979920
+      Sonic_GBA_Template_10: 994404680
+      Sonic_GBA_Template_108: 2110851986
+      Sonic_GBA_Template_122: 921483838
+      Sonic_GBA_Template_37: -667766144
+      Sonic_GBA_Template_82: -249355179
+      Sonic_GBA_Template_76: 464317866
+      Sonic_GBA_Template_96: 437245001
+      Sonic_GBA_Template_105: -2129546372
+      Sonic_GBA_Template_127: 1207096870
+      Sonic_GBA_Template_45: -541013913
+      Sonic_GBA_Template_14: -2000138432
+      Sonic_GBA_Template_34: -9784317
+      Sonic_GBA_Template_77: -1310100143
+      Sonic_GBA_Template_43: 1192479495
+      Sonic_GBA_Template_115: -1382894420
+      Sonic_GBA_Template_88: 2039377175
+      Sonic_GBA_Template_11: 1164319341
+      Sonic_GBA_Template_58: -1393964278
+      Sonic_GBA_Template_92: -333932032
+      Sonic_GBA_Template_4: 2119355653
+      Sonic_GBA_Template_24: 586124515
+      Sonic_GBA_Template_128: 1264150787
+      Sonic_GBA_Template_18: -436409621
+      Sonic_GBA_Template_93: -413712499
+      Sonic_GBA_Template_16: 1677934473
+      Sonic_GBA_Template_90: -439696271
+      Sonic_GBA_Template_44: 1434310658
+      Sonic_GBA_Template_75: -1853893122
+      Sonic_GBA_Template_26: -1123776635
+      Sonic_GBA_Template_103: 395281952
+      Sonic_GBA_Template_50: -1806736885
+      Sonic_GBA_Template_23: -1071600891
+      Sonic_GBA_Template_109: -390829520
+      Sonic_GBA_Template_41: -1410364065
+      Sonic_GBA_Template_118: 94100467
+      Sonic_GBA_Template_84: 436919223
+      Sonic_GBA_Template_71: 1282386029
+      Sonic_GBA_Template_111: -1146894297
+      Sonic_GBA_Template_129: -202370488
+      Sonic_GBA_Template_51: -1325619055
+      Sonic_GBA_Template_8: 1665672638
+      Sonic_GBA_Template_7: -1747208055
+      Sonic_GBA_Template_39: 620942615
+      Sonic_GBA_Template_46: 1567373422
+      Sonic_GBA_Template_55: 844461192
+      Sonic_GBA_Template_123: 522170420
+      Sonic_GBA_Template_112: 590849145
+      Sonic_GBA_Template_125: -1092053228
+      Sonic_GBA_Template_61: -2004449013
+      Sonic_GBA_Template_99: -1422800513
+      Sonic_GBA_Template_36: -205200830
+      Sonic_GBA_Template_98: -1554366710
+      Sonic_GBA_Template_25: -1050605770
+      Sonic_GBA_Template_54: 1720564317
+      Sonic_GBA_Template_106: 470502887
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
