@@ -187,7 +187,6 @@ public class HedgehogMovement : MonoBehaviour
     void Awake()
     {
         afterImage = gameObject.GetComponentInChildren<AfterImage>();
-        afterImage.makeGhost = false;
         //luzGlobalBranca = GameObject.Find("White Global Light 2D").GetComponent<Light2D>();
         //luzGlobalAzul = GameObject.Find("Blue Global Light 2D").GetComponent<Light2D>();
 
@@ -244,8 +243,6 @@ public class HedgehogMovement : MonoBehaviour
             //GUILayout.Label("freandoAgachado: " + (freandoAgachado ? "SIM" : "NÃO"));
             GUILayout.Label("estáCaindo: " + (estáCaindo ? "SIM" : "NÃO"));
 
-
-            GUILayout.Label("apertouBotãoPulo: " + (gameInput.checkApertouBotãoPulo() == true ? "SIM" : "NÃO"));
             //GUILayout.Label("lowCeiling: " + (lowCeiling ? "SIM" : "NÃO"));
             GUILayout.Label("estáPulando: " + (estáPulando ? "SIM" : "NÃO"));
             //GUILayout.Label("estáPulandoNormal: " + (estáPulandoNormal ? "SIM" : "NÃO"));
@@ -275,32 +272,111 @@ public class HedgehogMovement : MonoBehaviour
 
     private void Start() {
         gameInput.OnPulo += GameInput_OnPulo;
+        gameInput.OnBulletTime += GameInput_OnBulletTime;
     }
+
+    private void GameInput_OnBulletTime(object sender, System.EventArgs e) {
+
+        if (//Input.GetKeyDown(KeyCode.E) && 
+            pegouBulletTime) 
+        { 
+            BulletTime(); 
+        }
+    }
+
     private void GameInput_OnPulo(object sender, System.EventArgs e) { 
-        Debug.Log("PRESSED JUMP!");
+        //Debug.Log("PRESSED JUMP!");
 
         if (grounded && !spinReady && jumpBufferCounter > 0)
             Pule();
-        else if (grounded && !abaixado && !lowCeiling && !estáLedgeClimbing && !spinReady)
+        else if (grounded && !abaixado && !lowCeiling && !estáLedgeGrabbing && !estáLedgeClimbing && !spinReady)
             Pule();
         else if (!grounded && coyoteTimeCounter > 0 && !lowCeiling && !spinReady)
             Pule();
 
-        //if (Input.GetButton("Jump"))
+        //TÔ BOTANDO TODOS Input.GetButton("Jump") AQUI 
+        //SÓ FALTA PULO VARIÁVEL
+        
+        //spin dash
+        if (grounded
+            && pegouSpinDash
+            && groundVelocity == 0
+            && !mudarDireção
+            && abaixado
+            && groundMode == GroundMode.Floor
+            && leftHit.collider == null
+            && rightHit.collider == null)
+        {
+            spinReady = true;
+            //mudarDireção = false;
+            CreateDust();
+        }
+
         if (!grounded)
+        {
             jumpBufferCounter = jumpBuffer;
+
+            //-----------------------------------------------------------------------------------------------------
+            // DOUBLE JUMP
+            //-----------------------------------------------------------------------------------------------------
+            #region doubleJump
+            if (pegouDoubleJump
+                && doubleJumpReady
+                && doubleJumpDelay <= 0
+                && !lowCeiling
+                && !estáWallSliding)
+            {
+                Debug.Log("Double Jump!");
+                float jumpVel = jumpVelocity;
+                velocity.y = jumpVel;
+                grounded = false;
+                estáPulando = true;
+                estáPulandoNormal = true;
+                doubleJumpReady = false;
+                CreateDust();
+            }
+            #endregion
+
+
+            //-----------------------------------------------------------------------------------------------------
+            // ALTURA DE PULO VARIÁVEL
+            //-----------------------------------------------------------------------------------------------------
+
+            //define valor máximo do pulo
+            float jumpReleaThreshold = /*underwater ? uwJumpReleaseThreshold :*/ jumpReleaseThreshold;
+
+            // JÁ PULOU, SOLTOU O BOTÃO, ESTÁ NO AR E A VELOCIDADE VERTICAL A SER APLICADA PASSOU DO LIMITE MÁXIMO?
+            // VOLTA A APLICAR SÓ O MÁXIMO (a gravidade eventualmente o puxará pra baixo)
+            if (estáPulando && velocity.y > jumpReleaThreshold)
+            {
+                //velocity.y = jumpReleaThreshold;
+                //print("velocity.y = jumpReleaThreshold: " + velocity.y);
+            }
+
+        }
+
+        //-----------------------------------------------------------------------------------------------------
+        // CAIR DA PAREDE ou PULAR DA PAREDE / DAR WALLJUMP
+        //-----------------------------------------------------------------------------------------------------
+        if (estáWallSliding && !grounded)
+        {
+            if (leftHit.collider != null) { velocity.x += 200; }
+            else if (rightHit.collider != null) { velocity.x -= 200; }
+            velocity.y += 300;
+            estáWallSliding = false;
+            estáPulandoNormal = true;
+        }
+
     }
 
     void FixedUpdate()
     {
         //INPUT
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        //print("input clássico: " + input);
         Vector2 inputVector = gameInput.GetMovementVector();
 
 
         if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
-        if (Input.GetKeyDown(KeyCode.E) && pegouBulletTime) { BulletTime(); }
 
 
         if (doubleJumpDelay > 0) {
@@ -317,23 +393,6 @@ public class HedgehogMovement : MonoBehaviour
             // SPINDASH
             //-----------------------------------------------------------------------------------------------------
             #region spinDash
-            //tá parado, grounded, abaixado e apertou pulo?
-            //comece a carregar o spindash
-            if (pegouSpinDash
-                && groundVelocity == 0
-                && !mudarDireção
-                && Input.GetButton("Jump")
-                //&& gameInput.checkApertouBotãoPulo() == true NÃO FUNCIONA
-                && abaixado
-                //&& Input.GetKeyDown(KeyCode.Q)
-                && groundMode == GroundMode.Floor
-                && leftHit.collider == null 
-                && rightHit.collider == null)
-            {
-                spinReady = true;
-                //mudarDireção = false;
-                CreateDust();
-            }
 
             //soltou a seta pra baixo? simbora
             if (spinReady && !abaixado)
@@ -404,15 +463,7 @@ public class HedgehogMovement : MonoBehaviour
 
             coyoteTimeCounter = coyoteTime;
 
-            if (!estáPulando)
-            /*if (!spinReady && jumpBufferCounter > 0)
-            {
-                Pule();
-            }
-            else if (Input.GetButton("Jump") && !abaixado && !lowCeiling && !estáLedgeClimbing && !spinReady)
-            {
-                Pule();
-            } else*/
+            if (!estáPulando) 
             {
                 //timer do control lock
                 if (hControlLock)
@@ -524,7 +575,7 @@ public class HedgehogMovement : MonoBehaviour
                 {
                     afterImage.makeGhost = true;
                 }
-                else
+                else if (!estáEmBulletTime)
                 {
                     afterImage.makeGhost = false;
                 }
@@ -549,9 +600,6 @@ public class HedgehogMovement : MonoBehaviour
             else 
                 coyoteTimeCounter = 0;
 
-            //if (Input.GetButton("Jump"))
-              //  jumpBufferCounter = jumpBuffer;
-
             if (jumpBufferCounter > 0)
                 jumpBufferCounter -= Time.deltaTime;
             else
@@ -570,7 +618,7 @@ public class HedgehogMovement : MonoBehaviour
             if (estáPulando && velocity.y > jumpReleaThreshold && Input.GetButtonUp("Jump"))
             {
                 velocity.y = jumpReleaThreshold;
-                print("velocity.y = jumpReleaThreshold: " + velocity.y);    
+                print("velocity.y = jumpReleaThreshold: " + velocity.y);
             }
             else
             {
@@ -592,26 +640,7 @@ public class HedgehogMovement : MonoBehaviour
                 }
             }
 
-            //-----------------------------------------------------------------------------------------------------
-            // DOUBLE JUMP
-            //-----------------------------------------------------------------------------------------------------
-            #region doubleJump
-            if (pegouDoubleJump
-                && doubleJumpReady
-                && doubleJumpDelay <= 0
-                && Input.GetButton("Jump")
-                && !lowCeiling
-                && !estáWallSliding)
-            {
-                float jumpVel = jumpVelocity;
-                velocity.y = jumpVel;
-                grounded = false;
-                estáPulando = true;
-                estáPulandoNormal = true;
-                doubleJumpReady = false;
-                CreateDust();
-            }
-            #endregion
+
 
             //-----------------------------------------------------------------------------------------------------
             // ACELERAR NO AR
@@ -712,7 +741,7 @@ public class HedgehogMovement : MonoBehaviour
 
                 //olhandoDireita = false;
 
-                if (Input.GetButton("Jump") || input.x > 0.05f)
+                if (input.x > 0.05f /*|| Input.GetButton("Jump")*/)
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
@@ -731,7 +760,7 @@ public class HedgehogMovement : MonoBehaviour
 
                 //olhandoDireita = true;
 
-                if (Input.GetButton("Jump") || input.x < -0.05f)
+                if (input.x < -0.05f /*|| Input.GetButton("Jump")*/)
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
@@ -806,7 +835,7 @@ public class HedgehogMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         if (estáWallSliding && !grounded)
         {
-            if (wallJumpDelay > 0 && !(Input.GetButton("Jump")) && velocity.y <= 0)
+            if (wallJumpDelay > 0 && velocity.y <= 0 )
             {
                 //wallJumpDelay -= Time.deltaTime;
                 transform.position = new Vector2(transform.position.x, transform.position.y - wallSlideSpeed * Time.deltaTime);
@@ -816,16 +845,6 @@ public class HedgehogMovement : MonoBehaviour
                 if (leftHit.collider != null) { velocity.x += 100; }
                 else if (rightHit.collider != null) { velocity.x -= 100; }
                 wallJumpDelay = wallJumpDelayTotal;
-            }
-            else if (Input.GetButton("Jump"))
-            {
-                if (leftHit.collider != null) { velocity.x += 200; }
-                else if (rightHit.collider != null) { velocity.x -= 200; }
-                velocity.y += 300;
-                estáWallSliding = false;
-                estáPulandoNormal = true;
-                
-                //print(velocity.y);
             }
         }
 
@@ -1346,15 +1365,15 @@ public class HedgehogMovement : MonoBehaviour
     // BULLET TIME
     //-----------------------------------------------------------------------------------------------------
     public void BulletTime()
-    {
-        
+    {        
         estáEmBulletTime = !estáEmBulletTime;
         if (estáEmBulletTime)
         {
             Time.timeScale = fatorLentidão;
-            //print("ZA WARUDO! toki wo tomare!");
-            luzGlobalBranca.SetActive(false);
-            luzGlobalAzul.SetActive(true);
+            Debug.Log("ZA WARUDO! toki wo tomare!");
+            //luzGlobalBranca.SetActive(false);
+            //luzGlobalAzul.SetActive(true);
+
             afterImage.makeGhost = true;
             //se o tempo está 50% mais lento, a velocidade do jogador dobra
             //jogadorVelocidade /= fatorLentidão;
@@ -1364,16 +1383,13 @@ public class HedgehogMovement : MonoBehaviour
         }
         else
         {
-            //print("Fim do Bullet Time.");
-
             //esse deltaTime é absoluto, não fica mais lento
             //Time.timeScale += (1f / duraçãoLentidão) * Time.unscaledDeltaTime;
             Time.timeScale = 1;
-            //print("toki wa ugoki dasu");
+            Debug.Log("toki wa ugoki dasu");
             afterImage.makeGhost = false;
-            luzGlobalAzul.SetActive(false);
-
-            luzGlobalBranca.SetActive(true);
+            //luzGlobalAzul.SetActive(false);
+            //luzGlobalBranca.SetActive(true);
         }        
     }
 

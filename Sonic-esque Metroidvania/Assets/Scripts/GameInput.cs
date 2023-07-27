@@ -7,14 +7,16 @@ using UnityEngine.InputSystem;
 public class GameInput : MonoBehaviour
 {
     public event EventHandler OnPulo;
+    public event EventHandler OnBulletTime;
     private PlayerInputActions playerInputActions;
-
-    private bool apertouBotãoPulo;
 
     private void Awake() {
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
         playerInputActions.Player.Pulo.performed += Pulo_performed;
+        playerInputActions.Player.Pulo.canceled += Pulo_canceled;
+        playerInputActions.Player.BulletTime.performed += BulletTime_performed;
+        playerInputActions.Player.BulletTime.canceled += BulletTime_canceled;
     }
 
     public Vector2 GetMovementVector() {
@@ -24,21 +26,20 @@ public class GameInput : MonoBehaviour
 
     public void Pulo_performed(InputAction.CallbackContext context) {
         OnPulo?.Invoke(this, EventArgs.Empty);
-        //Debug.Log(context);
-        if (context.performed)
-        {
-            apertouBotãoPulo = true;
-            Debug.Log("JUMP!" + context.phase);
-        }
-        else {
-            apertouBotãoPulo = false;
-            Debug.Log("NÃO PULOU!" + context.phase);
-        }
-
     }
 
-    public bool checkApertouBotãoPulo()
+    public void Pulo_canceled(InputAction.CallbackContext context)
+    { 
+    
+    }
+
+    public void BulletTime_performed(InputAction.CallbackContext context)
     {
-        return apertouBotãoPulo;
+        OnBulletTime?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void BulletTime_canceled(InputAction.CallbackContext context)
+    { 
+    
     }
 }

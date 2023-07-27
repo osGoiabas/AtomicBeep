@@ -9,11 +9,11 @@ public class AfterImage : MonoBehaviour
     public GameObject ghost;
     public bool makeGhost = false;
 
-    void Update()
+    void FixedUpdate()
     {
         if (makeGhost)
         {
-            if (ghostDelaySeconds > 0)
+            if (ghostDelaySeconds > 0f)
             {
                 ghostDelaySeconds -= Time.unscaledDeltaTime;
             }
