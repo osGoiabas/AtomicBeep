@@ -228,9 +228,9 @@ public class HedgehogMovement : MonoBehaviour
 
             //GUILayout.Label("mudarDireção: " + (mudarDireção ? "SIM" : "NÃO"));
             //GUILayout.Label("mudarDireçãoTimer: " + mudarDireçãoTimer);
-            //GUILayout.Label("Olhando para: " + (olhandoDireita ? "DIREITA" : "ESQUERDA"));
+            GUILayout.Label("Olhando para: " + (olhandoDireita ? "DIREITA" : "ESQUERDA"));
 
-            GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
+            //GUILayout.Label("spinReady: " + (spinReady ? "SIM" : "NÃO"));
             //GUILayout.Label("doubleJumpDelay: " + doubleJumpDelay);
             //GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
 
@@ -239,7 +239,7 @@ public class HedgehogMovement : MonoBehaviour
             //GUILayout.Label("colliderParede?: " + ((leftHit.collider != null || rightHit.collider != null) ? "SIM" : "NÃO"));
 
             //GUILayout.Label("charAngle: " + characterAngle);
-            GUILayout.Label("Grounded: " + (grounded ? "SIM" : "NÃO"));
+            GUILayout.Label("grounded: " + (grounded ? "SIM" : "NÃO"));
             //GUILayout.Label("freandoAgachado: " + (freandoAgachado ? "SIM" : "NÃO"));
             GUILayout.Label("estáCaindo: " + (estáCaindo ? "SIM" : "NÃO"));
 
@@ -247,12 +247,13 @@ public class HedgehogMovement : MonoBehaviour
             GUILayout.Label("estáPulando: " + (estáPulando ? "SIM" : "NÃO"));
             //GUILayout.Label("estáPulandoNormal: " + (estáPulandoNormal ? "SIM" : "NÃO"));
             //GUILayout.Label("estáPiruentado: " + (estáPiruentado ? "SIM" : "NÃO"));
-            GUILayout.Label("tempoPirueta: " + tempoPirueta);
-            GUILayout.Label("coyoteTimeCounter: " + coyoteTimeCounter);
-            GUILayout.Label("jumpBufferCounter: " + jumpBufferCounter);
+            //GUILayout.Label("tempoPirueta: " + tempoPirueta);
+            //GUILayout.Label("coyoteTimeCounter: " + coyoteTimeCounter);
+            //GUILayout.Label("jumpBufferCounter: " + jumpBufferCounter);
 
             //GUILayout.Label("abaixado: " + (abaixado ? "SIM" : "NÃO"));
-            //GUILayout.Label("estáLedgeClimbing: " + (estáLedgeClimbing ? "SIM" : "NÃO"));
+            GUILayout.Label("estáLedgeGrabbing: " + (estáLedgeGrabbing ? "SIM" : "NÃO"));
+            GUILayout.Label("estáLedgeClimbing: " + (estáLedgeClimbing ? "SIM" : "NÃO"));
 
             // GUILayout.Label("empurrando: " + (empurrando ? "SIM" : "NÃO"));
 
@@ -730,16 +731,15 @@ public class HedgehogMovement : MonoBehaviour
             estáLedgeClimbing = false;
         }
 
+        int tileSideLength = 24;
+
         if (estáLedgeGrabbing && !estáLedgeClimbing) 
         {
-            if (!grounded &&
-                rightHit.collider != null && ledgeRight.collider == null) 
+            if (!grounded && rightHit.collider != null && ledgeRight.collider == null) 
             {
                 velocity.y = 0;
-                posLedge1.y = rightHit.point.y - 1 + (16 - rightHit.point.y % 16);
+                posLedge1.y = rightHit.point.y - 1 + (tileSideLength - rightHit.point.y % tileSideLength);
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
-
-                //olhandoDireita = false;
 
                 if (input.x > 0.05f /*|| Input.GetButton("Jump")*/)
                 {
@@ -751,14 +751,11 @@ public class HedgehogMovement : MonoBehaviour
                     estáLedgeClimbing = false;
                 }
             }
-            else if (!grounded &&
-                     leftHit.collider != null && ledgeLeft.collider == null)
+            else if (!grounded && leftHit.collider != null && ledgeLeft.collider == null)
             {
                 velocity.y = 0;
-                posLedge1.y = leftHit.point.y - 1 + (16 - leftHit.point.y % 16);
+                posLedge1.y = leftHit.point.y - 1 + (tileSideLength - leftHit.point.y % tileSideLength);
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
-
-                //olhandoDireita = true;
 
                 if (input.x < -0.05f /*|| Input.GetButton("Jump")*/)
                 {
@@ -776,7 +773,7 @@ public class HedgehogMovement : MonoBehaviour
         if (estáLedgeClimbing)
         {
             ledgeClimbTimer -= Time.deltaTime;
-            if (ledgeClimbTimer < 0)
+            if (ledgeClimbTimer <= 0)
             {
                 if (rightHit.collider != null && ledgeRight.collider == null)
                 {
@@ -786,9 +783,8 @@ public class HedgehogMovement : MonoBehaviour
                 }
                 if (leftHit.collider != null && ledgeLeft.collider == null)
                 {
-                    //ESQUERDA
                     posLedge2 = new Vector2(transform.position.x - 22, posLedge1.y + 18);
-                    transform.position = posLedge2;
+                    transform.position = new Vector2(posLedge2.x, posLedge2.y);
                     estáLedgeClimbing = false;
                 }
             }
