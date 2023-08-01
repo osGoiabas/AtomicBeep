@@ -153,7 +153,7 @@ public class HedgehogMovement : MonoBehaviour
     Vector2 posLedge1;
     Vector2 posLedge2;
     float ledgeClimbTimer;
-    float ledgeClimbTimerTotal = 0.5f;
+    float ledgeClimbTimerTotal = 0.3f;
     bool estáLedgeClimbing = false;
 
     private float fatorLentidão = 0.2f;
