@@ -100,9 +100,9 @@ public class HedgehogMovement : MonoBehaviour
     // AIR MOVEMENT
     //-----------------------------------------------------------------------------------------------------   
     private float airAcceleration = 150f; //340f
-    private float jumpVelocity = 410f; //390f;
+    private float jumpVelocity = 350f; //390f;
     private float jumpReleaseThreshold = 240f;
-    private float gravity = -750f; //-790f;
+    private float gravity = -790f; //-790f;
     private float terminalVelocity = 960f;
     //private float airDrag = 0.5f; //1f; //celeste tem muito airDrag, pesquisar
 
@@ -575,6 +575,7 @@ public class HedgehogMovement : MonoBehaviour
                 if (velocidadePura > groundTopSpeed + 1f)
                 {
                     afterImage.makeGhost = true;
+                    CreateDust();
                 }
                 else if (!estáEmBulletTime)
                 {
@@ -1022,7 +1023,7 @@ public class HedgehogMovement : MonoBehaviour
             // rotaciona personagem perfeitamente, como em Sonic Mania e Freedom Planet, não em frações de 45º
             transform.rotation = Quaternion.Euler(0f, 0f, characterAngle); 
         }
-        else // não está no chão? fique em posição de queda normal.
+        else // não está no chão? rode para a posição de queda normal.
         { 
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, 5 * Time.deltaTime);
             characterAngle = 0;
@@ -1044,6 +1045,7 @@ public class HedgehogMovement : MonoBehaviour
 
         if (mudarDireção && grounded)
         {
+            CreateDust();
             mudarDireçãoTimer -= Time.deltaTime;
             if (mudarDireçãoTimer < 0)
             {
@@ -1124,6 +1126,9 @@ public class HedgehogMovement : MonoBehaviour
         grounded = false;
         estáPulando = true;
 
+        if (groundMode == GroundMode.LeftWall || groundMode == GroundMode.RightWall) {
+            velocity.y += jumpVel/2;
+        }
         //print("velocity.y: " + velocity.y);
 
         doubleJumpReady = true;
@@ -1393,7 +1398,7 @@ public class HedgehogMovement : MonoBehaviour
     // PÓ E PARTÍCULAS
     //-----------------------------------------------------------------------------------------------------
     void CreateDust() {
-        //climbdust.Play();
+        dust.Play();
     }
 
     //-----------------------------------------------------------------------------------------------------
