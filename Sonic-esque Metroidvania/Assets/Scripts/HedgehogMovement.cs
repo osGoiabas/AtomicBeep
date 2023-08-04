@@ -310,7 +310,6 @@ public class HedgehogMovement : MonoBehaviour
         {
             spinReady = true;
             //mudarDireção = false;
-            CreateDust();
         }
 
         if (!grounded)
@@ -384,9 +383,16 @@ public class HedgehogMovement : MonoBehaviour
             doubleJumpDelay -= Time.deltaTime;
         }
 
+
+        if (spinReady)
+        {
+            CreateDust();
+        }
+
         //-----------------------------------------------------------------------------------------------------
         // ESTÁ NO CHÃO?
         //-----------------------------------------------------------------------------------------------------
+
 
         if (grounded)
         {
