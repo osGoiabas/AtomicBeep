@@ -63,6 +63,16 @@ public class HedgehogMovement : MonoBehaviour
     RaycastHit2D ledgeLeft;
     RaycastHit2D ledgeRight;
 
+
+    //-----------------------------------------------------------------------------------------------------
+    // HABILIDADES
+    //-----------------------------------------------------------------------------------------------------
+    [Header("Habilidades")]
+    [SerializeField] private bool pegouSpinDash = false;
+    [SerializeField] private bool pegouWallJump = false;
+    [SerializeField] private bool pegouDoubleJump = false;
+    [SerializeField] private bool pegouBulletTime = false;
+
     //-----------------------------------------------------------------------------------------------------
     // GROUND MOVEMENT
     //-----------------------------------------------------------------------------------------------------
@@ -110,23 +120,26 @@ public class HedgehogMovement : MonoBehaviour
     // ANIMAÇÃO
     //-----------------------------------------------------------------------------------------------------
     [SerializeField] public Animator animator;
-    int speedHash;
-    int standHash;
-    int groundedHash;
+    private int speedHash;
+    private int standHash;
+    private int groundedHash;
 
-    int caindoHash;
-    int pulandoNormalHash;
-    int piruetandoHash;
+    private int caindoHash;
+    private int pulandoNormalHash;
+    private int piruetandoHash;
 
-    int spinReadyHash;
+    private int spinReadyHash;
 
-    int wallSlidingHash;
-    int ledgeGrabHash;
-    int ledgeClimbHash;
+    private int wallSlidingHash;
+    private int ledgeGrabHash;
+    private int ledgeClimbHash;
 
-    int brakeHash;
-    int freandoAgachadoHash;
-    int empurrandoHash;
+    private int brakeHash;
+    private int freandoAgachadoHash;
+    private int empurrandoHash;
+
+    private int hitHash;
+    private int postHitHash;
 
     //-----------------------------------------------------------------------------------------------------
     // OUTROS
@@ -168,11 +181,12 @@ public class HedgehogMovement : MonoBehaviour
     private float jumpBuffer = 0.1f;
     private float jumpBufferCounter;
 
-    [Header("Habilidades")]
-    [SerializeField] private bool pegouSpinDash = false;
-    [SerializeField] private bool pegouWallJump = false;
-    [SerializeField] private bool pegouDoubleJump = false;
-    [SerializeField] private bool pegouBulletTime = false;
+    /// <Summary>
+    /// True if the character is currently in the hit state.
+    /// </Summary>
+    public bool isHit { get; private set; }
+    private float postHitInvulnerabilityTimer = 0f;
+
     #endregion
 
     #region setup
@@ -209,6 +223,9 @@ public class HedgehogMovement : MonoBehaviour
 
         brakeHash = Animator.StringToHash("Brake");
         freandoAgachadoHash = Animator.StringToHash("freandoAgachado");
+
+        hitHash = Animator.StringToHash("Hit");
+        postHitHash = Animator.StringToHash("PostHit");
 
         empurrandoHash = Animator.StringToHash("Empurrando");
     }
@@ -277,6 +294,8 @@ public class HedgehogMovement : MonoBehaviour
     }
 
     private void GameInput_OnBulletTime(object sender, System.EventArgs e) {
+
+        SetHitState(new Vector2(0, 0), 0);
 
         if (//Input.GetKeyDown(KeyCode.E) && 
             pegouBulletTime) 
@@ -368,6 +387,54 @@ public class HedgehogMovement : MonoBehaviour
         }
 
     }
+
+
+    public void SetHitState(Vector2 source, int damage)
+    {
+        isHit = true;
+        postHitInvulnerabilityTimer = 0f;
+        //vida -= damage;
+
+        characterAngle = 0f;
+        grounded = false;
+        estáPulando = false;
+        spinReady = false;
+        //isBraking = false;
+        //ReleaseSpinDash(launch: false);
+
+        // Jumping resets the horizontal control lock
+        hControlLock = false;
+        hControlLockTimer = 0f;
+        
+        
+        Vector2 hitStateVelocity = new Vector2 (0,0);
+        //float positionDif = transform.position.x - source.x;
+
+
+        velocity = new Vector2(hitStateVelocity.x, hitStateVelocity.y);
+
+        /*
+        // If the damage source is nearly directly above or below us, default to getting knocked away from where we are facing at a lower speed
+        if (Mathf.Abs(positionDif) < 1f)
+        {
+            velocity = new Vector2(hitStateVelocity.x * -FacingDirection, hitStateVelocity.y);
+        }
+        else
+        {
+            velocity = new Vector2(hitStateVelocity.x * Mathf.Sign(positionDif), hitStateVelocity.y);
+        }
+
+
+        
+        animator.SetBool(springJumpHash, false);
+        animator.SetBool(brakeHash, false);
+        animator.SetFloat(speedHash, 0.1f);
+        */
+
+        animator.SetBool(postHitHash, false);
+        animator.SetBool(hitHash, true);
+    }
+
 
     void FixedUpdate()
     {
