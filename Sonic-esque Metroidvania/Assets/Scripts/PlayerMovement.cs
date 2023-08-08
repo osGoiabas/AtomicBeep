@@ -14,7 +14,7 @@ public class GroundInfo
     public bool valid = false;
 }
 
-public class HedgehogMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     #region variáveis
 
@@ -45,6 +45,8 @@ public class HedgehogMovement : MonoBehaviour
     public bool estáLedgeGrabbing { get; private set; }
 
     public bool lostFooting = false;
+
+    public bool IsInvulnerable = false;
 
     //float standingHeight = 40f;
     private float heightHalf = 20f;
@@ -410,6 +412,7 @@ public class HedgehogMovement : MonoBehaviour
         Vector2 hitStateVelocity = new Vector2 (0,0);
         //float positionDif = transform.position.x - source.x;
 
+        Debug.Log(damage);
 
         velocity = new Vector2(hitStateVelocity.x, hitStateVelocity.y);
 
