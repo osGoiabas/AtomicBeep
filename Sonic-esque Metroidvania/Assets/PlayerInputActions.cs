@@ -53,6 +53,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Ataque"",
+                    ""type"": ""Button"",
+                    ""id"": ""8eee9169-0fad-4ec1-a4a2-8edc0d1ca53c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -220,6 +229,28 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""BulletTime"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e3a06c10-5b77-4473-ac47-2735c5795d06"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Ataque"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0fd274e5-2b7b-4191-ac6d-f73d1215ae2c"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Ataque"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -293,6 +324,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Pulo = m_Player.FindAction("Pulo", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_BulletTime = m_Player.FindAction("BulletTime", throwIfNotFound: true);
+        m_Player_Ataque = m_Player.FindAction("Ataque", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
@@ -358,6 +390,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Pulo;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_BulletTime;
+    private readonly InputAction m_Player_Ataque;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -365,6 +398,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Pulo => m_Wrapper.m_Player_Pulo;
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @BulletTime => m_Wrapper.m_Player_BulletTime;
+        public InputAction @Ataque => m_Wrapper.m_Player_Ataque;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -383,6 +417,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @BulletTime.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBulletTime;
                 @BulletTime.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBulletTime;
                 @BulletTime.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBulletTime;
+                @Ataque.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAtaque;
+                @Ataque.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAtaque;
+                @Ataque.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAtaque;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -396,6 +433,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @BulletTime.started += instance.OnBulletTime;
                 @BulletTime.performed += instance.OnBulletTime;
                 @BulletTime.canceled += instance.OnBulletTime;
+                @Ataque.started += instance.OnAtaque;
+                @Ataque.performed += instance.OnAtaque;
+                @Ataque.canceled += instance.OnAtaque;
             }
         }
     }
@@ -456,6 +496,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnPulo(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnBulletTime(InputAction.CallbackContext context);
+        void OnAtaque(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
