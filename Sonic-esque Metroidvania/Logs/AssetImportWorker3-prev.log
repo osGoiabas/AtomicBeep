@@ -1,0 +1,267 @@
+Using pre-set license
+Built from '2021.3/staging' branch; Version is '2021.3.5f1 (40eb3a945986) revision 4254522'; Using compiler version '192829333'; Build Type 'Release'
+OS: 'Windows 11  (10.0.22631) 64bit CoreSingleLanguage' Language: 'pt' Physical Memory: 8025 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 1
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2021.3.5f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker3
+-projectPath
+C:/Users/djaly/Documents/GitHub/Sonic-esque-Metroidvania/Sonic-esque Metroidvania
+-logFile
+Logs/AssetImportWorker3.log
+-srvPort
+52208
+Successfully changed project path to: C:/Users/djaly/Documents/GitHub/Sonic-esque-Metroidvania/Sonic-esque Metroidvania
+C:/Users/djaly/Documents/GitHub/Sonic-esque-Metroidvania/Sonic-esque Metroidvania
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gfx=262144"
+Refreshing native plugins compatible for Editor in 127.14 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2021.3.5f1 (40eb3a945986)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2021.3.5f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/djaly/Documents/GitHub/Sonic-esque-Metroidvania/Sonic-esque Metroidvania/Assets
+GfxDevice: creating device client; threaded=0; jobified=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: Intel(R) UHD Graphics (ID=0x9b41)
+    Vendor:   Intel
+    VRAM:     4012 MB
+    Driver:   30.0.100.9864
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2021.3.5f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2021.3.5f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/2021.3.5f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56516
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2021.3.5f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.009497 seconds.
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 97.08 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.028 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1029ms)
+		BeginReloadAssembly (115ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (1ms)
+		EndReloadAssembly (735ms)
+			LoadAssemblies (113ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (226ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (46ms)
+			SetupLoadedEditorAssemblies (378ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (13ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (97ms)
+				BeforeProcessingInitializeOnLoad (2ms)
+				ProcessInitializeOnLoadAttributes (199ms)
+				ProcessInitializeOnLoadMethodAttributes (66ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.020722 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 118.09 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Package Manager log level set to [2]
+Mono: successfully reloaded assembly
+- Completed reload, in  2.529 seconds
+Domain Reload Profiling:
+	ReloadAssembly (2530ms)
+		BeginReloadAssembly (174ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (10ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (28ms)
+		EndReloadAssembly (2107ms)
+			LoadAssemblies (212ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (547ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (105ms)
+			SetupLoadedEditorAssemblies (1132ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (6ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (118ms)
+				BeforeProcessingInitializeOnLoad (155ms)
+				ProcessInitializeOnLoadAttributes (574ms)
+				ProcessInitializeOnLoadMethodAttributes (270ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (8ms)
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.14 seconds
+Refreshing native plugins compatible for Editor in 1.15 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3568 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 84 unused Assets / (129.2 KB). Loaded Objects now: 3998.
+Memory consumption went from 149.0 MB to 148.9 MB.
+Total: 10.980700 ms (FindLiveObjects: 0.416800 ms CreateObjectMapping: 0.546600 ms MarkObjects: 9.826900 ms  DeleteObjects: 0.189000 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 781707.427309 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/_GBA_Template.png
+  artifactKey: Guid(1d7928007b2ffe545976956b88b501eb) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/_GBA_Template.png using Guid(1d7928007b2ffe545976956b88b501eb) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1314909cd8067dcd7e24034dcb9ff45a') in 0.940761 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 7814.334339 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_72.asset
+  artifactKey: Guid(bf919f4fd1fe9764cb13fdcac87b7cde) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_72.asset using Guid(bf919f4fd1fe9764cb13fdcac87b7cde) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7e46e0793fbc4c2cd8f79f4c348a6956') in 0.434382 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000294 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_88.asset
+  artifactKey: Guid(24fbfc2b4af14ac45aeb8f48eff2f403) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_88.asset using Guid(24fbfc2b4af14ac45aeb8f48eff2f403) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'aa9658d6aa91794a206835c5a78fd2f0') in 0.043072 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.630891 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_92.asset
+  artifactKey: Guid(12055c92c356f7b4aacea5017c2adf18) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_92.asset using Guid(12055c92c356f7b4aacea5017c2adf18) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '205eb3640f8e8239bed4a69b89616662') in 0.030707 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.032100 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_94.asset
+  artifactKey: Guid(6234c7fbe3260bc499a4eb56581b6daa) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_94.asset using Guid(6234c7fbe3260bc499a4eb56581b6daa) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3cd6fe4871fccba0231a736f49fa41d2') in 0.033095 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.069749 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_97.asset
+  artifactKey: Guid(cfc4f62b967f85d46ae789bed17ac8bb) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_97.asset using Guid(cfc4f62b967f85d46ae789bed17ac8bb) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '85f28893f9611ffd8355f4179df6ef17') in 0.032691 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.029551 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_99.asset
+  artifactKey: Guid(adbf6a8e3c713a44f8bfc6fbd231c9ef) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_99.asset using Guid(adbf6a8e3c713a44f8bfc6fbd231c9ef) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c258173606fb8812eaa201b65ef5d354') in 0.030255 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.120142 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_104.asset
+  artifactKey: Guid(3d5c6451669106c41a7b60b89dbced9a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_104.asset using Guid(3d5c6451669106c41a7b60b89dbced9a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8751546424d2f9f9df2900b853f06042') in 0.032248 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.028766 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_106.asset
+  artifactKey: Guid(afcd41a336554e54881a2362a9e6d8fd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_106.asset using Guid(afcd41a336554e54881a2362a9e6d8fd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '86dcf27cb8b2d4769fe4e3d0134589a9') in 0.031916 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.058519 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_109.asset
+  artifactKey: Guid(dab8fd23e8012c0459c00037bbf01dbc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_109.asset using Guid(dab8fd23e8012c0459c00037bbf01dbc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9611a7fa6ea8f231f5f2179fc1022484') in 0.031501 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.027694 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_111.asset
+  artifactKey: Guid(2d7b229976da627409f961a96216d15f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_111.asset using Guid(2d7b229976da627409f961a96216d15f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3af257a520d74a2459c956dbb083df63') in 0.031379 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.062546 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_114.asset
+  artifactKey: Guid(a5e1371e7b4dc924980560cb13b04f2c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_114.asset using Guid(a5e1371e7b4dc924980560cb13b04f2c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd6dc852caa1b9ede201d3348a688e962') in 0.031232 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.111144 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_119.asset
+  artifactKey: Guid(bc194ab0a9c9f2a49bd5e63ed1c2f6e4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_119.asset using Guid(bc194ab0a9c9f2a49bd5e63ed1c2f6e4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4362d03acbdfa0bfeba20ac469cda912') in 0.030777 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.062317 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_122.asset
+  artifactKey: Guid(0524e8c02b51f1d46ad1b0b22aae4ff9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/Tiles/Sonic_GBA_Template_122.asset using Guid(0524e8c02b51f1d46ad1b0b22aae4ff9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bd4b9d498a17861e6693151c0e154261') in 0.031360 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.383999 seconds.
+  path: Assets/Tiles/Sonic_GBA_template/_GBA_Template.aseprite
+  artifactKey: Guid(fc1fcfd74e8b0f14ea2956745e01d581) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/Sonic_GBA_template/_GBA_Template.aseprite using Guid(fc1fcfd74e8b0f14ea2956745e01d581) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '495671217119208d64d32f2477530bb6') in 0.008602 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.150445 seconds.
+  path: Assets/Tiles/quadradin.png
+  artifactKey: Guid(0446cb8cc6e67894da48ae189dd1c1d6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiles/quadradin.png using Guid(0446cb8cc6e67894da48ae189dd1c1d6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fe3c01d6e4f2ad9cabcd3737d7b8bfae') in 0.040516 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.038827 seconds.
+  path: Assets/VFX
+  artifactKey: Guid(c302069c60a930245aa50c3c3f84ce95) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/VFX using Guid(c302069c60a930245aa50c3c3f84ce95) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b490362bca975ca7fc7b2fcbb54ba00f') in 0.014732 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.080236 seconds.
+  path: Assets/darkblue.png
+  artifactKey: Guid(65ab492848d5d1a47981e42e2047c788) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/darkblue.png using Guid(65ab492848d5d1a47981e42e2047c788) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'dc34f8ae1e9700c97063f263eb225c75') in 0.081300 seconds 

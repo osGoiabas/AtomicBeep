@@ -3333,6 +3333,195 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: _GBA_Template_0
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 936
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e20d7bdca8c571849b15097c379698ea
+      internalID: -1224543902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _GBA_Template_1
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 360
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04c839d0640f0154692eb7ccd9d5acc7
+      internalID: -1774388891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _GBA_Template_2
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 360
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d88bacb0e9d60ed4ea6c9a504f9b3c1d
+      internalID: -690077483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _GBA_Template_3
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 360
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f795a3e16b6949a4bb2d6f54bb1c63e3
+      internalID: -1312334391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _GBA_Template_4
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 360
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01850423af3de1441beef043e1160830
+      internalID: 1088983273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _GBA_Template_5
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 264
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ac92ed9a99676446833e746db24e644
+      internalID: 94049735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _GBA_Template_6
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 264
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0f854caf5cc8664d961600200b49291
+      internalID: -1658929624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _GBA_Template_7
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 264
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab96e0bd503a3d146a0d47527d679c7a
+      internalID: 1026958622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: _GBA_Template_8
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 264
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa2a10769753d544085b761dd20e5d54
+      internalID: 664414782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -3365,9 +3554,12 @@ TextureImporter:
       Sonic_GBA_Template_31: 1274994249
       Sonic_GBA_Template_17: 1296216290
       Sonic_GBA_Template_57: -1538247842
+      _GBA_Template_2: -690077483
       Sonic_GBA_Template_114: -856704472
       Sonic_GBA_Template_9: 34935694
       Sonic_GBA_Template_66: -1725333407
+      _GBA_Template_4: 1088983273
+      _GBA_Template_6: -1658929624
       Sonic_GBA_Template_100: 456353720
       Sonic_GBA_Template_79: -1239010995
       Sonic_GBA_Template_59: 1491724927
@@ -3397,6 +3589,7 @@ TextureImporter:
       Sonic_GBA_Template_6: -1138945478
       Sonic_GBA_Template_110: 972351805
       Sonic_GBA_Template_80: 1310313084
+      _GBA_Template_7: 1026958622
       Sonic_GBA_Template_91: 1246593136
       Sonic_GBA_Template_94: 1772507812
       Sonic_GBA_Template_12: 457465678
@@ -3411,6 +3604,7 @@ TextureImporter:
       Sonic_GBA_Template_63: 2125436242
       Sonic_GBA_Template_102: 1776825201
       Sonic_GBA_Template_101: -369366672
+      _GBA_Template_1: -1774388891
       Sonic_GBA_Template_42: 1728244703
       Sonic_GBA_Template_117: 1984613471
       Sonic_GBA_Template_95: 114407301
@@ -3427,11 +3621,14 @@ TextureImporter:
       Sonic_GBA_Template_76: 464317866
       Sonic_GBA_Template_96: 437245001
       Sonic_GBA_Template_105: -2129546372
+      _GBA_Template_0: -1224543902
       Sonic_GBA_Template_127: 1207096870
+      _GBA_Template_8: 664414782
       Sonic_GBA_Template_45: -541013913
       Sonic_GBA_Template_14: -2000138432
       Sonic_GBA_Template_34: -9784317
       Sonic_GBA_Template_77: -1310100143
+      _GBA_Template_3: -1312334391
       Sonic_GBA_Template_43: 1192479495
       Sonic_GBA_Template_115: -1382894420
       Sonic_GBA_Template_88: 2039377175
@@ -3446,6 +3643,7 @@ TextureImporter:
       Sonic_GBA_Template_16: 1677934473
       Sonic_GBA_Template_90: -439696271
       Sonic_GBA_Template_44: 1434310658
+      _GBA_Template_5: 94049735
       Sonic_GBA_Template_75: -1853893122
       Sonic_GBA_Template_26: -1123776635
       Sonic_GBA_Template_103: 395281952
