@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 1
+  spritePixelsToUnits: 2
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -1344,8 +1344,8 @@ TextureImporter:
       outline: []
       physicsShape:
       - - {x: -48, y: -48}
-        - {x: -48, y: 48}
-        - {x: 48, y: 48}
+        - {x: -48, y: 0}
+        - {x: 48, y: 0}
         - {x: 48, y: -48}
       tessellationDetail: 0
       bones: []
@@ -3342,10 +3342,14 @@ TextureImporter:
         width: 96
         height: 96
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape: []
+      physicsShape:
+      - - {x: -48, y: 0}
+        - {x: -48, y: 48}
+        - {x: 48, y: 48}
+        - {x: 48, y: 0}
       tessellationDetail: 0
       bones: []
       spriteID: e20d7bdca8c571849b15097c379698ea
@@ -3363,7 +3367,7 @@ TextureImporter:
         width: 96
         height: 96
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -3384,7 +3388,7 @@ TextureImporter:
         width: 96
         height: 96
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -3405,7 +3409,7 @@ TextureImporter:
         width: 96
         height: 96
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -3426,7 +3430,7 @@ TextureImporter:
         width: 96
         height: 96
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -3447,7 +3451,7 @@ TextureImporter:
         width: 96
         height: 96
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -3468,7 +3472,7 @@ TextureImporter:
         width: 96
         height: 96
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -3489,7 +3493,7 @@ TextureImporter:
         width: 96
         height: 96
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -3510,7 +3514,7 @@ TextureImporter:
         width: 96
         height: 96
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -3547,14 +3551,14 @@ TextureImporter:
       Sonic_GBA_Template_35: -1310512223
       Sonic_GBA_Template_83: 1734893488
       Sonic_GBA_Template_29: 475491339
-      Sonic_GBA_Template_32: 100523261
+      _GBA_Template_2: -690077483
       Sonic_GBA_Template_20: -1235344255
       Sonic_GBA_Template_56: -25591070
       Sonic_GBA_Template_67: -614766716
       Sonic_GBA_Template_31: 1274994249
       Sonic_GBA_Template_17: 1296216290
+      Sonic_GBA_Template_32: 100523261
       Sonic_GBA_Template_57: -1538247842
-      _GBA_Template_2: -690077483
       Sonic_GBA_Template_114: -856704472
       Sonic_GBA_Template_9: 34935694
       Sonic_GBA_Template_66: -1725333407

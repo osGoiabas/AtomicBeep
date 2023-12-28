@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 //using UnityEngine.Experimental.Rendering.LWRP;
 
 public class GroundInfo
@@ -46,11 +47,13 @@ public class PlayerMovement : MonoBehaviour
 
     public bool lostFooting = false;
 
-    public bool IsInvulnerable = false;
+    //public bool IsInvulnerable = false;
 
     //float standingHeight = 40f;
     private float heightHalf = 20f;
     private float standWidthHalf = 10f;
+
+    private int tileSideLength = 48;
 
     private Vector2 velocity;
     private float characterAngle;
@@ -79,27 +82,27 @@ public class PlayerMovement : MonoBehaviour
     // GROUND MOVEMENT
     //-----------------------------------------------------------------------------------------------------
     [Header("Ground Movement")]
-    float groundAcceleration = 300f; //168.75f;
-    float groundTopSpeed = 300f; //360f;
-    float speedLimit = 650f; //960f; //MAIS RÁPIDO QUE 600 ELE FICA TRAVANDO NAS CURVAS ÀS VEZES, ACHO QUE É BUG DA UNITY
+    float groundAcceleration = 150f; //old = 300f | SONIC? = 168.75f;
+    float groundTopSpeed = 150f; //old = 300f | SONIC? = 360f;
+    float speedLimit = 300f; //old = 650f | SONIC? = 960f; //MAIS RÁPIDO QUE 600 ELE FICA TRAVANDO NAS CURVAS ÀS VEZES, ACHO QUE É BUG DA UNITY
     float velocidadePura; //só usada para debug e pra checar se é pra makeGhost
 
     bool olhandoDireita = true;
 
-    private float friction = 500f; //168.75f;
-    private float abaixadoFriction = 350f; //84.375f;
-    private float deceleration = 2999f; //1800f;
+    private float friction = 250f; //old = 500f | SONIC? = 168.75f;
+    private float abaixadoFriction = 350f; //old = 350f | SONIC? = 84.375f;
+    private float deceleration = 1500f; //old = 2999f | SONIC? = 1800f;
 
     private float dashSpeed = 1000f;
 
     private float peleGrossura = 0.05f;
-    private float slopeFactor = 450f;
+    private float slopeFactor = 200f; //old = 450f
 
     private float ledgeHeightOffset = 10f;
     private float sideRaycastOffset = -4f;
     private float sideRaycastDist = 10f;
     private float groundRaycastDist = 24f;
-    private float fallVelocityThreshold = 180f;
+    private float fallVelocityThreshold = 90f; //old = 180f | SONIC? = ???
 
     float groundVelocity = 0f;
     bool hControlLock = false;
@@ -108,14 +111,16 @@ public class PlayerMovement : MonoBehaviour
     GroundInfo currentGroundInfo;
     GroundMode groundMode = GroundMode.Floor;
 
+    private float tempoPiruetaTotal = 0.5f; //0.75f;
+
     //-----------------------------------------------------------------------------------------------------
     // AIR MOVEMENT
     //-----------------------------------------------------------------------------------------------------   
     private float airAcceleration = 150f; //340f
-    private float jumpVelocity = 350f; //390f;
+    private float jumpVelocity = 300f; //old = 390f | SONIC? = 390f;
     private float jumpReleaseThreshold = 240f;
-    private float gravity = -790f; //-790f;
-    private float terminalVelocity = 960f;
+    private float gravity = -600f; //old = 790f | SONIC? = -790f;
+    private float terminalVelocity = 500f; //old = 960f | SONIC? = 960f;
     //private float airDrag = 0.5f; //1f; //celeste tem muito airDrag, pesquisar
 
     //-----------------------------------------------------------------------------------------------------
@@ -141,7 +146,6 @@ public class PlayerMovement : MonoBehaviour
     private int empurrandoHash;
 
     private int hitHash;
-    private int postHitHash;
 
     //-----------------------------------------------------------------------------------------------------
     // OUTROS
@@ -163,7 +167,8 @@ public class PlayerMovement : MonoBehaviour
 
     private float wallJumpDelay;
     private float wallJumpDelayTotal = 0.5f;
-    private float wallSlideSpeed = 100f;
+    private float wallSlideSpeed = 80f;
+    private float wallJumpVelocity = 300f; //old = 300f
 
     Vector2 posLedge1;
     Vector2 posLedge2;
@@ -187,7 +192,12 @@ public class PlayerMovement : MonoBehaviour
     /// True if the character is currently in the hit state.
     /// </Summary>
     public bool isHit { get; private set; }
-    private float postHitInvulnerabilityTimer = 0f;
+    private float hitTimer = 0f;
+    private float hitDuration = 1f;
+    public bool IsInvulnerable { get { return isHit || hitTimer > 0f; } }
+
+
+    private CinemachineImpulseSource impulseSource;
 
     #endregion
 
@@ -202,6 +212,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Awake()
     {
+        impulseSource = GetComponent<CinemachineImpulseSource>();
         afterImage = gameObject.GetComponentInChildren<AfterImage>();
         //luzGlobalBranca = GameObject.Find("White Global Light 2D").GetComponent<Light2D>();
         //luzGlobalAzul = GameObject.Find("Blue Global Light 2D").GetComponent<Light2D>();
@@ -227,7 +238,6 @@ public class PlayerMovement : MonoBehaviour
         freandoAgachadoHash = Animator.StringToHash("freandoAgachado");
 
         hitHash = Animator.StringToHash("Hit");
-        postHitHash = Animator.StringToHash("PostHit");
 
         empurrandoHash = Animator.StringToHash("Empurrando");
     }
@@ -262,17 +272,20 @@ public class PlayerMovement : MonoBehaviour
             //GUILayout.Label("freandoAgachado: " + (freandoAgachado ? "SIM" : "NÃO"));
             GUILayout.Label("estáCaindo: " + (estáCaindo ? "SIM" : "NÃO"));
 
+            GUILayout.Label("isHit?: " + (isHit ? "SIM" : "NÃO"));
+            GUILayout.Label("hitTimer: " + hitTimer);            
+
             //GUILayout.Label("lowCeiling: " + (lowCeiling ? "SIM" : "NÃO"));
             GUILayout.Label("estáPulando: " + (estáPulando ? "SIM" : "NÃO"));
             //GUILayout.Label("estáPulandoNormal: " + (estáPulandoNormal ? "SIM" : "NÃO"));
             //GUILayout.Label("estáPiruentado: " + (estáPiruentado ? "SIM" : "NÃO"));
-            //GUILayout.Label("tempoPirueta: " + tempoPirueta);
+            GUILayout.Label("tempoPirueta: " + tempoPirueta);
             //GUILayout.Label("coyoteTimeCounter: " + coyoteTimeCounter);
             //GUILayout.Label("jumpBufferCounter: " + jumpBufferCounter);
 
             //GUILayout.Label("abaixado: " + (abaixado ? "SIM" : "NÃO"));
-            GUILayout.Label("estáLedgeGrabbing: " + (estáLedgeGrabbing ? "SIM" : "NÃO"));
-            GUILayout.Label("estáLedgeClimbing: " + (estáLedgeClimbing ? "SIM" : "NÃO"));
+            //GUILayout.Label("estáLedgeGrabbing: " + (estáLedgeGrabbing ? "SIM" : "NÃO"));
+            //GUILayout.Label("estáLedgeClimbing: " + (estáLedgeClimbing ? "SIM" : "NÃO"));
 
             // GUILayout.Label("empurrando: " + (empurrando ? "SIM" : "NÃO"));
 
@@ -297,7 +310,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void GameInput_OnBulletTime(object sender, System.EventArgs e) {
 
-        SetHitState(new Vector2(0, 0), 0);
+        //SetHitState(new Vector2(0, 0), 0);
 
         if (//Input.GetKeyDown(KeyCode.E) && 
             pegouBulletTime) 
@@ -381,9 +394,9 @@ public class PlayerMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         if (estáWallSliding && !grounded)
         {
-            if (leftHit.collider != null) { velocity.x += 200; }
-            else if (rightHit.collider != null) { velocity.x -= 200; }
-            velocity.y += 300;
+            if (leftHit.collider != null) { velocity.x += wallJumpVelocity/2; }
+            else if (rightHit.collider != null) { velocity.x -= wallJumpVelocity/2; }   
+            velocity.y += wallJumpVelocity;
             estáWallSliding = false;
             estáPulandoNormal = true;
         }
@@ -394,7 +407,10 @@ public class PlayerMovement : MonoBehaviour
     public void SetHitState(Vector2 source, int damage)
     {
         isHit = true;
-        postHitInvulnerabilityTimer = 0f;
+        CameraShakeManager.instance.CameraShake(impulseSource, 5f);
+        FindObjectOfType<HitStop>().Stop(0.05f);
+
+        hitTimer = hitDuration;
         //vida -= damage;
 
         characterAngle = 0f;
@@ -409,12 +425,12 @@ public class PlayerMovement : MonoBehaviour
         hControlLockTimer = 0f;
         
         
-        Vector2 hitStateVelocity = new Vector2 (0,0);
         //float positionDif = transform.position.x - source.x;
 
         Debug.Log(damage);
 
-        velocity = new Vector2(hitStateVelocity.x, hitStateVelocity.y);
+        //Vector2 hitStateVelocity = new Vector2(0, 0);
+        //velocity = new Vector2(hitStateVelocity.x, hitStateVelocity.y);
 
         /*
         // If the damage source is nearly directly above or below us, default to getting knocked away from where we are facing at a lower speed
@@ -426,16 +442,11 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity = new Vector2(hitStateVelocity.x * Mathf.Sign(positionDif), hitStateVelocity.y);
         }
-
-
         
         animator.SetBool(springJumpHash, false);
         animator.SetBool(brakeHash, false);
         animator.SetFloat(speedHash, 0.1f);
         */
-
-        animator.SetBool(postHitHash, false);
-        animator.SetBool(hitHash, true);
     }
 
 
@@ -458,6 +469,19 @@ public class PlayerMovement : MonoBehaviour
         {
             CreateDust();
         }
+
+
+        if (hitTimer >= 0f)
+        {
+            hitTimer -= Time.fixedDeltaTime;
+            if (hitTimer <= 0f)
+            {
+                isHit = false;
+                hitTimer = 0;
+            }
+        }
+
+
 
         //-----------------------------------------------------------------------------------------------------
         // ESTÁ NO CHÃO?
@@ -808,14 +832,12 @@ public class PlayerMovement : MonoBehaviour
             estáLedgeClimbing = false;
         }
 
-        int tileSideLength = 24;
-
         if (estáLedgeGrabbing && !estáLedgeClimbing) 
         {
             if (!grounded && rightHit.collider != null && ledgeRight.collider == null) 
             {
                 velocity.y = 0;
-                posLedge1.y = rightHit.point.y - 1 + (tileSideLength - rightHit.point.y % tileSideLength);
+                posLedge1.y = rightHit.point.y - 1 + (tileSideLength/6 - rightHit.point.y % (tileSideLength/6));
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
                 if (input.x > 0.05f /*|| Input.GetButton("Jump")*/)
@@ -831,7 +853,7 @@ public class PlayerMovement : MonoBehaviour
             else if (!grounded && leftHit.collider != null && ledgeLeft.collider == null)
             {
                 velocity.y = 0;
-                posLedge1.y = leftHit.point.y - 1 + (tileSideLength - leftHit.point.y % tileSideLength);
+                posLedge1.y = leftHit.point.y - 1 + (tileSideLength/6 - leftHit.point.y % (tileSideLength/6));
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
                 if (input.x < -0.05f /*|| Input.GetButton("Jump")*/)
@@ -886,16 +908,20 @@ public class PlayerMovement : MonoBehaviour
             if (leftHit.collider != null) { olhandoDireita = true; }
             else if (rightHit.collider != null) { olhandoDireita = false; }
 
-            velocity.y -= friction * Time.deltaTime;
-            /*
+
+            velocity = new Vector2(velocity.x, velocity.y * 0.90f);
+
+            //velocity.y -= friction * Time.deltaTime;
+
+            
             if (velocity.y > 0)
             {
                 velocity.y -= friction * Time.deltaTime;
             }
             else 
             { 
-                velocity.y = 0;
-            }*/
+                //velocity.y = 0;
+            }
         }
         else 
         {
@@ -915,8 +941,8 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (wallJumpDelay < 0)
             { // solta ele da parede se o tempo acabar; cód está atualmente INATIVO
-                if (leftHit.collider != null) { velocity.x += 100; }
-                else if (rightHit.collider != null) { velocity.x -= 100; }
+                if (leftHit.collider != null) { velocity.x += wallSlideSpeed; }
+                else if (rightHit.collider != null) { velocity.x -= wallSlideSpeed; }
                 wallJumpDelay = wallJumpDelayTotal;
             }
         }
@@ -1084,6 +1110,8 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool(ledgeGrabHash, estáLedgeGrabbing);
         animator.SetBool(ledgeClimbHash, estáLedgeClimbing);
 
+        animator.SetBool(hitHash, isHit);
+
         animator.SetBool(spinReadyHash, spinReady);
 
         animator.SetBool(brakeHash, mudarDireção);
@@ -1188,6 +1216,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+
     #region pule
     void Pule() {
         coyoteTimeCounter = 0;
@@ -1219,7 +1248,7 @@ public class PlayerMovement : MonoBehaviour
         {
             estáPulandoNormal = false;
             estáPiruetando = true;
-            tempoPirueta = 0.75f;
+            tempoPirueta = tempoPiruetaTotal;
             //#TODO variar tempoPirueta e velocidade da animação baseado na velocidade horizontal
         }
 
