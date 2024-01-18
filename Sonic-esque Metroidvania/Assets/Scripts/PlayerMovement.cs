@@ -47,6 +47,8 @@ public class PlayerMovement : MonoBehaviour
 
     public bool lostFooting = false;
 
+    public bool estáAtacando = false;
+
     //public bool IsInvulnerable = false;
 
     //float standingHeight = 40f;
@@ -306,6 +308,11 @@ public class PlayerMovement : MonoBehaviour
     private void Start() {
         gameInput.OnPulo += GameInput_OnPulo;
         gameInput.OnBulletTime += GameInput_OnBulletTime;
+    }
+
+    private void GameInput_OnAtaque(object sender, System.EventArgs e) {
+        estáAtacando = true;
+        estáAtacando = true;
     }
 
     private void GameInput_OnBulletTime(object sender, System.EventArgs e) {
