@@ -128,7 +128,7 @@ public class PlayerMovement : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------
     // ANIMAÇÃO
     //-----------------------------------------------------------------------------------------------------
-    [SerializeField] public Animator animator;
+    private Animator animator;
     private int speedHash;
     private int standHash;
     private int groundedHash;
@@ -148,6 +148,7 @@ public class PlayerMovement : MonoBehaviour
     private int empurrandoHash;
 
     private int hitHash;
+    private int atacandoHash;
 
     //-----------------------------------------------------------------------------------------------------
     // OUTROS
@@ -195,7 +196,7 @@ public class PlayerMovement : MonoBehaviour
     /// </Summary>
     public bool isHit { get; private set; }
     private float hitTimer = 0f;
-    private float hitDuration = 1f;
+    private float hitDuration = 0.5f;
     public bool IsInvulnerable { get { return isHit || hitTimer > 0f; } }
 
 
@@ -214,6 +215,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Awake()
     {
+        animator = GetComponent<Animator>();
         impulseSource = GetComponent<CinemachineImpulseSource>();
         afterImage = gameObject.GetComponentInChildren<AfterImage>();
         //luzGlobalBranca = GameObject.Find("White Global Light 2D").GetComponent<Light2D>();
@@ -240,6 +242,7 @@ public class PlayerMovement : MonoBehaviour
         freandoAgachadoHash = Animator.StringToHash("freandoAgachado");
 
         hitHash = Animator.StringToHash("Hit");
+        atacandoHash = Animator.StringToHash("Atacando");
 
         empurrandoHash = Animator.StringToHash("Empurrando");
     }
@@ -308,11 +311,16 @@ public class PlayerMovement : MonoBehaviour
     private void Start() {
         gameInput.OnPulo += GameInput_OnPulo;
         gameInput.OnBulletTime += GameInput_OnBulletTime;
+        gameInput.OnAtaque += GameInput_OnAtaque;
     }
 
     private void GameInput_OnAtaque(object sender, System.EventArgs e) {
+        FindObjectOfType<SoundManager>().PlaySFX("beepSwing");
         estáAtacando = true;
-        estáAtacando = true;
+    }
+
+    public void AcabarAtaque() {
+        estáAtacando = false;
     }
 
     private void GameInput_OnBulletTime(object sender, System.EventArgs e) {
@@ -414,6 +422,7 @@ public class PlayerMovement : MonoBehaviour
     public void SetHitState(Vector2 source, int damage)
     {
         isHit = true;
+        FindObjectOfType<SoundManager>().PlaySFX("beepHurt");
         CameraShakeManager.instance.CameraShake(impulseSource, 5f);
         FindObjectOfType<HitStop>().Stop(0.05f);
 
@@ -1118,6 +1127,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool(ledgeClimbHash, estáLedgeClimbing);
 
         animator.SetBool(hitHash, isHit);
+        animator.SetBool(atacandoHash, estáAtacando);
 
         animator.SetBool(spinReadyHash, spinReady);
 

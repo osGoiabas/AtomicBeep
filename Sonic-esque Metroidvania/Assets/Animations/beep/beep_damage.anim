@@ -26,7 +26,7 @@ AnimationClip:
     - time: 0.1
       value: {fileID: -2048850262, guid: 5d2a2890cd4abd74b9fea73864bf132b, type: 3}
     attribute: m_Sprite
-    path: 
+    path: beep-sprite
     classID: 212
     script: {fileID: 0}
   m_SampleRate: 60
@@ -37,7 +37,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 0
+      path: 3303043643
       attribute: 0
       script: {fileID: 0}
       typeID: 212

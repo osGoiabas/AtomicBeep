@@ -8,15 +8,15 @@ public class GameInput : MonoBehaviour
 {
     public event EventHandler OnPulo;
     public event EventHandler OnBulletTime;
+    public event EventHandler OnAtaque;
     private PlayerInputActions playerInputActions;
 
     private void Awake() {
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
         playerInputActions.Player.Pulo.performed += Pulo_performed;
-        playerInputActions.Player.Pulo.canceled += Pulo_canceled;
         playerInputActions.Player.BulletTime.performed += BulletTime_performed;
-        playerInputActions.Player.BulletTime.canceled += BulletTime_canceled;
+        playerInputActions.Player.Ataque.performed += Ataque_performed;
     }
 
     public Vector2 GetMovementVector() {
@@ -28,18 +28,13 @@ public class GameInput : MonoBehaviour
         OnPulo?.Invoke(this, EventArgs.Empty);
     }
 
-    public void Pulo_canceled(InputAction.CallbackContext context)
-    { 
-    
-    }
-
     public void BulletTime_performed(InputAction.CallbackContext context)
     {
         OnBulletTime?.Invoke(this, EventArgs.Empty);
     }
 
-    public void BulletTime_canceled(InputAction.CallbackContext context)
-    { 
-    
+    public void Ataque_performed(InputAction.CallbackContext context)
+    {
+        OnAtaque?.Invoke(this, EventArgs.Empty);
     }
 }
