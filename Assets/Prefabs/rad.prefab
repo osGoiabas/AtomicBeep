@@ -189,8 +189,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a4d47ba28af1e409c61319ea85a777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radValue: 1
-  radSound: {fileID: 8300000, guid: 178939ae0598e214fb3fbbf3d7ab64b1, type: 3}
 --- !u!1 &1754540630988416093
 GameObject:
   m_ObjectHideFlags: 0
