@@ -249,7 +249,7 @@ public class PlayerMovement : MonoBehaviour
     #endregion
 
     #region debugWindow
-    private bool debug = true;
+    private bool debug = false;
     void OnGUI()
     {
         if (debug)
@@ -469,7 +469,7 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         //INPUT
-        Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        //Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         Vector2 inputVector = gameInput.GetMovementVector();
 
 
@@ -541,7 +541,7 @@ public class PlayerMovement : MonoBehaviour
             //-----------------------------------------------------------------------------------------------------
             // ABAIXAR
             //-----------------------------------------------------------------------------------------------------
-            if (input.y < 0) { abaixado = true; }
+            if (inputVector.y < 0) { abaixado = true; }
             else { abaixado = false; }
 
             //-----------------------------------------------------------------------------------------------------
@@ -598,7 +598,7 @@ public class PlayerMovement : MonoBehaviour
                 //-----------------------------------------------------------------------------------------------------
 
                 // NÃO HÁ INPUT E/OU ESTÁ ABAIXADO? aplique fricção.
-                if (abaixado || Mathf.Abs(input.x) < 0.005f)
+                if (abaixado || Mathf.Abs(inputVector.x) < 0.005f)
                 {
                     // Mostly because I don't like chaining ternaries 
                     float dePéFric = /*underwater ? uwFriction :*/ friction;
@@ -624,7 +624,7 @@ public class PlayerMovement : MonoBehaviour
                 //-----------------------------------------------------------------------------------------------------
 
 
-                if (!hControlLock && Mathf.Abs(input.x) >= 0.005f && !abaixado)
+                if (!hControlLock && Mathf.Abs(inputVector.x) >= 0.005f && !abaixado)
                 {
                     float accel = /*underwater ? uwAcceleration :*/ groundAcceleration;
                     float decel = /*underwater ? uwDeceleration :*/ deceleration;
@@ -632,7 +632,7 @@ public class PlayerMovement : MonoBehaviour
                     //-----------------------------------------------------------------------------------------------------
                     // ESQUERDA
                     //-----------------------------------------------------------------------------------------------------
-                    if (input.x < 0f)
+                    if (inputVector.x < 0f)
                     {
                         float acceleration = 0f;
                         if (groundVelocity > 0.005f)
@@ -643,14 +643,14 @@ public class PlayerMovement : MonoBehaviour
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
                         if (groundVelocity > -groundTopSpeed)
                         {
-                            groundVelocity = Mathf.Max(-groundTopSpeed, groundVelocity + (input.x * acceleration) * Time.fixedDeltaTime);
+                            groundVelocity = Mathf.Max(-groundTopSpeed, groundVelocity + (inputVector.x * acceleration) * Time.fixedDeltaTime);
                         }
                     }
 
                     //-----------------------------------------------------------------------------------------------------
                     // DIREITA
                     //-----------------------------------------------------------------------------------------------------
-                    else if (input.x > 0f)
+                    else if (inputVector.x > 0f)
                     {
                         float acceleration = 0f;
                         if (groundVelocity < -0.005f)
@@ -661,7 +661,7 @@ public class PlayerMovement : MonoBehaviour
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
                         if (groundVelocity < groundTopSpeed)
                         {
-                            groundVelocity = Mathf.Min(groundTopSpeed, groundVelocity + (input.x * acceleration) * Time.fixedDeltaTime);
+                            groundVelocity = Mathf.Min(groundTopSpeed, groundVelocity + (inputVector.x * acceleration) * Time.fixedDeltaTime);
                         }
                     }
                 }
@@ -765,12 +765,12 @@ public class PlayerMovement : MonoBehaviour
             //-----------------------------------------------------------------------------------------------------
 
             // MOVA-SE, USANDO A airAcceleration AO INVÉS DA ACELERAÇÃO DO CHÃO
-            if (Mathf.Abs(input.x) >= 0.005f)
+            if (Mathf.Abs(inputVector.x) >= 0.005f)
             {
-                if ((input.x < 0f && velocity.x > -groundTopSpeed) || (input.x > 0f && velocity.x < groundTopSpeed))
+                if ((inputVector.x < 0f && velocity.x > -groundTopSpeed) || (inputVector.x > 0f && velocity.x < groundTopSpeed))
                 {
                     float airAcc = /*underwater ? uwAirAcceleration :*/ airAcceleration;
-                    velocity.x = Mathf.Clamp(velocity.x + (input.x * airAcc * Time.deltaTime), -groundTopSpeed, groundTopSpeed);
+                    velocity.x = Mathf.Clamp(velocity.x + (inputVector.x * airAcc * Time.deltaTime), -groundTopSpeed, groundTopSpeed);
                 }
             }
         }
@@ -856,7 +856,7 @@ public class PlayerMovement : MonoBehaviour
                 posLedge1.y = rightHit.point.y - 1 + (tileSideLength/6 - rightHit.point.y % (tileSideLength/6));
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
-                if (input.x > 0.05f /*|| Input.GetButton("Jump")*/)
+                if (inputVector.x > 0.05f /*|| Input.GetButton("Jump")*/)
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
@@ -872,7 +872,7 @@ public class PlayerMovement : MonoBehaviour
                 posLedge1.y = leftHit.point.y - 1 + (tileSideLength/6 - leftHit.point.y % (tileSideLength/6));
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
-                if (input.x < -0.05f /*|| Input.GetButton("Jump")*/)
+                if (inputVector.x < -0.05f /*|| Input.GetButton("Jump")*/)
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
@@ -1155,10 +1155,10 @@ public class PlayerMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         #region direção
 
-        if (Mathf.Abs(input.x) > 0.05f && grounded && !freandoAgachado && !spinReady)
+        if (Mathf.Abs(inputVector.x) > 0.05f && grounded && !freandoAgachado && !spinReady)
         {
             // indo prum lado mas olhando pro outro
-            if ((input.x < 0.05f && olhandoDireita) || (input.x > 0.05f && !olhandoDireita))
+            if ((inputVector.x < 0.05f && olhandoDireita) || (inputVector.x > 0.05f && !olhandoDireita))
             {
                 mudarDireção = true;
             } 
@@ -1194,8 +1194,8 @@ public class PlayerMovement : MonoBehaviour
         if (grounded)
         {
             if (freandoAgachado == false && Mathf.Abs(groundVelocity) >= freandoAgachadoLimiteVirar
-                                 && ((groundVelocity < 0 && input.x > 0) ||
-                                     (groundVelocity > 0 && input.x < 0)))
+                                 && ((groundVelocity < 0 && inputVector.x > 0) ||
+                                     (groundVelocity > 0 && inputVector.x < 0)))
             {
                 //animator.SetTrigger("freandoAgachado");
                 freandoAgachado = true;
@@ -1204,7 +1204,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (freandoAgachado && Mathf.Abs(groundVelocity) < freandoAgachadoLimiteVirar)
             {
-                if (Mathf.Abs(input.x) > 0.05f)
+                if (Mathf.Abs(inputVector.x) > 0.05f)
                 {
                     olhandoDireita = !olhandoDireita;
                     animator.SetTrigger("freandoAgachadoVirar");
@@ -1212,7 +1212,7 @@ public class PlayerMovement : MonoBehaviour
                 freandoAgachado = false;
                 TraveControleH();
             }
-            else if (groundVelocity == 0 || ((groundVelocity > 0 && input.x > 0) || (groundVelocity < 0 && input.x < 0)))
+            else if (groundVelocity == 0 || ((groundVelocity > 0 && inputVector.x > 0) || (groundVelocity < 0 && inputVector.x < 0)))
             {
                 hControlLock = false;
             }
@@ -1272,8 +1272,8 @@ public class PlayerMovement : MonoBehaviour
         /*
         //LONG JUMP
         if (Mathf.Abs(groundVelocity) >= fallVelocityThreshold) {
-            if (input.x > 0 && olhandoDireita) { velocity.x += 150; print("LONGJUMP direita!"); }
-            else if (input.x < 0 && !olhandoDireita) { velocity.x -= 150; print("LONGJUMP esquerda!"); }
+            if (inputVector.x > 0 && olhandoDireita) { velocity.x += 150; print("LONGJUMP direita!"); }
+            else if (inputVector.x < 0 && !olhandoDireita) { velocity.x -= 150; print("LONGJUMP esquerda!"); }
         }*/
     }
     #endregion

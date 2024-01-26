@@ -5,18 +5,18 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public void Start()
+    [SerializeField]
+    private SceneTransitionMode sceneTransitionMode;
+
+    public void StartGame()
     {
-        FindObjectOfType<SoundManager>().PlaySFX("titleAtomicBeep");
+        FindObjectOfType<SoundManager>().PlaySFX("rads");
+        SceneTransitioner.Instance.LoadScene("DebugRoom 1", sceneTransitionMode);
     }
 
-    public void ExitButton() {
+    public void ExitButton()
+    {
         Application.Quit();
         Debug.Log("Fechou o jogo.");
     }
-
-    public void StartGame() {
-        FindObjectOfType<SoundManager>().PlaySFX("rads");
-        SceneManager.LoadScene("DebugRoom 1");
-    } 
 }

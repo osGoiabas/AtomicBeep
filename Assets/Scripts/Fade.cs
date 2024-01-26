@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Fade : MonoBehaviour
 {
@@ -12,18 +13,33 @@ public class Fade : MonoBehaviour
 
     void Start()
     {
-        rend = GetComponent<SpriteRenderer>();
-        Color c = rend.material.color;
-        c.a = 0f;
-        rend.material.color = c;
+        canvasgroup = GetComponent<CanvasGroup>();
+        FindObjectOfType<SoundManager>().PlaySFX("titleAtomicBeep");
+        DontDestroyOnLoad(this);
+    }
+    public void ExitButton()
+    {
+        Application.Quit();
+        Debug.Log("Fechou o jogo.");
     }
 
+    public void StartGame()
+    {
+        SceneManager.LoadScene("DebugRoom 1");
+        //SceneManager.LoadSceneAsync("DebugRoom 1");
+    }
+
+
     IEnumerator FadeIn() {
-        for (float f = 0.05f; f <= timeToFade; f += 0.05f) {
-            Color c = rend.material.color;
-            c.a = f;
-            rend.material.color = c;
+        FindObjectOfType<SoundManager>().PlaySFX("rads");
+        for (float f = 0.05f; f < timeToFade + 0.05f; f += 0.05f) {
+            canvasgroup.alpha = f/timeToFade;
+            Debug.Log(f);
             yield return new WaitForSeconds(0.05f);
+        }
+        if (canvasgroup.alpha >= 1f - 0.05f) {
+            canvasgroup.alpha = 1f;
+            StartGame();
         }
     }
     public void FicarPreto() {
@@ -34,9 +50,7 @@ public class Fade : MonoBehaviour
     {
         for (float f = timeToFade; f >= -0.05f; f -= 0.05f)
         {
-            Color c = rend.material.color;
-            c.a = f;
-            rend.material.color = c;
+            canvasgroup.alpha = f/timeToFade;
             yield return new WaitForSeconds(0.05f);
         }
     }

@@ -8,9 +8,13 @@ public class ExitScene : MonoBehaviour
     public string sceneToLoad;
     public string exitName;
 
+    [SerializeField]
+    private SceneTransitionMode sceneTransitionMode;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         PlayerPrefs.SetString("LastExitName", exitName);
-        SceneManager.LoadScene(sceneToLoad);
+        SceneTransitioner.Instance.LoadScene(sceneToLoad, sceneTransitionMode);
+        //SceneManager.LoadScene(sceneToLoad);
     }
 }

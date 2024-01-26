@@ -11,12 +11,26 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnAtaque;
     private PlayerInputActions playerInputActions;
 
+    public static GameInput instance;
+
     private void Awake() {
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
         playerInputActions.Player.Pulo.performed += Pulo_performed;
         playerInputActions.Player.BulletTime.performed += BulletTime_performed;
         playerInputActions.Player.Ataque.performed += Ataque_performed;
+    }
+    void Start()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
+        DontDestroyOnLoad(gameObject);
     }
 
     public Vector2 GetMovementVector() {
