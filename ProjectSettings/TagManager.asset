@@ -6,6 +6,7 @@ TagManager:
   tags:
   - rad
   - Bounds
+  - Input
   layers:
   - Default
   - TransparentFX

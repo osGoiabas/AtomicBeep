@@ -33,7 +33,7 @@ public class SceneTransitioner : MonoBehaviour
 
         SceneManager.activeSceneChanged += HandleSceneChange;
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         TransitionCanvas = GetComponent<Canvas>();
         TransitionCanvas.enabled = false;

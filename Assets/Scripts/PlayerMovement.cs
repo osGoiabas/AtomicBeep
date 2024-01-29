@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Cinemachine;
 //using UnityEngine.Experimental.Rendering.LWRP;
 
@@ -314,6 +315,12 @@ public class PlayerMovement : MonoBehaviour
         gameInput.OnAtaque += GameInput_OnAtaque;
     }
 
+    public void Update()
+    {
+        //TODO: tirar isso do Update, só fazer OnSceneLoad ou algo do tipo
+        gameInput = GameObject.FindGameObjectWithTag("Input").GetComponent<GameInput>();
+    }
+
     private void GameInput_OnAtaque(object sender, System.EventArgs e) {
         FindObjectOfType<SoundManager>().PlaySFX("beepSwing");
         estáAtacando = true;
@@ -470,6 +477,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //INPUT
         //Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
         Vector2 inputVector = gameInput.GetMovementVector();
 
 

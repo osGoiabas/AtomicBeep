@@ -7,6 +7,7 @@ public class CameraManager : MonoBehaviour
 {
     public static CameraManager instance;
     private CinemachineConfiner2D pcamconfiner;
+    private CinemachineVirtualCamera cinemachineVirtualCamera;
     void Start()
     {
         if (instance != null)
@@ -24,8 +25,10 @@ public class CameraManager : MonoBehaviour
 
     private void Update()
     {
+        //TODO: tirar isso do Update, só fazer OnSceneLoad ou algo do tipo
         pcamconfiner = GetComponentInChildren<CinemachineConfiner2D>();
-        //pcamconfiner.InvalidatePathCache();
+        cinemachineVirtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
         pcamconfiner.m_BoundingShape2D = GameObject.FindGameObjectWithTag("Bounds").GetComponent<CompositeCollider2D>();
+        cinemachineVirtualCamera.Follow = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
     }
 }

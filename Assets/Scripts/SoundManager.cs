@@ -24,6 +24,7 @@ public class SoundManager : MonoBehaviour
 
     void Awake() {
 
+        
         if (instance == null)
             instance = this;
         else {
@@ -31,7 +32,8 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
+        
 
         foreach (Sound s in SFX) {
             s.sfxSource = gameObject.AddComponent<AudioSource>();
