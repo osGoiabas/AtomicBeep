@@ -25,15 +25,17 @@ public class GameInput : MonoBehaviour
 
     void Start()
     {
+        
         if (instance != null)
         {
+            //Debug.LogWarning($"Duplicate Instances found! First one: {instance.name} Second one: {name}. Destroying second one.");
             Destroy(gameObject);
         }
         else
         {
             instance = this;
         }
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 
     public Vector2 GetMovementVector() {

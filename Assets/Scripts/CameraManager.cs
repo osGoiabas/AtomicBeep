@@ -10,9 +10,10 @@ public class CameraManager : MonoBehaviour
     private CinemachineVirtualCamera cinemachineVirtualCamera;
     void Start()
     {
+        
         if (instance != null)
         {
-            Debug.LogWarning($"Invalid configuration. Duplicate Instances found! First one: {instance.name} Second one: {name}. Destroying second one.");
+            //Debug.LogWarning($"Duplicate Instances found! First one: {instance.name} Second one: {name}. Destroying second one.");
             Destroy(gameObject);
             return;
         }
@@ -20,7 +21,6 @@ public class CameraManager : MonoBehaviour
         {
             instance = this;
         }
-        DontDestroyOnLoad(gameObject);
     }
 
     private void Update()

@@ -9,7 +9,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (instance != null)
         {
-            Debug.LogWarning($"Invalid configuration. Duplicate Instances found! First one: {instance.name} Second one: {name}. Destroying second one.");
+            //Debug.LogWarning($"Duplicate Instances found! First one: {instance.name} Second one: {name}. Destroying second one.");
             Destroy(gameObject);
             return;
         }

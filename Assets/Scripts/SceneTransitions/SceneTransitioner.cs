@@ -31,7 +31,7 @@ public class SceneTransitioner : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogWarning($"Invalid configuration. Duplicate Instances found! First one: {Instance.name} Second one: {name}. Destroying second one.");
+            //Debug.LogWarning($"Duplicate Instances found! First one: {Instance.name} Second one: {name}. Destroying second one.");
             Destroy(gameObject);
             return;
         }
@@ -104,14 +104,12 @@ public class SceneTransitioner : MonoBehaviour
         ExitScene[] portas = FindObjectsOfType<ExitScene>();
         for (int i = 0; i < portas.Length; i++)
         {
-            Debug.Log(portas[i]);
             if (portas[i]._portaAtual == portaEmQueVaiSpawnar)
             {
                 //#TODO isso aqui é jank, ver jeito mais certinho de pegar o lugar exato em que spawnar
                 _doorPos = new Vector3 (portas[i].gameObject.transform.position.x,
                                         portas[i].gameObject.transform.position.y - 20,
                                         portas[i].gameObject.transform.position.z);
-                Debug.Log(portaEmQueVaiSpawnar);
                 return;
             }
         }
@@ -132,7 +130,6 @@ public class SceneTransitioner : MonoBehaviour
         {
             ProcurarPorta(_portaEmQueVaiSpawnar);
             PlayerManager.instance.transform.position = _doorPos;
-            //Debug.Log(_portaEmQueVaiSpawnar);
             _loadFromDoor = false;
         }
     }

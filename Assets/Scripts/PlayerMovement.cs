@@ -475,25 +475,15 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        //INPUT
-        //Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
         Vector2 inputVector = gameInput.GetMovementVector();
 
-
         if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
-
 
         if (doubleJumpDelay > 0) {
             doubleJumpDelay -= Time.deltaTime;
         }
 
-
-        if (spinReady)
-        {
-            CreateDust();
-        }
-
+        if (spinReady) { CreateDust(); }
 
         if (hitTimer >= 0f)
         {
@@ -504,8 +494,6 @@ public class PlayerMovement : MonoBehaviour
                 hitTimer = 0;
             }
         }
-
-
 
         //-----------------------------------------------------------------------------------------------------
         // ESTÁ NO CHÃO?

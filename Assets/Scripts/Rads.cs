@@ -9,9 +9,9 @@ public class Rads : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.CompareTag("Player")) 
         {
-            ItemManager.instance.ChangeRadsCollected(radValue);
+            FindObjectOfType<ItemManager>().ChangeRadsCollected(radValue);
             FindObjectOfType<SoundManager>().PlaySFX("rads");
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 }
