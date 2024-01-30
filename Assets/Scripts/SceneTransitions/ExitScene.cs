@@ -5,15 +5,31 @@ using UnityEngine.SceneManagement;
 
 public class ExitScene : MonoBehaviour
 {
-    public string sceneToLoad = "";
-    public string exitName = "";
 
     [SerializeField]
     private SceneTransitionMode sceneTransitionMode;
 
+    [SerializeField] public PortaEmQueVaiSpawnar _portaAtual;
+
+    [Space(10f)]
+    [Header("Vai para a cena:")]
+    [SerializeField] private PortaEmQueVaiSpawnar _portaEmQueVaiSpawnar;
+    [SerializeField] private SceneField _sceneToLoad;
+
+
+    public enum PortaEmQueVaiSpawnar { 
+        Nenhuma,
+        Porta01,
+        Porta02,
+        Porta03,
+        Porta04,
+        Porta05,
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        PlayerPrefs.SetString("LastExitName", exitName);
-        SceneTransitioner.Instance.LoadScene(sceneToLoad, sceneTransitionMode);
+        SceneTransitioner._loadFromDoor = true;
+        SceneTransitioner.Instance.LoadScene(_sceneToLoad.SceneName, _portaEmQueVaiSpawnar, sceneTransitionMode);
     }
+
 }

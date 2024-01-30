@@ -7,11 +7,13 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField]
     private SceneTransitionMode sceneTransitionMode;
+    [SerializeField] 
+    private ExitScene.PortaEmQueVaiSpawnar _portaEmQueVaiSpawnar;
 
     public void StartGame()
     {
         FindObjectOfType<SoundManager>().PlaySFX("rads");
-        SceneTransitioner.Instance.LoadScene("DebugRoom 1", sceneTransitionMode);
+        SceneTransitioner.Instance.LoadScene("DebugRoom 1", _portaEmQueVaiSpawnar, sceneTransitionMode);
     }
 
     public void ExitButton()

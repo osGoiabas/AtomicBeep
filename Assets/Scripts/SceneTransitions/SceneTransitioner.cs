@@ -7,6 +7,11 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Canvas))]
 public class SceneTransitioner : MonoBehaviour
 {
+    public static bool _loadFromDoor;
+
+    [SerializeField] private ExitScene.PortaEmQueVaiSpawnar _portaEmQueVaiSpawnar;
+    private Vector3 _doorPos;
+
     private static SceneTransitioner _instance;
     public static SceneTransitioner Instance
     {
@@ -39,10 +44,13 @@ public class SceneTransitioner : MonoBehaviour
         TransitionCanvas.enabled = false;
     }
 
-    public void LoadScene(string Scene,
+    public void LoadScene(string Scene, 
+        ExitScene.PortaEmQueVaiSpawnar porta,
         SceneTransitionMode TransitionMode = SceneTransitionMode.None,
         LoadSceneMode Mode = LoadSceneMode.Single)
     {
+        _portaEmQueVaiSpawnar = porta;
+
         LoadLevelOperation = SceneManager.LoadSceneAsync(Scene);
 
         Transition transition = Transitions.Find((transition) => transition.Mode == TransitionMode);
@@ -88,5 +96,44 @@ public class SceneTransitioner : MonoBehaviour
     {
         public SceneTransitionMode Mode;
         public AbstractSceneTransitionScriptableObject AnimationSO;
+    }
+
+
+    private void ProcurarPorta(ExitScene.PortaEmQueVaiSpawnar portaEmQueVaiSpawnar)
+    {
+        ExitScene[] portas = FindObjectsOfType<ExitScene>();
+        for (int i = 0; i < portas.Length; i++)
+        {
+            Debug.Log(portas[i]);
+            if (portas[i]._portaAtual == portaEmQueVaiSpawnar)
+            {
+                //#TODO isso aqui é jank, ver jeito mais certinho de pegar o lugar exato em que spawnar
+                _doorPos = new Vector3 (portas[i].gameObject.transform.position.x,
+                                        portas[i].gameObject.transform.position.y - 20,
+                                        portas[i].gameObject.transform.position.z);
+                Debug.Log(portaEmQueVaiSpawnar);
+                return;
+            }
+        }
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (_loadFromDoor)
+        {
+            ProcurarPorta(_portaEmQueVaiSpawnar);
+            PlayerManager.instance.transform.position = _doorPos;
+            //Debug.Log(_portaEmQueVaiSpawnar);
+            _loadFromDoor = false;
+        }
     }
 }
