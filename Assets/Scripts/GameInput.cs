@@ -20,6 +20,9 @@ public class GameInput : MonoBehaviour
         playerInputActions.Player.BulletTime.performed += BulletTime_performed;
         playerInputActions.Player.Ataque.performed += Ataque_performed;
     }
+
+
+
     void Start()
     {
         if (instance != null)

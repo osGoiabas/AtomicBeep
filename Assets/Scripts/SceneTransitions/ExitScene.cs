@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class ExitScene : MonoBehaviour
 {
-    public string sceneToLoad;
-    public string exitName;
+    public string sceneToLoad = "";
+    public string exitName = "";
 
     [SerializeField]
     private SceneTransitionMode sceneTransitionMode;
@@ -15,6 +15,5 @@ public class ExitScene : MonoBehaviour
     {
         PlayerPrefs.SetString("LastExitName", exitName);
         SceneTransitioner.Instance.LoadScene(sceneToLoad, sceneTransitionMode);
-        //SceneManager.LoadScene(sceneToLoad);
     }
 }

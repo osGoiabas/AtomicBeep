@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EntranceScene : MonoBehaviour
 {
-    public string lastExitName;
+    public string lastExitName = "";
 
     void Start()
     {
