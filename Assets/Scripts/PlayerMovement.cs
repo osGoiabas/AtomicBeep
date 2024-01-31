@@ -39,16 +39,15 @@ public class PlayerMovement : MonoBehaviour
     public bool estáPulando { get; private set; }
     public bool estáPulandoNormal { get; private set; }
     public bool estáPiruetando { get; private set; }
-
     public bool abaixado { get; private set; }
-
     public bool empurrando { get; private set; }
+    public bool vaiWallSlide { get; private set; }
+    public bool estáWallToRamp { get; private set; }    
     public bool estáWallSliding { get; private set; }
     public bool estáLedgeGrabbing { get; private set; }
+    public bool lostFooting { get; private set; }
+    public bool estáAtacando { get; private set; }
 
-    public bool lostFooting = false;
-
-    public bool estáAtacando = false;
 
     //public bool IsInvulnerable = false;
 
@@ -141,6 +140,8 @@ public class PlayerMovement : MonoBehaviour
     private int spinReadyHash;
 
     private int wallSlidingHash;
+    private int vaiWallSlideHash;
+    private int estáWallToRampHash;    
     private int ledgeGrabHash;
     private int ledgeClimbHash;
 
@@ -236,6 +237,9 @@ public class PlayerMovement : MonoBehaviour
         spinReadyHash = Animator.StringToHash("SpinReady");
 
         wallSlidingHash = Animator.StringToHash("WallSliding");
+        vaiWallSlideHash = Animator.StringToHash("VaiWallSlide");
+        estáWallToRampHash = Animator.StringToHash("WallToRamp");
+        
         ledgeGrabHash = Animator.StringToHash("LedgeGrabbing"); 
         ledgeClimbHash = Animator.StringToHash("LedgeClimbing");
 
@@ -250,7 +254,7 @@ public class PlayerMovement : MonoBehaviour
     #endregion
 
     #region debugWindow
-    private bool debug = false;
+    private bool debug = true;
     void OnGUI()
     {
         if (debug)
@@ -269,23 +273,24 @@ public class PlayerMovement : MonoBehaviour
             //GUILayout.Label("doubleJumpDelay: " + doubleJumpDelay);
             //GUILayout.Label("Bullet Time: " + (estáEmBulletTime ? "SIM" : "NÃO"));
 
-            //GUILayout.Label("estáWallSliding: " + (estáWallSliding ? "SIM" : "NÃO"));
+            GUILayout.Label("estáWallSliding: " + (estáWallSliding ? "SIM" : "NÃO"));
+            GUILayout.Label("estáWallToRamp: " + (estáWallToRamp ? "SIM" : "NÃO"));
             //GUILayout.Label("wallJumpDelay: " + wallJumpDelay);
             //GUILayout.Label("colliderParede?: " + ((leftHit.collider != null || rightHit.collider != null) ? "SIM" : "NÃO"));
 
             //GUILayout.Label("charAngle: " + characterAngle);
             GUILayout.Label("grounded: " + (grounded ? "SIM" : "NÃO"));
             //GUILayout.Label("freandoAgachado: " + (freandoAgachado ? "SIM" : "NÃO"));
-            GUILayout.Label("estáCaindo: " + (estáCaindo ? "SIM" : "NÃO"));
+            //GUILayout.Label("estáCaindo: " + (estáCaindo ? "SIM" : "NÃO"));
 
-            GUILayout.Label("isHit?: " + (isHit ? "SIM" : "NÃO"));
-            GUILayout.Label("hitTimer: " + hitTimer);            
+            //GUILayout.Label("isHit?: " + (isHit ? "SIM" : "NÃO"));
+            //GUILayout.Label("hitTimer: " + hitTimer);            
 
             //GUILayout.Label("lowCeiling: " + (lowCeiling ? "SIM" : "NÃO"));
-            GUILayout.Label("estáPulando: " + (estáPulando ? "SIM" : "NÃO"));
+            //GUILayout.Label("estáPulando: " + (estáPulando ? "SIM" : "NÃO"));
             //GUILayout.Label("estáPulandoNormal: " + (estáPulandoNormal ? "SIM" : "NÃO"));
             //GUILayout.Label("estáPiruentado: " + (estáPiruentado ? "SIM" : "NÃO"));
-            GUILayout.Label("tempoPirueta: " + tempoPirueta);
+            //GUILayout.Label("tempoPirueta: " + tempoPirueta);
             //GUILayout.Label("coyoteTimeCounter: " + coyoteTimeCounter);
             //GUILayout.Label("jumpBufferCounter: " + jumpBufferCounter);
 
@@ -545,6 +550,8 @@ public class PlayerMovement : MonoBehaviour
             //-----------------------------------------------------------------------------------------------------
 
             lostFooting = false;
+            vaiWallSlide = false;
+            estáWallToRamp = false;
 
             // SE NÃO ESTÁ NO FLOOR, MAS NÃO TEM VELOCIDADE PRA CORRER NA PAREDE/TETO
             if (groundMode != GroundMode.Floor && Mathf.Abs(groundVelocity) < fallVelocityThreshold)
@@ -553,6 +560,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     characterAngle = 0;
                     transform.rotation = Quaternion.identity;
+                    vaiWallSlide = true;
                     if (olhandoDireita) { transform.position += new Vector3(10f, 0f, 0f); } 
                     else { transform.position -= new Vector3(10f, 0f, 0f); }
                 }
@@ -561,12 +569,13 @@ public class PlayerMovement : MonoBehaviour
                     //TRAVE O CONTROLE NA HORIZONTAL
                     TraveControleH();
                     lostFooting = true;
+                    vaiWallSlide = false;
                 }
                 groundMode = GroundMode.Floor; // VIRE PRO CHÃO
                 grounded = false; // NÃO TÁ NO CHÃO
             }
 
-
+            
 
             //-----------------------------------------------------------------------------------------------------
             // PULAR
@@ -818,6 +827,8 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            vaiWallSlide = false;
+            //estáWallToRamp = false;
             //empurrando = false;
         }
         #endregion
@@ -912,7 +923,7 @@ public class PlayerMovement : MonoBehaviour
             && !grounded
             && groundMode == GroundMode.Floor
             && ((characterAngle >= 0 && characterAngle <= 5)
-            || (characterAngle >= 355 && characterAngle <= 360) 
+            || (characterAngle >= 355 && characterAngle <= 360)
             || (characterAngle >= 175 && characterAngle <= 185)))
         {
             estáWallSliding = true;
@@ -925,19 +936,23 @@ public class PlayerMovement : MonoBehaviour
 
             //velocity.y -= friction * Time.deltaTime;
 
-            
+
             if (velocity.y > 0)
             {
                 velocity.y -= friction * Time.deltaTime;
             }
-            else 
-            { 
+            else
+            {
                 //velocity.y = 0;
             }
+        } else if (estáWallSliding && grounded) {
+            estáWallToRamp = true;
+            estáWallSliding = false;
         }
-        else 
+        else
         {
-            estáWallSliding = false; 
+            estáWallSliding = false;
+            estáWallToRamp = false;
             wallJumpDelay = wallJumpDelayTotal;
         }
 
@@ -1084,12 +1099,12 @@ public class PlayerMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
 
         // CAIR FALLING
-        if (!estáWallSliding && !grounded && velocity.y < 0 && tempoPirueta == 0)
+        if (!vaiWallSlide && !estáWallSliding && !grounded && velocity.y < 0 && tempoPirueta == 0)
         { estáCaindo = true; }
         else
         { estáCaindo = false; }
 
-        if (grounded || estáCaindo || estáWallSliding || estáLedgeGrabbing || estáLedgeClimbing)
+        if (grounded || estáCaindo || vaiWallSlide || estáWallSliding || estáLedgeGrabbing || estáLedgeClimbing)
             estáPulando = false;
 
         if (!estáPulando) {
@@ -1119,6 +1134,9 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool(caindoHash, estáCaindo);        
 
         animator.SetBool(wallSlidingHash, estáWallSliding);
+        animator.SetBool(vaiWallSlideHash, vaiWallSlide);
+        animator.SetBool(estáWallToRampHash, estáWallToRamp);
+
         animator.SetBool(ledgeGrabHash, estáLedgeGrabbing);
         animator.SetBool(ledgeClimbHash, estáLedgeClimbing);
 
