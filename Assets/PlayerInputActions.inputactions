@@ -24,18 +24,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "BulletTime",
+                    "name": "Ataque",
                     "type": "Button",
-                    "id": "ad010c41-edde-42ae-98fe-d092d7ab9559",
+                    "id": "8eee9169-0fad-4ec1-a4a2-8edc0d1ca53c",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Ataque",
+                    "name": "BulletTime",
                     "type": "Button",
-                    "id": "8eee9169-0fad-4ec1-a4a2-8edc0d1ca53c",
+                    "id": "ad010c41-edde-42ae-98fe-d092d7ab9559",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -228,39 +228,6 @@
                 },
                 {
                     "name": "",
-                    "id": "e3a06c10-5b77-4473-ac47-2735c5795d06",
-                    "path": "<Keyboard>/z",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Ataque",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "0fd274e5-2b7b-4191-ac6d-f73d1215ae2c",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Ataque",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f672c2cb-6106-4097-b312-13e6ca0291eb",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Ataque",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "3ad502d8-1a50-4ab1-9588-edc4122c7420",
                     "path": "<Keyboard>/tab",
                     "interactions": "",
@@ -289,6 +256,39 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e3a06c10-5b77-4473-ac47-2735c5795d06",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Ataque",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0fd274e5-2b7b-4191-ac6d-f73d1215ae2c",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Ataque",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f672c2cb-6106-4097-b312-13e6ca0291eb",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Ataque",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

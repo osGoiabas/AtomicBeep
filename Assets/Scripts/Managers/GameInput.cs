@@ -64,6 +64,7 @@ public class GameInput : MonoBehaviour
     private void Update()
     {
         //TESTE PRA ORGANIZAR O INPUT
+
         /*
         MoveInput = _moveAction.ReadValue<Vector2>();
 
@@ -74,7 +75,7 @@ public class GameInput : MonoBehaviour
         WasAttackPressed = _attackAction.WasPressedThisFrame;
         WasBulletTimePressed = _bulletTimeAction.WasPressedThisFrame;
         WasDebugPressed = _debugAction.WasPressedThisFrame;
-        WasPausePressed = _pauseAction.WasPressedThisFrame;
+        WasPausePressed = _pauseAction.WasPressedThisFrame; 
         */
     }
 

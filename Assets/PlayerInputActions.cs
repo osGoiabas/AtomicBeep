@@ -46,18 +46,18 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""BulletTime"",
+                    ""name"": ""Ataque"",
                     ""type"": ""Button"",
-                    ""id"": ""ad010c41-edde-42ae-98fe-d092d7ab9559"",
+                    ""id"": ""8eee9169-0fad-4ec1-a4a2-8edc0d1ca53c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Ataque"",
+                    ""name"": ""BulletTime"",
                     ""type"": ""Button"",
-                    ""id"": ""8eee9169-0fad-4ec1-a4a2-8edc0d1ca53c"",
+                    ""id"": ""ad010c41-edde-42ae-98fe-d092d7ab9559"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -250,39 +250,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e3a06c10-5b77-4473-ac47-2735c5795d06"",
-                    ""path"": ""<Keyboard>/z"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Ataque"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0fd274e5-2b7b-4191-ac6d-f73d1215ae2c"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Ataque"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f672c2cb-6106-4097-b312-13e6ca0291eb"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Ataque"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""3ad502d8-1a50-4ab1-9588-edc4122c7420"",
                     ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
@@ -311,6 +278,39 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e3a06c10-5b77-4473-ac47-2735c5795d06"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Ataque"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0fd274e5-2b7b-4191-ac6d-f73d1215ae2c"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Ataque"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f672c2cb-6106-4097-b312-13e6ca0291eb"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Ataque"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -385,8 +385,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Pulo = m_Player.FindAction("Pulo", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
-        m_Player_BulletTime = m_Player.FindAction("BulletTime", throwIfNotFound: true);
         m_Player_Ataque = m_Player.FindAction("Ataque", throwIfNotFound: true);
+        m_Player_BulletTime = m_Player.FindAction("BulletTime", throwIfNotFound: true);
         m_Player_Debug = m_Player.FindAction("Debug", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         // UI
@@ -453,8 +453,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Pulo;
     private readonly InputAction m_Player_Move;
-    private readonly InputAction m_Player_BulletTime;
     private readonly InputAction m_Player_Ataque;
+    private readonly InputAction m_Player_BulletTime;
     private readonly InputAction m_Player_Debug;
     private readonly InputAction m_Player_Pause;
     public struct PlayerActions
@@ -463,8 +463,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Pulo => m_Wrapper.m_Player_Pulo;
         public InputAction @Move => m_Wrapper.m_Player_Move;
-        public InputAction @BulletTime => m_Wrapper.m_Player_BulletTime;
         public InputAction @Ataque => m_Wrapper.m_Player_Ataque;
+        public InputAction @BulletTime => m_Wrapper.m_Player_BulletTime;
         public InputAction @Debug => m_Wrapper.m_Player_Debug;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -482,12 +482,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
-                @BulletTime.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBulletTime;
-                @BulletTime.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBulletTime;
-                @BulletTime.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBulletTime;
                 @Ataque.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAtaque;
                 @Ataque.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAtaque;
                 @Ataque.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAtaque;
+                @BulletTime.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBulletTime;
+                @BulletTime.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBulletTime;
+                @BulletTime.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBulletTime;
                 @Debug.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebug;
                 @Debug.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebug;
                 @Debug.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebug;
@@ -504,12 +504,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
-                @BulletTime.started += instance.OnBulletTime;
-                @BulletTime.performed += instance.OnBulletTime;
-                @BulletTime.canceled += instance.OnBulletTime;
                 @Ataque.started += instance.OnAtaque;
                 @Ataque.performed += instance.OnAtaque;
                 @Ataque.canceled += instance.OnAtaque;
+                @BulletTime.started += instance.OnBulletTime;
+                @BulletTime.performed += instance.OnBulletTime;
+                @BulletTime.canceled += instance.OnBulletTime;
                 @Debug.started += instance.OnDebug;
                 @Debug.performed += instance.OnDebug;
                 @Debug.canceled += instance.OnDebug;
@@ -575,8 +575,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     {
         void OnPulo(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
-        void OnBulletTime(InputAction.CallbackContext context);
         void OnAtaque(InputAction.CallbackContext context);
+        void OnBulletTime(InputAction.CallbackContext context);
         void OnDebug(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
     }

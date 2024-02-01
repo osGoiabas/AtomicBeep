@@ -482,7 +482,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector2 inputVector = gameInput.GetMovementVector();
 
-        if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
+        //if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
 
         if (doubleJumpDelay > 0) {
             doubleJumpDelay -= Time.deltaTime;
@@ -738,7 +738,7 @@ public class PlayerMovement : MonoBehaviour
 
             // JÁ PULOU, SOLTOU O BOTÃO, ESTÁ NO AR E A VELOCIDADE VERTICAL A SER APLICADA PASSOU DO LIMITE MÁXIMO?
             // VOLTA A APLICAR SÓ O MÁXIMO (a gravidade eventualmente o puxará pra baixo)
-            if (estáPulando && velocity.y > jumpReleaThreshold && Input.GetButtonUp("Jump"))
+            if (estáPulando && velocity.y > jumpReleaThreshold ) //&& Input.GetButtonUp("Jump")) #TODO CORRIGIR ISSO AQUI
             {
                 velocity.y = jumpReleaThreshold;
                 print("velocity.y = jumpReleaThreshold: " + velocity.y);
