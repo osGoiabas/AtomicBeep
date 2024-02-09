@@ -1,2 +1,2 @@
 # AtomicBeep
-Um metroidvania 2D inspirado na movimentação de personagens como Sonic e Fancy Pants.
+Jogo de plataforma sidescrolling metroidvania 2D, programado em C# na Unity, com engine física original e mecânicas de movimento aprofundadas, fortemente inspiradas em jogos clássicos como Pinball, Sonic the Hedgehog e Fancy Pants Adventure. Trabalho em equipe neste projeto junto com mais um colaborador, que desenhou a maior parte dos sprites em pixel-art.
