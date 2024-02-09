@@ -254,7 +254,7 @@ public class PlayerMovement : MonoBehaviour
     #endregion
 
     #region debugWindow
-    private bool debug = true;
+    private bool debug = false;
     void OnGUI()
     {
         if (debug)
