@@ -269,7 +269,7 @@ SpriteShapeRenderer:
   - {fileID: 0}
   - {fileID: 0}
   m_LocalAABB:
-    m_Center: {x: 42.38241, y: 58.015076, z: 0}
+    m_Center: {x: 42.38241, y: 58.01508, z: 0}
     m_Extent: {x: 87.28914, y: 67.84668, z: 0}
 --- !u!4 &61212771
 Transform:
@@ -20050,12 +20050,12 @@ PrefabInstance:
     - target: {fileID: 1043711017719292942, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -846.42236
+      value: -1293.4224
       objectReference: {fileID: 0}
     - target: {fileID: 1043711017719292942, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 299
+      value: -558
       objectReference: {fileID: 0}
     - target: {fileID: 1043711017719292943, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
@@ -20065,12 +20065,12 @@ PrefabInstance:
     - target: {fileID: 1043711018578096132, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -846.42236
+      value: -1293.4224
       objectReference: {fileID: 0}
     - target: {fileID: 1043711018578096132, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 299
+      value: -558
       objectReference: {fileID: 0}
     - target: {fileID: 1043711018578096378, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
@@ -20292,12 +20292,12 @@ PrefabInstance:
     - target: {fileID: 7985653372348900562, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -26
+      value: -473
       objectReference: {fileID: 0}
     - target: {fileID: 7985653372348900562, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1902
+      value: 1045
       objectReference: {fileID: 0}
     - target: {fileID: 7985653372348900562, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
         type: 3}
