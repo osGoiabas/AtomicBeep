@@ -35,14 +35,14 @@ public class MenuManager : MonoBehaviour
     public void Pause() {
         isPaused = true;
         Time.timeScale = 0f;
-
+        GameInput.PlayerInput.SwitchCurrentActionMap("UI");
         OpenPauseMenu();
     }
 
     public void Unpause(){
         isPaused = false;
         Time.timeScale = 1f;
-
+        GameInput.PlayerInput.SwitchCurrentActionMap("Player");
         CloseAllMenus();
     }
 

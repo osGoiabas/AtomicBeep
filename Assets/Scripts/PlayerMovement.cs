@@ -185,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject _BulletTimeCanvas;
     private AfterImage afterImage;
 
-    private float coyoteTime = 0.2f;
+    private float coyoteTime = 0.1f;
     private float coyoteTimeCounter;
 
     private float jumpBuffer = 0.1f;
@@ -289,8 +289,8 @@ public class PlayerMovement : MonoBehaviour
             //GUILayout.Label("estáPulandoNormal: " + (estáPulandoNormal ? "SIM" : "NÃO"));
             //GUILayout.Label("estáPiruentado: " + (estáPiruentado ? "SIM" : "NÃO"));
             //GUILayout.Label("tempoPirueta: " + tempoPirueta);
-            //GUILayout.Label("coyoteTimeCounter: " + coyoteTimeCounter);
-            //GUILayout.Label("jumpBufferCounter: " + jumpBufferCounter);
+            GUILayout.Label("coyoteTimeCounter: " + coyoteTimeCounter);
+            GUILayout.Label("jumpBufferCounter: " + jumpBufferCounter);
 
             //GUILayout.Label("abaixado: " + (abaixado ? "SIM" : "NÃO"));
             //GUILayout.Label("estáLedgeGrabbing: " + (estáLedgeGrabbing ? "SIM" : "NÃO"));
