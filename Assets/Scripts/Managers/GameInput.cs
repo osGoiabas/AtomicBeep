@@ -28,7 +28,7 @@ public class GameInput : MonoBehaviour
     public static bool WasAttackPressed;
     public static bool WasBulletTimePressed;
     public static bool WasDebugPressed;
-    public static bool WasPausePressed;
+    public static bool WasPausePressed {get; private set; }
 
     private InputAction _moveAction;
     private InputAction _jumpAction;
@@ -46,9 +46,6 @@ public class GameInput : MonoBehaviour
         playerInputActions.Player.BulletTime.performed += BulletTime_performed;
         playerInputActions.Player.Ataque.performed += Ataque_performed;
 
-
-
-
         //TESTE PRA ORGANIZAR O INPUT
         PlayerInput = GetComponent<PlayerInput>();
 
@@ -65,18 +62,16 @@ public class GameInput : MonoBehaviour
     {
         //TESTE PRA ORGANIZAR O INPUT
 
-        /*
         MoveInput = _moveAction.ReadValue<Vector2>();
 
-        WasJumpPressed = _jumpAction.WasPressedThisFrame;
-        IsJumpBeingPressed = _jumpAction.IsPressed;
-        WasJumpReleased = _jumpAction.WasReleasedThisFrame;
+        WasJumpPressed = _jumpAction.WasPressedThisFrame();
+        IsJumpBeingPressed = _jumpAction.IsPressed();
+        WasJumpReleased = _jumpAction.WasReleasedThisFrame();
 
-        WasAttackPressed = _attackAction.WasPressedThisFrame;
-        WasBulletTimePressed = _bulletTimeAction.WasPressedThisFrame;
-        WasDebugPressed = _debugAction.WasPressedThisFrame;
-        WasPausePressed = _pauseAction.WasPressedThisFrame; 
-        */
+        WasAttackPressed = _attackAction.WasPressedThisFrame();
+        WasBulletTimePressed = _bulletTimeAction.WasPressedThisFrame();
+        WasDebugPressed = _debugAction.WasPressedThisFrame();
+        WasPausePressed = _pauseAction.WasPressedThisFrame();         
     }
 
     private void Start()
