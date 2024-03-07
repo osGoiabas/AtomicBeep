@@ -6,28 +6,17 @@ using UnityEngine.InputSystem;
 
 public class GameInput : MonoBehaviour
 {
-    public event EventHandler OnPulo;
-    public event EventHandler OnBulletTime;
-    public event EventHandler OnAtaque;
-    private PlayerInputActions playerInputActions;
-
     public static GameInput instance;
+    public static PlayerInput PlayerInput {get; private set; }
+    public static Vector2 MoveInput {get; private set; }
 
+    public static bool WasJumpPressed {get; private set; }
+    public static bool IsJumpBeingPressed {get; private set; }
+    public static bool WasJumpReleased {get; private set; }
 
-
-
-
-    //TESTE PRA ORGANIZAR O INPUT
-    public static PlayerInput PlayerInput;
-    public static Vector2 MoveInput;
-
-    public static bool WasJumpPressed;
-    public static bool IsJumpBeingPressed;
-    public static bool WasJumpReleased;
-
-    public static bool WasAttackPressed;
-    public static bool WasBulletTimePressed;
-    public static bool WasDebugPressed;
+    public static bool WasAttackPressed {get; private set; }
+    public static bool WasBulletTimePressed {get; private set; }
+    public static bool WasDebugPressed {get; private set; }
     public static bool WasPausePressed {get; private set; }
 
     private InputAction _moveAction;
@@ -40,13 +29,6 @@ public class GameInput : MonoBehaviour
 
 
     private void Awake() {
-        playerInputActions = new PlayerInputActions();
-        playerInputActions.Player.Enable();
-        playerInputActions.Player.Pulo.performed += Pulo_performed;
-        playerInputActions.Player.BulletTime.performed += BulletTime_performed;
-        playerInputActions.Player.Ataque.performed += Ataque_performed;
-
-        //TESTE PRA ORGANIZAR O INPUT
         PlayerInput = GetComponent<PlayerInput>();
 
         _moveAction = PlayerInput.actions["Move"];
@@ -60,8 +42,6 @@ public class GameInput : MonoBehaviour
 
     private void Update()
     {
-        //TESTE PRA ORGANIZAR O INPUT
-
         MoveInput = _moveAction.ReadValue<Vector2>();
 
         WasJumpPressed = _jumpAction.WasPressedThisFrame();
@@ -87,24 +67,5 @@ public class GameInput : MonoBehaviour
             instance = this;
         }
         //DontDestroyOnLoad(gameObject);
-    }
-
-    public Vector2 GetMovementVector() {
-        Vector2 inputVector = playerInputActions.Player.Move.ReadValue<Vector2>();
-        return inputVector;
-    }
-
-    public void Pulo_performed(InputAction.CallbackContext context) {
-        OnPulo?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void BulletTime_performed(InputAction.CallbackContext context)
-    {
-        OnBulletTime?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void Ataque_performed(InputAction.CallbackContext context)
-    {
-        OnAtaque?.Invoke(this, EventArgs.Empty);
     }
 }

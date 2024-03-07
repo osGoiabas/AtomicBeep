@@ -2,9 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Cinemachine;
-//using UnityEngine.Experimental.Rendering.LWRP;
 
 public class GroundInfo
 {
@@ -183,9 +181,9 @@ public class PlayerMovement : MonoBehaviour
 
     private float fatorLentidão = 0.2f;
     private bool estáEmBulletTime = false;
+    
+    [SerializeField] private GameObject _BulletTimeCanvas;
     private AfterImage afterImage;
-    public GameObject luzGlobalBranca;
-    public GameObject luzGlobalAzul;
 
     private float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
@@ -206,7 +204,7 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
 
-    #region setup
+    #region Awake e Start
     //Awake() is called immediately upon the start of the game,
     //independentemente do script estar ativado ou não.
 
@@ -314,122 +312,105 @@ public class PlayerMovement : MonoBehaviour
     }
     #endregion
 
-    private void Start() {
-        gameInput.OnPulo += GameInput_OnPulo;
-        gameInput.OnBulletTime += GameInput_OnBulletTime;
-        gameInput.OnAtaque += GameInput_OnAtaque;
-    }
-
     public void Update()
     {
-        //TODO: tirar isso do Update, só fazer OnSceneLoad ou algo do tipo
-        gameInput = GameObject.FindGameObjectWithTag("Input").GetComponent<GameInput>();
-    }
+        if (GameInput.WasAttackPressed) {
+            FindObjectOfType<SoundManager>().PlaySFX("beepSwing");
+            estáAtacando = true;
+        }
+        if (GameInput.WasBulletTimePressed){
+            if (pegouBulletTime) 
+            { 
+                BulletTime(); 
+            }
+        }
+        if (GameInput.WasDebugPressed){
+            debug = !debug;
+        }
+        if (GameInput.WasJumpPressed){
+            if (grounded && !spinReady && jumpBufferCounter > 0)
+                Pule();
+            else if (grounded && !abaixado && !lowCeiling && !estáLedgeGrabbing && !estáLedgeClimbing && !spinReady)
+                Pule();
+            else if (!grounded && coyoteTimeCounter > 0 && !lowCeiling && !spinReady)
+                Pule();
 
-    private void GameInput_OnAtaque(object sender, System.EventArgs e) {
-        FindObjectOfType<SoundManager>().PlaySFX("beepSwing");
-        estáAtacando = true;
+            
+            //spin dash
+            if (grounded
+                && pegouSpinDash
+                && groundVelocity == 0
+                && !mudarDireção
+                && abaixado
+                && groundMode == GroundMode.Floor
+                && leftHit.collider == null
+                && rightHit.collider == null)
+            {
+                spinReady = true;
+                //mudarDireção = false;
+            }
+
+            if (!grounded)
+            {
+                jumpBufferCounter = jumpBuffer;
+
+                //-----------------------------------------------------------------------------------------------------
+                // DOUBLE JUMP
+                //-----------------------------------------------------------------------------------------------------
+                #region doubleJump
+                if (pegouDoubleJump
+                    && doubleJumpReady
+                    && doubleJumpDelay <= 0
+                    && !lowCeiling
+                    && !estáWallSliding)
+                {
+                    Debug.Log("Double Jump!");
+                    float jumpVel = jumpVelocity;
+                    velocity.y = jumpVel;
+                    grounded = false;
+                    estáPulando = true;
+                    estáPulandoNormal = true;
+                    doubleJumpReady = false;
+                    CreateDust();
+                }
+                #endregion
+
+
+                //-----------------------------------------------------------------------------------------------------
+                // ALTURA DE PULO VARIÁVEL
+                //-----------------------------------------------------------------------------------------------------
+
+                //define valor máximo do pulo
+                float jumpReleaThreshold = /*underwater ? uwJumpReleaseThreshold :*/ jumpReleaseThreshold;
+
+                // JÁ PULOU, SOLTOU O BOTÃO, ESTÁ NO AR E A VELOCIDADE VERTICAL A SER APLICADA PASSOU DO LIMITE MÁXIMO?
+                // VOLTA A APLICAR SÓ O MÁXIMO (a gravidade eventualmente o puxará pra baixo)
+                if (estáPulando && velocity.y > jumpReleaThreshold)
+                {
+                    //velocity.y = jumpReleaThreshold;
+                    //print("velocity.y = jumpReleaThreshold: " + velocity.y);
+                }
+
+            }
+
+            //-----------------------------------------------------------------------------------------------------
+            // CAIR DA PAREDE ou PULAR DA PAREDE / DAR WALLJUMP
+            //-----------------------------------------------------------------------------------------------------
+            if (estáWallSliding && !grounded)
+            {
+                if (leftHit.collider != null) { velocity.x += wallJumpVelocity/2; }
+                else if (rightHit.collider != null) { velocity.x -= wallJumpVelocity/2; }   
+                velocity.y += wallJumpVelocity;
+                estáWallSliding = false;
+                estáPulandoNormal = true;
+            }
+
+        }
     }
 
     public void AcabarAtaque() {
         estáAtacando = false;
     }
-
-    private void GameInput_OnBulletTime(object sender, System.EventArgs e) {
-
-        //SetHitState(new Vector2(0, 0), 0);
-
-        if (//Input.GetKeyDown(KeyCode.E) && 
-            pegouBulletTime) 
-        { 
-            BulletTime(); 
-        }
-    }
-
-    private void GameInput_OnPulo(object sender, System.EventArgs e) { 
-        //Debug.Log("PRESSED JUMP!");
-
-        if (grounded && !spinReady && jumpBufferCounter > 0)
-            Pule();
-        else if (grounded && !abaixado && !lowCeiling && !estáLedgeGrabbing && !estáLedgeClimbing && !spinReady)
-            Pule();
-        else if (!grounded && coyoteTimeCounter > 0 && !lowCeiling && !spinReady)
-            Pule();
-
-        //TÔ BOTANDO TODOS Input.GetButton("Jump") AQUI 
-        //SÓ FALTA PULO VARIÁVEL
-        
-        //spin dash
-        if (grounded
-            && pegouSpinDash
-            && groundVelocity == 0
-            && !mudarDireção
-            && abaixado
-            && groundMode == GroundMode.Floor
-            && leftHit.collider == null
-            && rightHit.collider == null)
-        {
-            spinReady = true;
-            //mudarDireção = false;
-        }
-
-        if (!grounded)
-        {
-            jumpBufferCounter = jumpBuffer;
-
-            //-----------------------------------------------------------------------------------------------------
-            // DOUBLE JUMP
-            //-----------------------------------------------------------------------------------------------------
-            #region doubleJump
-            if (pegouDoubleJump
-                && doubleJumpReady
-                && doubleJumpDelay <= 0
-                && !lowCeiling
-                && !estáWallSliding)
-            {
-                Debug.Log("Double Jump!");
-                float jumpVel = jumpVelocity;
-                velocity.y = jumpVel;
-                grounded = false;
-                estáPulando = true;
-                estáPulandoNormal = true;
-                doubleJumpReady = false;
-                CreateDust();
-            }
-            #endregion
-
-
-            //-----------------------------------------------------------------------------------------------------
-            // ALTURA DE PULO VARIÁVEL
-            //-----------------------------------------------------------------------------------------------------
-
-            //define valor máximo do pulo
-            float jumpReleaThreshold = /*underwater ? uwJumpReleaseThreshold :*/ jumpReleaseThreshold;
-
-            // JÁ PULOU, SOLTOU O BOTÃO, ESTÁ NO AR E A VELOCIDADE VERTICAL A SER APLICADA PASSOU DO LIMITE MÁXIMO?
-            // VOLTA A APLICAR SÓ O MÁXIMO (a gravidade eventualmente o puxará pra baixo)
-            if (estáPulando && velocity.y > jumpReleaThreshold)
-            {
-                //velocity.y = jumpReleaThreshold;
-                //print("velocity.y = jumpReleaThreshold: " + velocity.y);
-            }
-
-        }
-
-        //-----------------------------------------------------------------------------------------------------
-        // CAIR DA PAREDE ou PULAR DA PAREDE / DAR WALLJUMP
-        //-----------------------------------------------------------------------------------------------------
-        if (estáWallSliding && !grounded)
-        {
-            if (leftHit.collider != null) { velocity.x += wallJumpVelocity/2; }
-            else if (rightHit.collider != null) { velocity.x -= wallJumpVelocity/2; }   
-            velocity.y += wallJumpVelocity;
-            estáWallSliding = false;
-            estáPulandoNormal = true;
-        }
-
-    }
-
 
     public void SetHitState(Vector2 source, int damage)
     {
@@ -455,7 +436,7 @@ public class PlayerMovement : MonoBehaviour
         
         //float positionDif = transform.position.x - source.x;
 
-        Debug.Log(damage);
+        Debug.Log("damage taken: " + damage);
 
         //Vector2 hitStateVelocity = new Vector2(0, 0);
         //velocity = new Vector2(hitStateVelocity.x, hitStateVelocity.y);
@@ -477,12 +458,10 @@ public class PlayerMovement : MonoBehaviour
         */
     }
 
-
+    // #TODO: trocar coisas de input pro Update ao invés de fixed?
     void FixedUpdate()
     {
-        Vector2 inputVector = gameInput.GetMovementVector();
-
-        //if (Input.GetKeyDown(KeyCode.Tab)) { debug = !debug; print("debug!"); }
+        Vector2 inputVector = GameInput.MoveInput; 
 
         if (doubleJumpDelay > 0) {
             doubleJumpDelay -= Time.deltaTime;
@@ -738,7 +717,8 @@ public class PlayerMovement : MonoBehaviour
 
             // JÁ PULOU, SOLTOU O BOTÃO, ESTÁ NO AR E A VELOCIDADE VERTICAL A SER APLICADA PASSOU DO LIMITE MÁXIMO?
             // VOLTA A APLICAR SÓ O MÁXIMO (a gravidade eventualmente o puxará pra baixo)
-            if (estáPulando && velocity.y > jumpReleaThreshold ) //&& Input.GetButtonUp("Jump")) #TODO CORRIGIR ISSO AQUI
+            // #TODO CORRIGIR ISSO AQUI
+            if (estáPulando && velocity.y > jumpReleaThreshold && GameInput.WasJumpReleased) 
             {
                 velocity.y = jumpReleaThreshold;
                 print("velocity.y = jumpReleaThreshold: " + velocity.y);
@@ -863,7 +843,7 @@ public class PlayerMovement : MonoBehaviour
                 posLedge1.y = rightHit.point.y - 1 + (tileSideLength/6 - rightHit.point.y % (tileSideLength/6));
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
-                if (inputVector.x > 0.05f /*|| Input.GetButton("Jump")*/)
+                if (inputVector.x > 0.05f || inputVector.y > 0.05f || GameInput.IsJumpBeingPressed)
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
@@ -879,7 +859,7 @@ public class PlayerMovement : MonoBehaviour
                 posLedge1.y = leftHit.point.y - 1 + (tileSideLength/6 - leftHit.point.y % (tileSideLength/6));
                 transform.position = new Vector2(transform.position.x, posLedge1.y);
 
-                if (inputVector.x < -0.05f /*|| Input.GetButton("Jump")*/)
+                if (inputVector.x < -0.05f  || inputVector.y > 0.05f || GameInput.IsJumpBeingPressed)
                 {
                     estáLedgeClimbing = true;
                     ledgeClimbTimer = ledgeClimbTimerTotal;
@@ -1254,18 +1234,17 @@ public class PlayerMovement : MonoBehaviour
         jumpBufferCounter = 0;
         float jumpVel = jumpVelocity;
 
+        print("velocity.y: " + velocity.y);
 
-        //print("velocity.y: " + velocity.y);
-
-        velocity.x -= jumpVel * (Mathf.Sin(currentGroundInfo.angle));
-        velocity.y = jumpVel * (Mathf.Cos(currentGroundInfo.angle));
+        velocity.x -= jumpVel * Mathf.Sin(currentGroundInfo.angle);
+        velocity.y = jumpVel * Mathf.Cos(currentGroundInfo.angle);
         grounded = false;
         estáPulando = true;
 
         if (groundMode == GroundMode.LeftWall || groundMode == GroundMode.RightWall) {
             velocity.y += jumpVel/2;
         }
-        //print("velocity.y: " + velocity.y);
+        print("velocity.y: " + velocity.y);
 
         doubleJumpReady = true;
         doubleJumpDelay = doubleJumpDelayTotal;
@@ -1281,6 +1260,8 @@ public class PlayerMovement : MonoBehaviour
             estáPiruetando = true;
             tempoPirueta = tempoPiruetaTotal;
             //#TODO variar tempoPirueta e velocidade da animação baseado na velocidade horizontal
+
+
         }
 
         /*
@@ -1508,9 +1489,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Time.timeScale = fatorLentidão;
             Debug.Log("ZA WARUDO! toki wo tomare!");
-            //luzGlobalBranca.SetActive(false);
-            //luzGlobalAzul.SetActive(true);
-
+            _BulletTimeCanvas.SetActive(true);
             afterImage.makeGhost = true;
             //se o tempo está 50% mais lento, a velocidade do jogador dobra
             //jogadorVelocidade /= fatorLentidão;
@@ -1525,8 +1504,7 @@ public class PlayerMovement : MonoBehaviour
             Time.timeScale = 1;
             Debug.Log("toki wa ugoki dasu");
             afterImage.makeGhost = false;
-            //luzGlobalAzul.SetActive(false);
-            //luzGlobalBranca.SetActive(true);
+            _BulletTimeCanvas.SetActive(false);
         }        
     }
 

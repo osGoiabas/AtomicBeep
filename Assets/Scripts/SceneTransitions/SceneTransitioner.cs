@@ -45,7 +45,7 @@ public class SceneTransitioner : MonoBehaviour
     }
 
     public void LoadScene(string Scene, 
-        ExitScene.PortaEmQueVaiSpawnar porta,
+        ExitScene.PortaEmQueVaiSpawnar porta = ExitScene.PortaEmQueVaiSpawnar.Nenhuma,
         SceneTransitionMode TransitionMode = SceneTransitionMode.None,
         LoadSceneMode Mode = LoadSceneMode.Single)
     {
@@ -106,7 +106,7 @@ public class SceneTransitioner : MonoBehaviour
         {
             if (portas[i]._portaAtual == portaEmQueVaiSpawnar)
             {
-                //#TODO isso aqui é jank, ver jeito mais certinho de pegar o lugar exato em que spawnar
+                //#TODO isso aqui ï¿½ jank, ver jeito mais certinho de pegar o lugar exato em que spawnar
                 _doorPos = new Vector3 (portas[i].gameObject.transform.position.x,
                                         portas[i].gameObject.transform.position.y - 20,
                                         portas[i].gameObject.transform.position.z);

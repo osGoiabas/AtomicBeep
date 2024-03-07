@@ -5345,6 +5345,8 @@ MonoBehaviour:
   pegouDoubleJump: 0
   pegouBulletTime: 1
   dust: {fileID: 6145442120104376716}
+  _BulletTimeCanvas: {fileID: 1997405369980090961, guid: af5a40cbc0922b94ea5fe792b4a276d9,
+    type: 3}
   luzGlobalBranca: {fileID: 0}
   luzGlobalAzul: {fileID: 0}
   somfreandoAgachado: {fileID: 0}
