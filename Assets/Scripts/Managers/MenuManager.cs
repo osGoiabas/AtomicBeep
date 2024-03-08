@@ -35,7 +35,8 @@ public class MenuManager : MonoBehaviour
     public void Pause() {
         isPaused = true;
         Time.timeScale = 0f;
-        GameInput.PlayerInput.SwitchCurrentActionMap("UI");
+        //GameInput.PlayerInput.SwitchCurrentActionMap("UI");
+        Debug.Log(GameInput.PlayerInput.currentActionMap);
         OpenPauseMenu();
     }
 
@@ -43,6 +44,7 @@ public class MenuManager : MonoBehaviour
         isPaused = false;
         Time.timeScale = 1f;
         GameInput.PlayerInput.SwitchCurrentActionMap("Player");
+        Debug.Log(GameInput.PlayerInput.currentActionMap);
         CloseAllMenus();
     }
 

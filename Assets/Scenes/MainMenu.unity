@@ -1328,6 +1328,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4355557951545421979, guid: 7720bace4313f2c48822d27d406a397a,
+        type: 3}
+      propertyPath: m_DefaultActionMap
+      value: 932b9cc5-06cb-4dc2-bc17-145d8b3c6178
+      objectReference: {fileID: 0}
     - target: {fileID: 8847811380285787496, guid: 7720bace4313f2c48822d27d406a397a,
         type: 3}
       propertyPath: m_Name
