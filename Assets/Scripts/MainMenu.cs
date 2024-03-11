@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -13,6 +12,7 @@ public class MainMenu : MonoBehaviour
     public void StartGame()
     {
         FindObjectOfType<SoundManager>().PlaySFX("rads");
+        GameInput.PlayerInput.SwitchCurrentActionMap("Player");
         SceneTransitioner.Instance.LoadScene("DebugRoom 1", _portaEmQueVaiSpawnar, sceneTransitionMode);
     }
 

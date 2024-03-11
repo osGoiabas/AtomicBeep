@@ -23,12 +23,11 @@ public class MenuManager : MonoBehaviour
     }
 
     private void Update(){
-        if (GameInput.WasPausePressed) {
-            if (!isPaused) {
+        if (GameInput.WasPausePressed){
+            if (!isPaused)
                 Pause();
-            } else {
+            else
                 Unpause();
-            }
         }
     }
 
@@ -36,15 +35,13 @@ public class MenuManager : MonoBehaviour
         isPaused = true;
         Time.timeScale = 0f;
         //GameInput.PlayerInput.SwitchCurrentActionMap("UI");
-        Debug.Log(GameInput.PlayerInput.currentActionMap);
         OpenPauseMenu();
     }
 
     public void Unpause(){
         isPaused = false;
         Time.timeScale = 1f;
-        GameInput.PlayerInput.SwitchCurrentActionMap("Player");
-        Debug.Log(GameInput.PlayerInput.currentActionMap);
+        //GameInput.PlayerInput.SwitchCurrentActionMap("Player");
         CloseAllMenus();
     }
 

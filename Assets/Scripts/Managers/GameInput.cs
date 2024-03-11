@@ -18,6 +18,7 @@ public class GameInput : MonoBehaviour
     public static bool WasBulletTimePressed {get; private set; }
     public static bool WasDebugPressed {get; private set; }
     public static bool WasPausePressed {get; private set; }
+    public static bool WasUnpausePressed {get; private set; }
 
     private InputAction _moveAction;
     private InputAction _jumpAction;
@@ -25,6 +26,7 @@ public class GameInput : MonoBehaviour
     private InputAction _bulletTimeAction;
     private InputAction _debugAction;
     private InputAction _pauseAction;
+    private InputAction _unpauseAction;
 
 
 
@@ -37,6 +39,7 @@ public class GameInput : MonoBehaviour
         _bulletTimeAction = PlayerInput.actions["BulletTime"];
         _debugAction = PlayerInput.actions["Debug"];
         _pauseAction = PlayerInput.actions["Pause"];
+        _unpauseAction = PlayerInput.actions["Unpause"];
     }
 
 
@@ -51,7 +54,8 @@ public class GameInput : MonoBehaviour
         WasAttackPressed = _attackAction.WasPressedThisFrame();
         WasBulletTimePressed = _bulletTimeAction.WasPressedThisFrame();
         WasDebugPressed = _debugAction.WasPressedThisFrame();
-        WasPausePressed = _pauseAction.WasPressedThisFrame();         
+        WasPausePressed = _pauseAction.WasPressedThisFrame();    
+        WasUnpausePressed = _unpauseAction.WasPressedThisFrame();       
     }
 
     private void Start()
