@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -312,8 +312,59 @@ public class PlayerMovement : MonoBehaviour
     }
     #endregion
 
-    public void Update()
+    public void AcabarAtaque() {
+        estáAtacando = false;
+    }
+
+    public void SetHitState(Vector2 source, int damage)
     {
+        isHit = true;
+        FindObjectOfType<SoundManager>().PlaySFX("beepHurt");
+        CameraShakeManager.instance.CameraShake(impulseSource, 5f);
+        FindObjectOfType<HitStop>().Stop(0.05f);
+
+        hitTimer = hitDuration;
+        //vida -= damage;
+
+        characterAngle = 0f;
+        grounded = false;
+        estáPulando = false;
+        spinReady = false;
+        //isBraking = false;
+        //ReleaseSpinDash(launch: false);
+
+        // Jumping resets the horizontal control lock
+        hControlLock = false;
+        hControlLockTimer = 0f;
+        
+        
+        //float positionDif = transform.position.x - source.x;
+
+        Debug.Log("damage taken: " + damage);
+
+        //Vector2 hitStateVelocity = new Vector2(0, 0);
+        //velocity = new Vector2(hitStateVelocity.x, hitStateVelocity.y);
+
+        /*
+        // If the damage source is nearly directly above or below us, default to getting knocked away from where we are facing at a lower speed
+        if (Mathf.Abs(positionDif) < 1f)
+        {
+            velocity = new Vector2(hitStateVelocity.x * -FacingDirection, hitStateVelocity.y);
+        }
+        else
+        {
+            velocity = new Vector2(hitStateVelocity.x * Mathf.Sign(positionDif), hitStateVelocity.y);
+        }
+        
+        animator.SetBool(springJumpHash, false);
+        animator.SetBool(brakeHash, false);
+        animator.SetFloat(speedHash, 0.1f);
+        */
+    }
+
+    void Update()
+    {
+        #region OldUpdate (da época em que eu separava FixedUpdate e Update)
         if (GameInput.WasAttackPressed) {
             FindObjectOfType<SoundManager>().PlaySFX("beepSwing");
             estáAtacando = true;
@@ -406,61 +457,9 @@ public class PlayerMovement : MonoBehaviour
             }
 
         }
-    }
+        #endregion
 
-    public void AcabarAtaque() {
-        estáAtacando = false;
-    }
 
-    public void SetHitState(Vector2 source, int damage)
-    {
-        isHit = true;
-        FindObjectOfType<SoundManager>().PlaySFX("beepHurt");
-        CameraShakeManager.instance.CameraShake(impulseSource, 5f);
-        FindObjectOfType<HitStop>().Stop(0.05f);
-
-        hitTimer = hitDuration;
-        //vida -= damage;
-
-        characterAngle = 0f;
-        grounded = false;
-        estáPulando = false;
-        spinReady = false;
-        //isBraking = false;
-        //ReleaseSpinDash(launch: false);
-
-        // Jumping resets the horizontal control lock
-        hControlLock = false;
-        hControlLockTimer = 0f;
-        
-        
-        //float positionDif = transform.position.x - source.x;
-
-        Debug.Log("damage taken: " + damage);
-
-        //Vector2 hitStateVelocity = new Vector2(0, 0);
-        //velocity = new Vector2(hitStateVelocity.x, hitStateVelocity.y);
-
-        /*
-        // If the damage source is nearly directly above or below us, default to getting knocked away from where we are facing at a lower speed
-        if (Mathf.Abs(positionDif) < 1f)
-        {
-            velocity = new Vector2(hitStateVelocity.x * -FacingDirection, hitStateVelocity.y);
-        }
-        else
-        {
-            velocity = new Vector2(hitStateVelocity.x * Mathf.Sign(positionDif), hitStateVelocity.y);
-        }
-        
-        animator.SetBool(springJumpHash, false);
-        animator.SetBool(brakeHash, false);
-        animator.SetFloat(speedHash, 0.1f);
-        */
-    }
-
-    // #TODO: trocar coisas de input pro Update ao invés de fixed?
-    void FixedUpdate()
-    {
         Vector2 inputVector = GameInput.MoveInput; 
 
         if (doubleJumpDelay > 0) {
@@ -471,7 +470,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (hitTimer >= 0f)
         {
-            hitTimer -= Time.fixedDeltaTime;
+            hitTimer -= Time.deltaTime;
             if (hitTimer <= 0f)
             {
                 isHit = false;
@@ -627,7 +626,7 @@ public class PlayerMovement : MonoBehaviour
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
                         if (groundVelocity > -groundTopSpeed)
                         {
-                            groundVelocity = Mathf.Max(-groundTopSpeed, groundVelocity + (inputVector.x * acceleration) * Time.fixedDeltaTime);
+                            groundVelocity = Mathf.Max(-groundTopSpeed, groundVelocity + (inputVector.x * acceleration) * Time.deltaTime);
                         }
                     }
 
@@ -645,7 +644,7 @@ public class PlayerMovement : MonoBehaviour
                         // ACELERAR OU DESACELERAR, CONFORME ACIMA, RESPEITANDO O SPEEDCAP ATUAL (água ou terra)
                         if (groundVelocity < groundTopSpeed)
                         {
-                            groundVelocity = Mathf.Min(groundTopSpeed, groundVelocity + (inputVector.x * acceleration) * Time.fixedDeltaTime);
+                            groundVelocity = Mathf.Min(groundTopSpeed, groundVelocity + (inputVector.x * acceleration) * Time.deltaTime);
                         }
                     }
                 }
@@ -925,15 +924,17 @@ public class PlayerMovement : MonoBehaviour
             {
                 //velocity.y = 0;
             }
-        } else if (estáWallSliding && grounded) {
-            estáWallToRamp = true;
-            estáWallSliding = false;
-        }
-        else
+        } 
+        else if (!estáWallSliding || !grounded)
         {
             estáWallSliding = false;
             estáWallToRamp = false;
             wallJumpDelay = wallJumpDelayTotal;
+        }
+
+        if (estáWallSliding && grounded) {
+            estáWallSliding = false;
+            estáWallToRamp = true;
         }
 
         //-----------------------------------------------------------------------------------------------------
@@ -1495,7 +1496,7 @@ public class PlayerMovement : MonoBehaviour
             //jogadorVelocidade /= fatorLentidão;
 
             //esse valor me parece arbitrário, melhor pesquisar
-            //Time.fixedDeltaTime = Time.timeScale * 0.02f; 
+            //Time.deltaTime = Time.timeScale * 0.02f; 
         }
         else
         {
