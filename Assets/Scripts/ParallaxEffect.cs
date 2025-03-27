@@ -1,37 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ParallaxEffect : MonoBehaviour
 {
-    private float _startingPos; //This is starting position of the sprites.
-    private float _lengthOfSprite;    //This is the length of the sprites.
-    [SerializeField] private float AmountOfParallax;  //This is amount of parallax scroll. 
+    private float _startingPosX; //This is starting position of the sprites.
+    private float _startingPosY; //This is starting position of the sprites.
+    [SerializeField] private float amountOfParallax;  //This is amount of parallax scroll. 
     [SerializeField] private Camera MainCamera;   //Reference of the camera.
 
     private void Start()
     {
         //Getting the starting X position of sprite.
-        _startingPos = transform.position.x;
-        //Getting the length of the sprites.
-        if (GetComponent<SpriteRenderer>() != null)
-        {
-            _lengthOfSprite = GetComponent<SpriteRenderer>().bounds.size.x;
-        }
-        else
-        {
-            //_lengthOfSprite = GetComponent<TilemapRenderer>().bounds.size.x;
-        }
+        _startingPosX = transform.position.x;
+        _startingPosY = transform.position.y;
     }
 
     private void Update()
     {
-        Vector3 Position = MainCamera.transform.position;
-        float Temp = Position.x * (1 - AmountOfParallax);
-        float Distance = Position.x * AmountOfParallax;
+        Vector3 position = MainCamera.transform.position;
+        float distanceX = position.x * amountOfParallax;
+        float distanceY = position.y * amountOfParallax * 0.5f;
 
-        Vector3 NewPosition = new Vector3(_startingPos + Distance, transform.position.y, transform.position.z);
+        Vector3 newPosition = new(_startingPosX + distanceX,
+                                  transform.position.y,//_startingPosY + distanceY, #TODO: implementar parallax vertical
+                                  transform.position.z);
 
-        transform.position = NewPosition;
+        transform.position = newPosition;
     }
 }

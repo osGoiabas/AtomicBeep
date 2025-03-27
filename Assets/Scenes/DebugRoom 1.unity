@@ -1082,9 +1082,8 @@ MonoBehaviour:
   sceneTransitionMode: 1
   _portaAtual: 1
   _portaEmQueVaiSpawnar: 1
-  _sceneToLoad:
-    m_SceneAsset: {fileID: 102900000, guid: 2c1cc26a9613ff64d9cbe6e96164b906, type: 3}
-    m_SceneName: DebugRoom 2
+  _sceneToLoad: {m_SceneAsset: {fileID: 102900000, guid: 2c1cc26a9613ff64d9cbe6e96164b906,
+      type: 3}, m_SceneName: DebugRoom 2}
 --- !u!61 &537528235
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1408,7 +1407,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &731426903
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1429,7 +1428,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c051310511f2ac843a57fdba5007bb8d, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1451,7 +1450,7 @@ SpriteRenderer:
   m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: bf0307cadbbaa0f4f8cb4f90747dfbab, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.24528301, g: 0.17702028, b: 0.17702028, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1469,7 +1468,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 731426902}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 525, y: 951, z: 267}
+  m_LocalPosition: {x: -640, y: 1116, z: 250}
   m_LocalScale: {x: 2.242329, y: 2.242329, z: 2.242329}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1488,7 +1487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef6dcf929ce3f6c449974032a37ea2a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AmountOfParallax: 0.5
+  amountOfParallax: 0.2
   MainCamera: {fileID: 621670299}
 --- !u!1 &767228319
 GameObject:
@@ -1550,9 +1549,8 @@ MonoBehaviour:
   sceneTransitionMode: 1
   _portaAtual: 2
   _portaEmQueVaiSpawnar: 2
-  _sceneToLoad:
-    m_SceneAsset: {fileID: 102900000, guid: 2c1cc26a9613ff64d9cbe6e96164b906, type: 3}
-    m_SceneName: DebugRoom 2
+  _sceneToLoad: {m_SceneAsset: {fileID: 102900000, guid: 2c1cc26a9613ff64d9cbe6e96164b906,
+      type: 3}, m_SceneName: DebugRoom 2}
 --- !u!212 &767228322
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2370,7 +2368,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1273985920
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2391,7 +2389,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c051310511f2ac843a57fdba5007bb8d, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2413,7 +2411,7 @@ SpriteRenderer:
   m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: fb78a821df55db34481a277d5371d7e5, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.21698111, g: 0.07880917, b: 0.07880917, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2431,7 +2429,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1273985919}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 494, y: 953, z: 473}
+  m_LocalPosition: {x: 494, y: 1067, z: 500}
   m_LocalScale: {x: 2.1224356, y: 2.1224356, z: 2.1224356}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2450,7 +2448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef6dcf929ce3f6c449974032a37ea2a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AmountOfParallax: 0.8
+  amountOfParallax: 0.1
   MainCamera: {fileID: 621670299}
 --- !u!1 &1304599266
 GameObject:
@@ -4396,7 +4394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef6dcf929ce3f6c449974032a37ea2a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AmountOfParallax: 0.3
+  amountOfParallax: 0
   MainCamera: {fileID: 621670299}
 --- !u!1 &1424167151
 GameObject:
@@ -8998,7 +8996,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c051310511f2ac843a57fdba5007bb8d, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -16035,7 +16033,7 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7264151, g: 0.39008662, b: 0.023985418, a: 1}
   m_Origin: {x: -45, y: -5, z: 0}
   m_Size: {x: 74, y: 28, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -19761,12 +19759,12 @@ PrefabInstance:
     - target: {fileID: 1043711017719292942, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 23.577637
+      value: -1127.4224
       objectReference: {fileID: 0}
     - target: {fileID: 1043711017719292942, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -467
+      value: -605
       objectReference: {fileID: 0}
     - target: {fileID: 1043711017719292943, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
@@ -19776,12 +19774,12 @@ PrefabInstance:
     - target: {fileID: 1043711018578096132, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 23.577637
+      value: -1127.4224
       objectReference: {fileID: 0}
     - target: {fileID: 1043711018578096132, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -467
+      value: -605
       objectReference: {fileID: 0}
     - target: {fileID: 1043711018578096378, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
@@ -19848,10 +19846,35 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2389061130900205588, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389061130900205589, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389061130900205589, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.43390918
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389061130900205589, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389061130900205589, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 2389061130900205590, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5
+      value: 700
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ac7e7347e4a8a7499c69f6498771f2f, type: 3}
@@ -19972,12 +19995,12 @@ PrefabInstance:
     - target: {fileID: 7985653372348900562, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 844
+      value: -307
       objectReference: {fileID: 0}
     - target: {fileID: 7985653372348900562, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1136
+      value: 998
       objectReference: {fileID: 0}
     - target: {fileID: 7985653372348900562, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
         type: 3}
