@@ -40,11 +40,12 @@ public class PlayerMovement : MonoBehaviour
     public bool abaixado { get; private set; }
     public bool empurrando { get; private set; }
     public bool vaiWallSlide { get; private set; }
-    public bool estáWallToRamp { get; private set; }    
+    public bool estáWallToRamp { get; private set; }
     public bool estáWallSliding { get; private set; }
     public bool estáLedgeGrabbing { get; private set; }
     public bool lostFooting { get; private set; }
     public bool estáAtacando { get; private set; }
+    public bool estáMagnetizado { get; private set; }
 
 
     //public bool IsInvulnerable = false;
@@ -377,6 +378,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (GameInput.WasDebugPressed){
             debug = !debug;
+            estáMagnetizado = !estáMagnetizado;
         }
         if (GameInput.WasJumpPressed){
             if (grounded && !spinReady && jumpBufferCounter > 0)
@@ -896,53 +898,54 @@ public class PlayerMovement : MonoBehaviour
         // WALLSLIDE: GRUDAR NA PAREDE 
         //-----------------------------------------------------------------------------------------------------
         #region wallJump
-        if (pegouWallJump
-            && (leftHit.collider != null || rightHit.collider != null)
-            && !estáLedgeGrabbing
-            && !grounded
-            && groundMode == GroundMode.Floor
-            && ((characterAngle >= 0 && characterAngle <= 5)
-            || (characterAngle >= 355 && characterAngle <= 360)
-            || (characterAngle >= 175 && characterAngle <= 185)))
-        {
-            Sprite currentSprite = GetComponent<SpriteRenderer>().sprite;
-            
-            estáWallSliding = true;
-            doubleJumpReady = true;
-            if (leftHit.collider != null) { olhandoDireita = true; }
-            else if (rightHit.collider != null) { olhandoDireita = false; }
 
-
-            velocity = new Vector2(velocity.x, velocity.y * 0.90f);
-
-            //velocity.y -= friction * Time.deltaTime;
-
-
-            if (velocity.y > 0)
+        if (estáMagnetizado) {
+            if (pegouWallJump
+                && (leftHit.collider != null || rightHit.collider != null)
+                && !estáLedgeGrabbing
+                && !grounded
+                && groundMode == GroundMode.Floor
+                && ((characterAngle >= 0 && characterAngle <= 5)
+                || (characterAngle >= 355 && characterAngle <= 360)
+                || (characterAngle >= 175 && characterAngle <= 185)))
             {
-                velocity.y -= friction * Time.deltaTime;
-            }
-            else
-            {
-                //velocity.y = 0;
-            }
-        } 
-        else if (!estáWallSliding || !grounded)
-        {
-            estáWallSliding = false;
-            estáWallToRamp = false;
-            wallJumpDelay = wallJumpDelayTotal;
-        }
+                estáWallSliding = true;
+                doubleJumpReady = true;
+                if (leftHit.collider != null) { olhandoDireita = true; }
+                else if (rightHit.collider != null) { olhandoDireita = false; }
 
-        if (estáWallSliding && grounded) {
-            estáWallSliding = false;
-            estáWallToRamp = true;
+
+                velocity = new Vector2(velocity.x, velocity.y * 0.90f);
+
+                //velocity.y -= friction * Time.deltaTime;
+
+
+                if (velocity.y > 0)
+                {
+                    velocity.y -= friction * Time.deltaTime;
+                }
+                else
+                {
+                    //velocity.y = 0;
+                }
+            } 
+            else if (!estáWallSliding || !grounded)
+            {
+                estáWallSliding = false;
+                estáWallToRamp = false;
+                wallJumpDelay = wallJumpDelayTotal;
+            }
+
+            if (estáWallSliding && grounded) {
+                estáWallSliding = false;
+                estáWallToRamp = true;
+            }
         }
 
         //-----------------------------------------------------------------------------------------------------
         // CAIR DA PAREDE ou PULAR DA PAREDE / DAR WALLJUMP
         //-----------------------------------------------------------------------------------------------------
-        if (estáWallSliding && !grounded)
+        if ((estáWallSliding && !grounded) || !estáMagnetizado)
         {
             if (wallJumpDelay > 0 && velocity.y <= 0 )
             {
