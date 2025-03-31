@@ -23,12 +23,12 @@ public class EnemyHealth : MonoBehaviour
             currentHealth -= amount;
             if (currentHealth <= 0)
             {
-                FindObjectOfType<SoundManager>().PlaySFX("enemyDestroy");
+                FindFirstObjectByType<SoundManager>().PlaySFX("enemyDestroy");
                 gameObject.SetActive(false);
             }
             else
             {
-                FindObjectOfType<SoundManager>().PlaySFX("enemyHurt");
+                FindFirstObjectByType<SoundManager>().PlaySFX("enemyHurt");
                 StartCoroutine(TurnOffHit());
             }
         }

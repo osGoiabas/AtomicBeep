@@ -9,7 +9,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        FindObjectOfType<SoundManager>().PlaySFX("rads");
+        FindFirstObjectByType<SoundManager>().PlaySFX("rads");
         GameInput.PlayerInput.SwitchCurrentActionMap("Player");
         //SceneTransitioner.Instance.LoadScene("DebugRoom 1", _portaEmQueVaiSpawnar, sceneTransitionMode);
     }

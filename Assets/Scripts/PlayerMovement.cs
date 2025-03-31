@@ -319,9 +319,9 @@ public class PlayerMovement : MonoBehaviour
     public void SetHitState(Vector2 source, int damage)
     {
         isHit = true;
-        FindObjectOfType<SoundManager>().PlaySFX("beepHurt");
+        FindFirstObjectByType<SoundManager>().PlaySFX("beepHurt");
         CameraShakeManager.instance.CameraShake(impulseSource, 5f);
-        FindObjectOfType<HitStop>().Stop(0.05f);
+        FindFirstObjectByType<HitStop>().Stop(0.05f);
 
         hitTimer = hitDuration;
         //vida -= damage;
@@ -366,7 +366,7 @@ public class PlayerMovement : MonoBehaviour
     {
         #region OldUpdate (da época em que eu separava FixedUpdate e Update)
         if (GameInput.WasAttackPressed) {
-            FindObjectOfType<SoundManager>().PlaySFX("beepSwing");
+            FindFirstObjectByType<SoundManager>().PlaySFX("beepSwing");
             estáAtacando = true;
         }
         if (GameInput.WasBulletTimePressed){
@@ -905,6 +905,8 @@ public class PlayerMovement : MonoBehaviour
             || (characterAngle >= 355 && characterAngle <= 360)
             || (characterAngle >= 175 && characterAngle <= 185)))
         {
+            Sprite currentSprite = GetComponent<SpriteRenderer>().sprite;
+            
             estáWallSliding = true;
             doubleJumpReady = true;
             if (leftHit.collider != null) { olhandoDireita = true; }
@@ -1112,7 +1114,7 @@ public class PlayerMovement : MonoBehaviour
         //animator.SetBool(groundedHash, grounded);
         animator.SetBool(pulandoNormalHash, estáPulandoNormal);
         animator.SetBool(piruetandoHash, estáPiruetando);
-        animator.SetBool(caindoHash, estáCaindo);        
+        animator.SetBool(caindoHash, estáCaindo);
 
         animator.SetBool(wallSlidingHash, estáWallSliding);
         animator.SetBool(vaiWallSlideHash, vaiWallSlide);
@@ -1195,7 +1197,7 @@ public class PlayerMovement : MonoBehaviour
                 //animator.SetTrigger("freandoAgachado");
                 freandoAgachado = true;
                 TraveControleH();
-                FindObjectOfType<SoundManager>().Play("freandoAgachado");
+                FindFirstObjectByType<SoundManager>().Play("freandoAgachado");
             }
             else if (freandoAgachado && Mathf.Abs(groundVelocity) < freandoAgachadoLimiteVirar)
             {
