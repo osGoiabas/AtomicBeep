@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -7,7 +5,7 @@ public class ItemManager : MonoBehaviour
 {
     [SerializeField] public static ItemManager instance;
     [SerializeField] private TextMeshProUGUI text;
-    private int radsCollected;
+    public static int radsCollected;
 
     // Start is called before the first frame update
     void Awake()
@@ -26,8 +24,9 @@ public class ItemManager : MonoBehaviour
 
     private void Update()
     {
-        //TODO: tirar isso do Update, só fazer OnSceneLoad ou algo do tipo
+        //TODO: tirar isso do Update, sÃ³ fazer OnSceneLoad ou algo do tipo
         text = GameObject.FindGameObjectWithTag("RadsCollected").GetComponent<TextMeshProUGUI>();
+        text.text = "x" + radsCollected.ToString();
     }
 
     public void ChangeRadsCollected(int radAmount) {

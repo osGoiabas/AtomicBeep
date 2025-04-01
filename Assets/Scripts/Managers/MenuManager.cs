@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
@@ -35,6 +39,7 @@ public class MenuManager : MonoBehaviour
         isPaused = true;
         Time.timeScale = 0f;
         //GameInput.PlayerInput.SwitchCurrentActionMap("UI");
+        SerializeJson();
         OpenPauseMenu();
     }
 
@@ -69,6 +74,7 @@ public class MenuManager : MonoBehaviour
     # endregion
 
     #region On Button Press
+
     public void OnSettingsPress(){
         OpenSettingsMenu();
     }
@@ -80,5 +86,47 @@ public class MenuManager : MonoBehaviour
     public void OnResumePress(){
         Unpause();
     }
+    #endregion
+
+    #region Serialize Data (Save Load)
+
+    //private PlayerStats PlayerStats = new PlayerStats();
+    private IDataService DataService = new JsonDataService();
+    private bool EncryptionEnabled = false;
+
+    public void SerializeJson()
+    {
+        if (DataService.SaveData("/player-stats.json", ItemManager.radsCollected, EncryptionEnabled))
+        {
+            try
+            {
+                int data = DataService.LoadData<int>("/player-stats.json", EncryptionEnabled);
+            }
+            catch
+            {
+                Debug.LogError($"Could not read file! Show something on the UI here!");
+            }
+        }
+        else
+        {
+            Debug.LogError("Could not save file! Show something on the UI about it!");
+        }
+    }
+
+    public void ToggleEncryption(bool EncryptionEnabled)
+    {
+        this.EncryptionEnabled = EncryptionEnabled;
+    }
+
+    public void ClearData()
+    {
+        string path = Application.persistentDataPath + "/player-stats.json";
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            //InputField.text = "Loaded data goes here";
+        }
+    }
+
     #endregion
 }
