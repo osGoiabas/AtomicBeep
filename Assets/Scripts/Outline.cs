@@ -15,7 +15,7 @@ public class Outline : MonoBehaviour
     if (playerMovement.estáMagnetizado) {
       material.SetColor("_Color", Color.magenta);
     } else {
-      material.SetColor("_Color", new Color(0,0,0,0));
+      material.SetColor("_Color", Color.clear);
     }
   }
 }
