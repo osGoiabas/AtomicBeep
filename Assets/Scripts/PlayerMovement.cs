@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class GroundInfo
 {
@@ -1034,11 +1034,11 @@ public class PlayerMovement : MonoBehaviour
                     float angleDeg = currentGroundInfo.angle * Mathf.Rad2Deg;
 
                     //if previousAngleDeg is more than 50 degrees different than angleDeg:
-                    if (Math.Abs(previousAngleDeg - angleDeg) > 50) {
-                        print("previousAngleDeg: " + previousAngleDeg);
-                        print("angleDeg: " + angleDeg);
-                        return;
-                    }
+                    // if (Math.Abs(previousAngleDeg - angleDeg) > 50) {
+                    //     print("previousAngleDeg: " + previousAngleDeg);
+                    //     print("angleDeg: " + angleDeg);
+                    //     return;
+                    // }
 
                     // SE O ÂNGULO É BAIXO, SIMPLESMENTE USE A VELOCIDADE DO CHÃO
                     if (angleDeg < 22.5f || (angleDeg > 337.5 && angleDeg <= 360f))

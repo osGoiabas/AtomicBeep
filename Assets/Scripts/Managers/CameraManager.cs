@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class CameraManager : MonoBehaviour
 {
@@ -25,10 +25,10 @@ public class CameraManager : MonoBehaviour
 
     private void Update()
     {
-        //TODO: tirar isso do Update, só fazer OnSceneLoad ou algo do tipo
+        //TODO: tirar isso do Update, sï¿½ fazer OnSceneLoad ou algo do tipo
         pcamconfiner = GetComponentInChildren<CinemachineConfiner2D>();
         cinemachineVirtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
-        pcamconfiner.m_BoundingShape2D = GameObject.FindGameObjectWithTag("Bounds").GetComponent<CompositeCollider2D>();
+        pcamconfiner.BoundingShape2D = GameObject.FindGameObjectWithTag("Bounds").GetComponent<CompositeCollider2D>();
         cinemachineVirtualCamera.Follow = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
     }
 }
