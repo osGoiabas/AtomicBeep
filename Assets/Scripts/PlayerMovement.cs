@@ -140,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
 
     private int wallSlidingHash;
     private int vaiWallSlideHash;
-    private int estáWallToRampHash;    
+    private int estáWallToRampHash;
     private int ledgeGrabHash;
     private int ledgeClimbHash;
 
@@ -200,6 +200,9 @@ public class PlayerMovement : MonoBehaviour
     private float hitDuration = 0.5f;
     public bool IsInvulnerable { get { return isHit || hitTimer > 0f; } }
 
+
+
+    private float previousAngleDeg;
 
     private CinemachineImpulseSource impulseSource;
 
@@ -1030,6 +1033,13 @@ public class PlayerMovement : MonoBehaviour
                     groundMode = GroundMode.Floor;
                     float angleDeg = currentGroundInfo.angle * Mathf.Rad2Deg;
 
+                    //if previousAngleDeg is more than 50 degrees different than angleDeg:
+                    if (Math.Abs(previousAngleDeg - angleDeg) > 50) {
+                        print("previousAngleDeg: " + previousAngleDeg);
+                        print("angleDeg: " + angleDeg);
+                        return;
+                    }
+
                     // SE O ÂNGULO É BAIXO, SIMPLESMENTE USE A VELOCIDADE DO CHÃO
                     if (angleDeg < 22.5f || (angleDeg > 337.5 && angleDeg <= 360f))
                     {
@@ -1051,6 +1061,8 @@ public class PlayerMovement : MonoBehaviour
                         // SE NÃO (está caindo/subindo muito rápido), USA A velocY INTEIRA, CORRIGIDA POR TRIGONOMETRIA
                         else { groundVelocity = velocity.y * Mathf.Sign(Mathf.Sin(currentGroundInfo.angle)); }
                     }
+
+                    previousAngleDeg = angleDeg;
 
                     // FINALMENTE, PARE DE CAIR (você já está no chão)
                     velocity.y = 0f;

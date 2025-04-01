@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class MainMenu : MonoBehaviour
         FindFirstObjectByType<SoundManager>().PlaySFX("rads");
         GameInput.PlayerInput.SwitchCurrentActionMap("Player");
         //SceneTransitioner.Instance.LoadScene("DebugRoom 1", _portaEmQueVaiSpawnar, sceneTransitionMode);
+        SceneManager.LoadScene(1); //DebugRoom 1
     }
 
     public void ExitButton()
