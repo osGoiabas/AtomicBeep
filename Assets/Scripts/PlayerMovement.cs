@@ -96,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
 
     private float dashSpeed = 1000f;
 
-    private float peleGrossura = 0.05f;
+    private float peleGrossura = 1f;
     private float slopeFactor = 200f; //old = 450f
 
     private float ledgeHeightOffset = 10f;
