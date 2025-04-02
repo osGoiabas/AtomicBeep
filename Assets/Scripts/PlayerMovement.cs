@@ -48,8 +48,6 @@ public class PlayerMovement : MonoBehaviour
     public bool estáMagnetizado { get; private set; }
 
 
-    //public bool IsInvulnerable = false;
-
     //float standingHeight = 40f;
     private float heightHalf = 20f;
     private float standWidthHalf = 10f;
