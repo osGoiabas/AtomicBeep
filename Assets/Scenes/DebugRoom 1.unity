@@ -20226,6 +20226,31 @@ PrefabInstance:
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 4294818185500055103}
+    - target: {fileID: 1043711017719292943, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
+        type: 3}
+      propertyPath: Priority.Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043711017719292943, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
+        type: 3}
+      propertyPath: Priority.m_Value
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043711017719292943, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
+        type: 3}
+      propertyPath: m_LegacyPriority
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043711017719292943, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
+        type: 3}
+      propertyPath: m_StreamingVersion
+      value: 20241001
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043711017996172337, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
     - target: {fileID: 1043711018578096132, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -20245,11 +20270,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Cameras
-      objectReference: {fileID: 0}
-    - target: {fileID: 1043711019267740701, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1043711019267740701, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
@@ -20301,11 +20321,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2389061130900205588, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2389061130900205589, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
       propertyPath: m_Color.b
@@ -20315,11 +20330,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Color.g
       value: 0.43390918
-      objectReference: {fileID: 0}
-    - target: {fileID: 2389061130900205589, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2389061130900205589, guid: 2ac7e7347e4a8a7499c69f6498771f2f,
         type: 3}
