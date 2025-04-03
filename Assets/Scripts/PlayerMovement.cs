@@ -204,6 +204,8 @@ public class PlayerMovement : MonoBehaviour
 
     private CinemachineImpulseSource impulseSource;
 
+    [SerializeField] public int vida = 5;
+
     #endregion
 
     #region Awake e Start
@@ -326,7 +328,8 @@ public class PlayerMovement : MonoBehaviour
         FindFirstObjectByType<HitStop>().Stop(0.05f);
 
         hitTimer = hitDuration;
-        //vida -= damage;
+
+        vida -= damage;
 
         characterAngle = 0f;
         grounded = false;
@@ -338,8 +341,7 @@ public class PlayerMovement : MonoBehaviour
         // Jumping resets the horizontal control lock
         hControlLock = false;
         hControlLockTimer = 0f;
-        
-        
+
         //float positionDif = transform.position.x - source.x;
 
         Debug.Log("damage taken: " + damage);

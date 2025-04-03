@@ -5,7 +5,7 @@ namespace Giometric.UniSonic.Objects
 {
     public class DamageTrigger : ObjectTriggerBase
     {
-        private int quantoMachuca = 15;
+        private int quantoMachuca = 1;
 
         protected override Color32 gizmoColor { get { return new Color32(255, 16, 16, 64); } }
 
