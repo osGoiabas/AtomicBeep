@@ -2,28 +2,26 @@ using UnityEngine;
 
 public class ParallaxEffect : MonoBehaviour
 {
-    private float _startingPosX; //This is starting position of the sprites.
-    private float _startingPosY; //This is starting position of the sprites.
-    [SerializeField] private float amountOfParallax;  //This is amount of parallax scroll. 
-    [SerializeField] private Camera MainCamera;   //Reference of the camera.
+    [SerializeField] private Camera cam;
+    [SerializeField] private Transform subject;
+
+    Vector2 startPosition;
+    float startZ;
+
+    Vector2 travel => (Vector2)cam.transform.position - startPosition;
+    float distanceFromSubject => transform.position.z - subject.position.z;
+    float clippingPlane => cam.transform.position.z + (distanceFromSubject > 0 ? cam.farClipPlane : cam.nearClipPlane);
+    float parallaxFactor => Mathf.Abs(distanceFromSubject) / clippingPlane;
 
     private void Start()
     {
-        //Getting the starting X position of sprite.
-        _startingPosX = transform.position.x;
-        _startingPosY = transform.position.y;
+        startPosition = transform.position;
+        startZ = transform.position.z;
     }
 
     private void Update()
     {
-        Vector3 position = MainCamera.transform.position;
-        float distanceX = position.x * amountOfParallax;
-        float distanceY = position.y * amountOfParallax * 0.5f;
-
-        Vector3 newPosition = new(_startingPosX + distanceX,
-                                  transform.position.y,//_startingPosY + distanceY, #TODO: implementar parallax vertical
-                                  transform.position.z);
-
-        transform.position = newPosition;
+        Vector2 newPos = startPosition + travel * parallaxFactor;
+        transform.position = new Vector3(newPos.x, newPos.y, startZ);
     }
 }
