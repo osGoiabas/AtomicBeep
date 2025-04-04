@@ -204,7 +204,8 @@ public class PlayerMovement : MonoBehaviour
 
     private CinemachineImpulseSource impulseSource;
 
-    [SerializeField] public int vida = 5;
+    [SerializeField] public int vida;
+    [SerializeField] public int vidaMax = 5;
 
     #endregion
 
@@ -213,7 +214,7 @@ public class PlayerMovement : MonoBehaviour
     //independentemente do script estar ativado ou não.
 
     //Start() só é chamada quando o script for ativado,
-    //e só será chamada essa única vez por toda a vida do script,
+    //e só será chamada essa única vez por toda a existência do script,
     //mesmo que ele seja desativado e reativado posteriormente.
     //Para essa última função, usar OnEnable()
 
@@ -252,6 +253,8 @@ public class PlayerMovement : MonoBehaviour
         atacandoHash = Animator.StringToHash("Atacando");
 
         empurrandoHash = Animator.StringToHash("Empurrando");
+
+        if (vida == 0) vida = vidaMax;
     }
     #endregion
 
@@ -330,6 +333,7 @@ public class PlayerMovement : MonoBehaviour
         hitTimer = hitDuration;
 
         vida -= damage;
+        if (vida <= 0) KillPlayer();
 
         characterAngle = 0f;
         grounded = false;
@@ -364,6 +368,12 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool(brakeHash, false);
         animator.SetFloat(speedHash, 0.1f);
         */
+    }
+
+    [SerializeField] Transform lastSavePoint;
+    void KillPlayer() {
+        vida = vidaMax;
+        transform.position = lastSavePoint.position;
     }
 
     void Update()
