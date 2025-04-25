@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class ItemManager : MonoBehaviour
@@ -25,8 +26,8 @@ public class ItemManager : MonoBehaviour
     private void Update()
     {
         //TODO: tirar isso do Update, só fazer OnSceneLoad ou algo do tipo
-        text = GameObject.FindGameObjectWithTag("RadsCollected").GetComponent<TextMeshProUGUI>();
-        text.text = "x" + radsCollected.ToString();
+        // text = GameObject.FindGameObjectWithTag("RadsCollected").GetComponent<TextMeshProUGUI>();
+        // text.text = "x" + radsCollected.ToString();
     }
 
     public void ChangeRadsCollected(int radAmount) {

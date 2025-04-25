@@ -3,8 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    //[SerializeField] private SceneTransitionMode sceneTransitionMode;
-    //[SerializeField] private ExitScene.PortaEmQueVaiSpawnar _portaEmQueVaiSpawnar;
+    [SerializeField] private SceneTransitionMode sceneTransitionMode;
+    [SerializeField] private ExitScene.PortaEmQueVaiSpawnar _portaEmQueVaiSpawnar;
 
     private IDataService DataService = new JsonDataService();
 
@@ -15,8 +15,8 @@ public class MainMenu : MonoBehaviour
 
         FindFirstObjectByType<SoundManager>().PlaySFX("rads");
         GameInput.PlayerInput.SwitchCurrentActionMap("Player");
-        //SceneTransitioner.Instance.LoadScene("DebugRoom 1", _portaEmQueVaiSpawnar, sceneTransitionMode);
-        SceneManager.LoadScene(2); //DebugRoom 2
+        SceneTransitioner.Instance.LoadScene("DebugRoom 2", _portaEmQueVaiSpawnar, sceneTransitionMode);
+        //SceneManager.LoadScene(2); //DebugRoom 2
     }
 
     public void LoadGame()
@@ -28,8 +28,8 @@ public class MainMenu : MonoBehaviour
 
         FindFirstObjectByType<SoundManager>().PlaySFX("rads");
         GameInput.PlayerInput.SwitchCurrentActionMap("Player");
-        //SceneTransitioner.Instance.LoadScene("DebugRoom 1", _portaEmQueVaiSpawnar, sceneTransitionMode);
-        SceneManager.LoadScene(2); //DebugRoom 2
+        SceneTransitioner.Instance.LoadScene("DebugRoom 2", _portaEmQueVaiSpawnar, sceneTransitionMode);
+        //SceneManager.LoadScene(2); //DebugRoom 2
     }
 
     public void ExitButton()

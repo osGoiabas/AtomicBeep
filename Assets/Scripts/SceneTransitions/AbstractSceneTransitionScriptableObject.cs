@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public abstract class AbstractSceneTransitionScriptableObject : ScriptableObject
 {
     public AnimationCurve LerpCurve;
-    public float AnimationTime = 1f;    
+    public float AnimationTime = 1f;
     protected Image AnimatedObject;
 
     public abstract IEnumerator Enter(Canvas Parent);

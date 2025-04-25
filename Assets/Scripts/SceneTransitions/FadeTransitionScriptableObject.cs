@@ -30,6 +30,8 @@ public class FadeTransitionScriptableObject : AbstractSceneTransitionScriptableO
         AnimatedObject.rectTransform.anchorMax = Vector2.one;
         AnimatedObject.rectTransform.sizeDelta = Vector2.zero;
 
+        Debug.Log("saindo");
+
         float time = 0;
         Color startColor = new Color(0, 0, 0, 0);
         Color endColor = Color.black;
@@ -40,6 +42,7 @@ public class FadeTransitionScriptableObject : AbstractSceneTransitionScriptableO
                 endColor,
                 LerpCurve.Evaluate(time)
             );
+            Debug.Log(AnimatedObject.color);
             yield return null;
             time += Time.deltaTime / AnimationTime;
         }

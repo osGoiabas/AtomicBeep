@@ -26,7 +26,6 @@ public class SceneTransitioner : MonoBehaviour
     private AsyncOperation LoadLevelOperation;
     private AbstractSceneTransitionScriptableObject ActiveTransition;
 
-
     private void Awake()
     {
         if (Instance != null)
@@ -51,6 +50,7 @@ public class SceneTransitioner : MonoBehaviour
     {
         _portaEmQueVaiSpawnar = porta;
 
+        Debug.Log("loading " + Scene);
         LoadLevelOperation = SceneManager.LoadSceneAsync(Scene);
 
         Transition transition = Transitions.Find((transition) => transition.Mode == TransitionMode);

@@ -17,7 +17,7 @@ public class ExitScene : MonoBehaviour
     [SerializeField] private SceneField _sceneToLoad;
 
 
-    public enum PortaEmQueVaiSpawnar { 
+    public enum PortaEmQueVaiSpawnar {
         Nenhuma,
         Porta01,
         Porta02,
@@ -31,5 +31,4 @@ public class ExitScene : MonoBehaviour
         SceneTransitioner._loadFromDoor = true;
         SceneTransitioner.Instance.LoadScene(_sceneToLoad.SceneName, _portaEmQueVaiSpawnar, sceneTransitionMode);
     }
-
 }

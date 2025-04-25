@@ -50,10 +50,17 @@ public class MenuManager : MonoBehaviour
         CloseAllMenus();
     }
 
+    public void BackToMainMenuPress(){
+        Debug.Log("BackToMainMenuPress");
+        SceneTransitioner.Instance.LoadScene("MainMenu");
+    }
+
     #region Open/Close Menus
+
     private void OpenPauseMenu(){
         _pauseMenuCanvas.SetActive(true);
         _settingsMenuCanvas.SetActive(false);
+        Debug.Log("OpenPauseMenu");
 
         EventSystem.current.SetSelectedGameObject(_pauseMenuFirst);
     }
@@ -86,6 +93,11 @@ public class MenuManager : MonoBehaviour
     public void OnResumePress(){
         Unpause();
     }
+
+    public void OnBackToMainMenuPress(){
+        BackToMainMenuPress();
+    }
+
     #endregion
 
     #region Serialize Data (Save Load)
