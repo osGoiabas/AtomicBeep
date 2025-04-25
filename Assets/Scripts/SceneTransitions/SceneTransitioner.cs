@@ -45,7 +45,7 @@ public class SceneTransitioner : MonoBehaviour
 
     public void LoadScene(string Scene, 
         ExitScene.PortaEmQueVaiSpawnar porta = ExitScene.PortaEmQueVaiSpawnar.Nenhuma,
-        SceneTransitionMode TransitionMode = SceneTransitionMode.None,
+        SceneTransitionMode TransitionMode = SceneTransitionMode.Fade,
         LoadSceneMode Mode = LoadSceneMode.Single)
     {
         _portaEmQueVaiSpawnar = porta;
@@ -101,12 +101,12 @@ public class SceneTransitioner : MonoBehaviour
 
     private void ProcurarPorta(ExitScene.PortaEmQueVaiSpawnar portaEmQueVaiSpawnar)
     {
-        ExitScene[] portas = FindObjectsOfType<ExitScene>();
+        ExitScene[] portas = FindObjectsByType<ExitScene>(FindObjectsSortMode.None);
         for (int i = 0; i < portas.Length; i++)
         {
             if (portas[i]._portaAtual == portaEmQueVaiSpawnar)
             {
-                //#TODO isso aqui � jank, ver jeito mais certinho de pegar o lugar exato em que spawnar
+                //#TODO isso aqui é jank, ver jeito mais certinho de pegar o lugar exato em que spawnar
                 _doorPos = new Vector3 (portas[i].gameObject.transform.position.x,
                                         portas[i].gameObject.transform.position.y - 20,
                                         portas[i].gameObject.transform.position.z);

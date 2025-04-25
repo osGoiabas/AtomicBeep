@@ -54,8 +54,12 @@ public class GameInput : MonoBehaviour
         WasAttackPressed = _attackAction.WasPressedThisFrame();
         WasBulletTimePressed = _bulletTimeAction.WasPressedThisFrame();
         WasDebugPressed = _debugAction.WasPressedThisFrame();
-        WasPausePressed = _pauseAction.WasPressedThisFrame();    
-        WasUnpausePressed = _unpauseAction.WasPressedThisFrame();       
+        WasPausePressed = _pauseAction.WasPressedThisFrame();
+        WasUnpausePressed = _unpauseAction.WasPressedThisFrame();
+
+        if (WasUnpausePressed) {
+            Debug.Log("Detected Unpause Press");
+        }
     }
 
     private void Start()

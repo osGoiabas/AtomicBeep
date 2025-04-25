@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DebugRoom 2.unity
     guid: 2c1cc26a9613ff64d9cbe6e96164b906
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 65fb8feae4708b74697d032f769ef12f,
+      type: 3}
+  m_UseUCBPForAssetBundles: 0

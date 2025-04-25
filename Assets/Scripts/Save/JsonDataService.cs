@@ -23,12 +23,12 @@ public class JsonDataService : IDataService
             if (File.Exists(path))
             {
                 //#TODO: salvar backup do arquivo, só deletar depois de tudo dar certo
-                Debug.Log("Data exists. Deleting old file and writing a new one!");
+                //Debug.Log("Data exists. Deleting old file and writing a new one!");
                 File.Delete(path);
             }
             else
             {
-                Debug.Log("Writing file for the first time!");
+                //Debug.Log("Writing file for the first time!");
             }
             using FileStream stream = File.Create(path);
             if (Encrypted)
@@ -41,7 +41,7 @@ public class JsonDataService : IDataService
                 File.WriteAllText(path, JsonConvert.SerializeObject(Data));
             }
             SaveTime = DateTime.Now.Ticks - startTime;
-            Debug.Log($"Save Time: {SaveTime / TimeSpan.TicksPerMillisecond:N4}ms");
+            //Debug.Log($"Save Time: {SaveTime / TimeSpan.TicksPerMillisecond:N4}ms");
             return true;
         }
         catch (Exception e)
@@ -95,8 +95,8 @@ public class JsonDataService : IDataService
             }
 
             LoadTime = DateTime.Now.Ticks - startTime;
-            Debug.Log("Loaded from file:\r\n" + JsonConvert.SerializeObject(data, Formatting.Indented));
-            Debug.Log($"Load Time: {LoadTime / TimeSpan.TicksPerMillisecond:N4}ms");
+            //Debug.Log("Loaded from file:\r\n" + JsonConvert.SerializeObject(data, Formatting.Indented));
+            //Debug.Log($"Load Time: {LoadTime / TimeSpan.TicksPerMillisecond:N4}ms");
 
             return data;
         }

@@ -32,13 +32,17 @@ public class MenuManager : MonoBehaviour
                 Pause();
             else
                 Unpause();
-        }
+        } else if (GameInput.WasUnpausePressed)
+            if (!isPaused)
+                Pause();
+            else
+                Unpause();
     }
 
     public void Pause() {
         isPaused = true;
         Time.timeScale = 0f;
-        //GameInput.PlayerInput.SwitchCurrentActionMap("UI");
+        GameInput.PlayerInput.SwitchCurrentActionMap("UI");
         SerializeJson();
         OpenPauseMenu();
     }
@@ -46,12 +50,13 @@ public class MenuManager : MonoBehaviour
     public void Unpause(){
         isPaused = false;
         Time.timeScale = 1f;
-        //GameInput.PlayerInput.SwitchCurrentActionMap("Player");
+        GameInput.PlayerInput.SwitchCurrentActionMap("Player");
         CloseAllMenus();
     }
 
     public void BackToMainMenuPress(){
-        Debug.Log("BackToMainMenuPress");
+        Time.timeScale = 1f;
+        CloseAllMenus();
         SceneTransitioner.Instance.LoadScene("MainMenu");
     }
 
@@ -60,7 +65,6 @@ public class MenuManager : MonoBehaviour
     private void OpenPauseMenu(){
         _pauseMenuCanvas.SetActive(true);
         _settingsMenuCanvas.SetActive(false);
-        Debug.Log("OpenPauseMenu");
 
         EventSystem.current.SetSelectedGameObject(_pauseMenuFirst);
     }
@@ -78,7 +82,8 @@ public class MenuManager : MonoBehaviour
 
         EventSystem.current.SetSelectedGameObject(null);
     }
-    # endregion
+
+    #endregion
 
     #region On Button Press
 
