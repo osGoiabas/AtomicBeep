@@ -54788,6 +54788,26 @@ PrefabInstance:
       propertyPath: 'hearts.Array.data[4]'
       value: 
       objectReference: {fileID: 408320447}
+    - target: {fileID: 4294818185500055112, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 4294818185500055112, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 4294818185500055112, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4294818185500055112, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7985653372348900560, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
         type: 3}
       propertyPath: m_Name
@@ -54853,6 +54873,11 @@ PrefabInstance:
       propertyPath: lastSavePoint
       value: 
       objectReference: {fileID: 840102727}
+    - target: {fileID: 7985653373520559650, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

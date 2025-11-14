@@ -134,6 +134,8 @@ public class PlayerMovement : MonoBehaviour
     private int pulandoNormalHash;
     private int piruetandoHash;
 
+    private int rodandoHash;
+
     private int spinReadyHash;
 
     private int wallSlidingHash;
@@ -236,6 +238,8 @@ public class PlayerMovement : MonoBehaviour
         caindoHash = Animator.StringToHash("Caindo");
         pulandoNormalHash = Animator.StringToHash("PulandoNormal");
         piruetandoHash = Animator.StringToHash("Piruetando");
+
+        rodandoHash = Animator.StringToHash("Rodando");
 
         spinReadyHash = Animator.StringToHash("SpinReady");
 
@@ -392,6 +396,27 @@ public class PlayerMovement : MonoBehaviour
         if (GameInput.WasDebugPressed){
             debug = !debug;
             estáMagnetizado = !estáMagnetizado;
+
+            //-----------------------------------------------------------------------------------------------------
+            // RODANDO
+            //-----------------------------------------------------------------------------------------------------
+            #region RODANDO
+
+            if (estáMagnetizado)
+            {
+                if (olhandoDireita)
+                {
+                    velocity.x += 2*dashSpeed;
+                    velocity.y += 2*dashSpeed;
+                }
+                else
+                {
+                    velocity.x -= 2*dashSpeed;
+                    velocity.y += 2*dashSpeed;
+                }
+            }
+            #endregion
+
         }
         if (GameInput.WasJumpPressed){
             if (grounded && !spinReady && jumpBufferCounter > 0)
@@ -1139,6 +1164,8 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool(piruetandoHash, estáPiruetando);
         animator.SetBool(caindoHash, estáCaindo);
 
+        animator.SetBool(rodandoHash, estáMagnetizado);
+
         animator.SetBool(wallSlidingHash, estáWallSliding);
         animator.SetBool(vaiWallSlideHash, vaiWallSlide);
         animator.SetBool(estáWallToRampHash, estáWallToRamp);
@@ -1171,7 +1198,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //-----------------------------------------------------------------------------------------------------
-        // DIREÇÃO E mudarDireção, VIRAR, TURN      
+        // DIREÇÃO E mudarDireção, VIRAR, TURN
         //-----------------------------------------------------------------------------------------------------
         #region direção
 
