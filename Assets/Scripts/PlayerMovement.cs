@@ -159,6 +159,22 @@ public class PlayerMovement : MonoBehaviour
 
     private bool spinReady = false;
 
+    // --- NEW: Beep (rodando-special) state -------------------------------------------------------
+    // When true the normal movement code is bypassed and a simple bouncing physics is applied.
+    private bool isBeeping = false;
+    private Vector2 beepVelocity = Vector2.zero;
+    private float beepGravity = -600f;       // match main gravity scale (tune as needed)
+    private float beepBounce = 0.80f;        // base reflection multiplier on collision
+    private float beepWallBounceMultiplier = 0.25f; // extra multiplier for vertical walls
+    private float beepExtraYOnWall = 10f;   // guaranteed upward boost on wall hits (pixels/sec)
+    private float beepLinearDrag = 0.5f;    // simple air drag (per second)
+    private float beepRadius = 10f;          // radius used for circlecast (in pixels/units)
+    private LayerMask beepCollisionMask;     // if not set, will fallback to máscaraColisão
+    private float beepStopSpeed = 100f;       // minimum speed to consider "stopped" and exit state
+    private float beepMaxSpeed = 700f;      // cap so reflections can't explode
+    [Header("Debug")]
+    private bool beepDebugLog = true;        // toggles debug prints for beep state
+    // ---------------------------------------------------------------------------------------------
     private bool mudarDireção = false;
     private float mudarDireçãoDelay = 0.3f;
     private float mudarDireçãoTimer;
@@ -274,6 +290,9 @@ public class PlayerMovement : MonoBehaviour
             //GUILayout.Label("hControlLockTimer: " + hControlLockTimer);
             //GUILayout.Label("hControlLock: " + (hControlLock ? "SIM" : "NÃO"));
 
+            GUILayout.Label("isBeeping: " + (isBeeping ? "YES" : "NO"));
+            GUILayout.Label("beepVelocity: " + beepVelocity);
+
             //GUILayout.Label("mudarDireção: " + (mudarDireção ? "SIM" : "NÃO"));
             //GUILayout.Label("mudarDireçãoTimer: " + mudarDireçãoTimer);
             GUILayout.Label("Olhando para: " + (olhandoDireita ? "DIREITA" : "ESQUERDA"));
@@ -382,6 +401,21 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        // Test hotkey: press B in Play mode to force EnterBeepState for debugging
+        if (GameInput.WasDebugPressed)
+        {
+            Vector2 testLaunch = olhandoDireita ? new Vector2(300f, 150f) : new Vector2(-300f, 150f);
+            EnterBeepState(testLaunch);
+            Debug.Log("[BeepTest] Debug pressed - EnterBeepState called with ");
+        }
+
+        // NEW: if in beep state, run special bouncing update and skip the rest of the movement code
+        if (isBeeping)
+        {
+            HandleBeepState();
+            return;
+        }
+
         #region OldUpdate (da época em que eu separava FixedUpdate e Update)
         if (GameInput.WasAttackPressed) {
             FindFirstObjectByType<SoundManager>().PlaySFX("beepSwing");
@@ -394,28 +428,28 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         if (GameInput.WasDebugPressed){
-            debug = !debug;
+            //debug = !debug;
             estáMagnetizado = !estáMagnetizado;
 
             //-----------------------------------------------------------------------------------------------------
             // RODANDO
             //-----------------------------------------------------------------------------------------------------
-            #region RODANDO
+            // #region RODANDO
 
-            if (estáMagnetizado)
-            {
-                if (olhandoDireita)
-                {
-                    velocity.x += 2*dashSpeed;
-                    velocity.y += 2*dashSpeed;
-                }
-                else
-                {
-                    velocity.x -= 2*dashSpeed;
-                    velocity.y += 2*dashSpeed;
-                }
-            }
-            #endregion
+            // if (estáMagnetizado)
+            // {
+            //     if (olhandoDireita)
+            //     {
+            //         velocity.x += 2*dashSpeed;
+            //         velocity.y += 2*dashSpeed;
+            //     }
+            //     else
+            //     {
+            //         velocity.x -= 2*dashSpeed;
+            //         velocity.y += 2*dashSpeed;
+            //     }
+            // }
+            // #endregion
 
         }
         if (GameInput.WasJumpPressed){
@@ -576,11 +610,11 @@ public class PlayerMovement : MonoBehaviour
             {
                 if ((pegouWallJump && estáMagnetizado) && (groundMode == GroundMode.LeftWall || groundMode == GroundMode.RightWall))
                 {
-                    characterAngle = 0;
-                    transform.rotation = Quaternion.identity;
-                    vaiWallSlide = true;
-                    if (olhandoDireita) { transform.position += new Vector3(10f, 0f, 0f); } 
-                    else { transform.position -= new Vector3(10f, 0f, 0f); }
+                    // characterAngle = 0;
+                    // transform.rotation = Quaternion.identity;
+                    // vaiWallSlide = true;
+                    // if (olhandoDireita) { transform.position += new Vector3(10f, 0f, 0f); } 
+                    // else { transform.position -= new Vector3(10f, 0f, 0f); }
                 }
                 else 
                 {
@@ -946,7 +980,7 @@ public class PlayerMovement : MonoBehaviour
             || (characterAngle >= 355 && characterAngle <= 360)
             || (characterAngle >= 175 && characterAngle <= 185)))
         {
-            estáWallSliding = true;
+            //estáWallSliding = true;
             doubleJumpReady = true;
             if (leftHit.collider != null) { olhandoDireita = true; }
             else if (rightHit.collider != null) { olhandoDireita = false; }
@@ -1579,5 +1613,115 @@ public class PlayerMovement : MonoBehaviour
         float angle = Mathf.Atan2(vector.y, vector.x) - (Mathf.PI / 2f);
         if (angle < 0f) { angle += Mathf.PI * 2f; }
         return angle;
+    }
+
+    // --- NEW: Public API to start/stop the beep bouncing state.
+    // Call EnterBeepState(...) from your RODANDO logic to send the player flying and into the bouncing behaviour.
+    public void EnterBeepState(Vector2 launchVelocity)
+    {
+        isBeeping = true;
+        if (beepCollisionMask == 0) beepCollisionMask = máscaraColisão;
+
+        beepVelocity = launchVelocity;
+        grounded = false;
+        estáPulando = false;
+        estáWallSliding = false;
+        estáLedgeGrabbing = false;
+        estáLedgeClimbing = false;
+        spinReady = false;
+
+        // set rolling animation if desired
+        if (animator != null) animator.SetBool(rodandoHash, true);
+
+        if (beepDebugLog) Debug.Log($"[Beep] EnterBeepState - launchVelocity={beepVelocity}");
+    }
+
+    public void ExitBeepState()
+    {
+        if (beepDebugLog) Debug.Log($"[Beep] ExitBeepState - finalVelocity={beepVelocity}, position={transform.position}");
+
+        isBeeping = false;
+        if (animator != null) animator.SetBool(rodandoHash, false);
+
+        // hand control back to normal movement using current beep velocity
+        velocity = beepVelocity;
+        transform.rotation = Quaternion.identity;
+    }
+
+    // Called every frame while in isBeeping. Simple integrate + circlecast bounce response.
+    private void HandleBeepState()
+    {
+        float dt = Time.deltaTime;
+        // gravity
+        beepVelocity.y += beepGravity * dt;
+        // simple linear drag
+        beepVelocity *= 1f - Mathf.Clamp01(beepLinearDrag * dt);
+
+        Vector2 currentPos = new Vector2(transform.position.x, transform.position.y);
+        Vector2 displacement = beepVelocity * dt;
+        float distance = displacement.magnitude;
+
+        if (distance <= Mathf.Epsilon)
+        {
+            if (beepVelocity.sqrMagnitude > 0.1f)
+            {
+                float angle = Mathf.Atan2(beepVelocity.y, beepVelocity.x) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            }
+            return;
+        }
+
+        LayerMask collisionMask = (beepCollisionMask != 0) ? beepCollisionMask : máscaraColisão;
+
+        RaycastHit2D hit = Physics2D.CircleCast(currentPos, beepRadius, displacement.normalized, distance + 0.01f, collisionMask);
+
+        if (hit.collider != null)
+        {
+            // move to just outside contact
+            Vector2 moveTo = hit.centroid + hit.normal * (beepRadius + 0.01f);
+            transform.position = new Vector3(moveTo.x, moveTo.y, transform.position.z);
+
+            // reflect and apply bounce
+            Vector2 reflected = Vector2.Reflect(beepVelocity, hit.normal);
+
+            bool hitVerticalWall = Mathf.Abs(hit.normal.x) > 0.5f;
+            if (hitVerticalWall)
+            {
+                reflected *= beepBounce * beepWallBounceMultiplier;
+                reflected.y = Mathf.Max(reflected.y, Mathf.Abs(reflected.x) * 0.15f + beepExtraYOnWall);
+            }
+            else
+            {
+                reflected *= beepBounce;
+            }
+
+            // clamp final speed so it stays stable
+            beepVelocity = Vector2.ClampMagnitude(reflected, beepMaxSpeed);
+
+            if (beepDebugLog) Debug.Log($"[Beep] Bounced - normal={hit.normal}, newVel={beepVelocity}, wall={hitVerticalWall}");
+
+            // stop condition -- hand control back when velocity small
+            if (beepVelocity.magnitude < beepStopSpeed)
+            {
+                if (beepDebugLog) Debug.Log($"[Beep] Stopping because speed {beepVelocity.magnitude} < {beepStopSpeed}");
+                ExitBeepState();
+                return;
+            }
+
+            var sfx = FindFirstObjectByType<SoundManager>();
+            if (sfx != null) sfx.PlaySFX("beepBounce");
+
+            if (impulseSource != null) impulseSource.GenerateImpulse(Mathf.Clamp01(beepVelocity.magnitude / 1000f));
+        }
+        else
+        {
+            transform.position = new Vector3(currentPos.x + displacement.x, currentPos.y + displacement.y, transform.position.z);
+        }
+
+        if (beepVelocity.sqrMagnitude > 0.1f)
+        {
+            float angle = Mathf.Atan2(beepVelocity.y, beepVelocity.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        }
     }
 }

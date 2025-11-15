@@ -54870,6 +54870,11 @@ PrefabInstance:
       objectReference: {fileID: 220530980}
     - target: {fileID: 7985653372348900563, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
         type: 3}
+      propertyPath: beepRadius
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 7985653372348900563, guid: 47328c196bd6b2d44879eb7cbb8bd1df,
+        type: 3}
       propertyPath: lastSavePoint
       value: 
       objectReference: {fileID: 840102727}
