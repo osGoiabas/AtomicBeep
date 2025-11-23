@@ -46,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
     public bool lostFooting { get; private set; }
     public bool estáAtacando { get; private set; }
     public bool estáMagnetizado { get; private set; }
+    public bool estáRodando { get; private set; }
 
 
     //float standingHeight = 40f;
@@ -402,7 +403,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         // Test hotkey: press B in Play mode to force EnterBeepState for debugging
-        if (GameInput.WasDebugPressed)
+        if (GameInput.WasAttackPressed)
         {
             Vector2 testLaunch = olhandoDireita ? new Vector2(300f, 150f) : new Vector2(-300f, 150f);
             EnterBeepState(testLaunch);
@@ -418,8 +419,8 @@ public class PlayerMovement : MonoBehaviour
 
         #region OldUpdate (da época em que eu separava FixedUpdate e Update)
         if (GameInput.WasAttackPressed) {
-            FindFirstObjectByType<SoundManager>().PlaySFX("beepSwing");
-            estáAtacando = true;
+            //FindFirstObjectByType<SoundManager>().PlaySFX("beepSwing");
+            //estáAtacando = true;
         }
         if (GameInput.WasBulletTimePressed){
             if (pegouBulletTime) 
@@ -428,7 +429,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         if (GameInput.WasDebugPressed){
-            //debug = !debug;
+            debug = !debug;
             estáMagnetizado = !estáMagnetizado;
         }
         if (GameInput.WasJumpPressed){
@@ -589,11 +590,11 @@ public class PlayerMovement : MonoBehaviour
             {
                 if ((pegouWallJump && estáMagnetizado) && (groundMode == GroundMode.LeftWall || groundMode == GroundMode.RightWall))
                 {
-                    // characterAngle = 0;
-                    // transform.rotation = Quaternion.identity;
-                    // vaiWallSlide = true;
-                    // if (olhandoDireita) { transform.position += new Vector3(10f, 0f, 0f); } 
-                    // else { transform.position -= new Vector3(10f, 0f, 0f); }
+                    characterAngle = 0;
+                    transform.rotation = Quaternion.identity;
+                    vaiWallSlide = true;
+                    if (olhandoDireita) { transform.position += new Vector3(10f, 0f, 0f); } 
+                    else { transform.position -= new Vector3(10f, 0f, 0f); }
                 }
                 else 
                 {
@@ -953,7 +954,7 @@ public class PlayerMovement : MonoBehaviour
             || (characterAngle >= 355 && characterAngle <= 360)
             || (characterAngle >= 175 && characterAngle <= 185)))
         {
-            //estáWallSliding = true;
+            estáWallSliding = true;
             doubleJumpReady = true;
             if (leftHit.collider != null) { olhandoDireita = true; }
             else if (rightHit.collider != null) { olhandoDireita = false; }
@@ -1171,7 +1172,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool(piruetandoHash, estáPiruetando);
         animator.SetBool(caindoHash, estáCaindo);
 
-        animator.SetBool(rodandoHash, estáMagnetizado);
+        animator.SetBool(rodandoHash, estáRodando);
 
         animator.SetBool(wallSlidingHash, estáWallSliding);
         animator.SetBool(vaiWallSlideHash, vaiWallSlide);

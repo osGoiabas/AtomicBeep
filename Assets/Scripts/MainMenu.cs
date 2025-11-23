@@ -15,7 +15,7 @@ public class MainMenu : MonoBehaviour
 
         FindFirstObjectByType<SoundManager>().PlaySFX("rads");
         GameInput.PlayerInput.SwitchCurrentActionMap("Player");
-        SceneTransitioner.Instance.LoadScene("DebugRoom 2", _portaEmQueVaiSpawnar, sceneTransitionMode);
+        SceneTransitioner.Instance.LoadScene("DebugRoom 1", _portaEmQueVaiSpawnar, sceneTransitionMode);
         //SceneManager.LoadScene(2); //DebugRoom 2
     }
 
@@ -28,7 +28,7 @@ public class MainMenu : MonoBehaviour
 
         FindFirstObjectByType<SoundManager>().PlaySFX("rads");
         GameInput.PlayerInput.SwitchCurrentActionMap("Player");
-        SceneTransitioner.Instance.LoadScene("DebugRoom 2", _portaEmQueVaiSpawnar, sceneTransitionMode);
+        SceneTransitioner.Instance.LoadScene("DebugRoom 1", _portaEmQueVaiSpawnar, sceneTransitionMode);
         //SceneManager.LoadScene(2); //DebugRoom 2
     }
 
