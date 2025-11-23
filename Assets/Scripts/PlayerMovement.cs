@@ -430,27 +430,6 @@ public class PlayerMovement : MonoBehaviour
         if (GameInput.WasDebugPressed){
             //debug = !debug;
             estáMagnetizado = !estáMagnetizado;
-
-            //-----------------------------------------------------------------------------------------------------
-            // RODANDO
-            //-----------------------------------------------------------------------------------------------------
-            // #region RODANDO
-
-            // if (estáMagnetizado)
-            // {
-            //     if (olhandoDireita)
-            //     {
-            //         velocity.x += 2*dashSpeed;
-            //         velocity.y += 2*dashSpeed;
-            //     }
-            //     else
-            //     {
-            //         velocity.x -= 2*dashSpeed;
-            //         velocity.y += 2*dashSpeed;
-            //     }
-            // }
-            // #endregion
-
         }
         if (GameInput.WasJumpPressed){
             if (grounded && !spinReady && jumpBufferCounter > 0)
@@ -594,7 +573,7 @@ public class PlayerMovement : MonoBehaviour
             //-----------------------------------------------------------------------------------------------------
             // ABAIXAR
             //-----------------------------------------------------------------------------------------------------
-            if (inputVector.y < 0) { abaixado = true; }
+            if (inputVector.y < -0.2f) { abaixado = true; }
             else { abaixado = false; }
 
             //-----------------------------------------------------------------------------------------------------
@@ -627,13 +606,9 @@ public class PlayerMovement : MonoBehaviour
                 grounded = false; // NÃO TÁ NO CHÃO
             }
 
-            
-
             //-----------------------------------------------------------------------------------------------------
             // PULAR
             //-----------------------------------------------------------------------------------------------------
-
-
 
             coyoteTimeCounter = coyoteTime;
 
@@ -654,14 +629,16 @@ public class PlayerMovement : MonoBehaviour
                 // FRICÇÃO
                 //-----------------------------------------------------------------------------------------------------
 
-                // NÃO HÁ INPUT E/OU ESTÁ ABAIXADO? aplique fricção.
-                if (abaixado || Mathf.Abs(inputVector.x) < 0.005f)
+                // NÃO HÁ INPUT E/OU ESTÁ ABAIXADO? aplique fricção. FREAR
+                if (//abaixado || 
+                    Mathf.Abs(inputVector.x) < 0.3f)
                 {
-                    // Mostly because I don't like chaining ternaries 
                     float dePéFric = /*underwater ? uwFriction :*/ friction;
                     float abaixadoFric = /*underwater ? uwRollingFriction :*/ abaixadoFriction;
 
-                    float frc = abaixado ? abaixadoFric : dePéFric;
+                    float frc = //abaixado 
+                                    //? abaixadoFric : 
+                                    dePéFric;
 
                     if (groundVelocity > 0f)
                     {
@@ -680,8 +657,7 @@ public class PlayerMovement : MonoBehaviour
                 // INPUT = MOVIMENTO!
                 //-----------------------------------------------------------------------------------------------------
 
-
-                if (!hControlLock && Mathf.Abs(inputVector.x) >= 0.005f && !abaixado)
+                if (!hControlLock && Mathf.Abs(inputVector.x) >= 0.3f && !abaixado)
                 {
                     float accel = /*underwater ? uwAcceleration :*/ groundAcceleration;
                     float decel = /*underwater ? uwDeceleration :*/ deceleration;
@@ -780,7 +756,6 @@ public class PlayerMovement : MonoBehaviour
             else
                 jumpBufferCounter = 0;
 
-
             //-----------------------------------------------------------------------------------------------------
             // ALTURA DE PULO VARIÁVEL
             //-----------------------------------------------------------------------------------------------------
@@ -815,8 +790,6 @@ public class PlayerMovement : MonoBehaviour
                     velocity.y = Mathf.Max(velocity.y + (gravity * Time.deltaTime), -terminalVelocity);
                 }
             }
-
-
 
             //-----------------------------------------------------------------------------------------------------
             // ACELERAR NO AR
@@ -1236,7 +1209,7 @@ public class PlayerMovement : MonoBehaviour
         //-----------------------------------------------------------------------------------------------------
         #region direção
 
-        if (Mathf.Abs(inputVector.x) > 0.05f && grounded && !freandoAgachado && !spinReady)
+        if (Mathf.Abs(inputVector.x) > 0.3f && grounded && !freandoAgachado && !spinReady)
         {
             // indo prum lado mas olhando pro outro
             if ((inputVector.x < 0.05f && olhandoDireita) || (inputVector.x > 0.05f && !olhandoDireita))
