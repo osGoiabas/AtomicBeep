@@ -830,7 +830,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (leftHit.collider != null)
         {
-            transform.position = new Vector2(leftHit.point.x + standWidthHalf, transform.position.y);
+            transform.position = new Vector2(leftHit.point.x + standWidthHalf + peleGrossura, transform.position.y);
             if (velocity.x < 0f)
             {
                 velocity.x = 0f;
@@ -842,7 +842,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (rightHit.collider != null)
         {
-            transform.position = new Vector2(rightHit.point.x - standWidthHalf, transform.position.y);
+            transform.position = new Vector2(rightHit.point.x - standWidthHalf - peleGrossura, transform.position.y);
             if (velocity.x > 0f)
             {
                 velocity.x = 0f;
@@ -1346,7 +1346,6 @@ public class PlayerMovement : MonoBehaviour
         Debug.DrawLine(pos, pos + (Vector2.right * distance), Color.blue);
     }
 
-    
     void LedgeCheck(float ledgeDistance, float ledgeHeightOffset, out RaycastHit2D ledgeLeft, out RaycastHit2D ledgeRight) 
     {
         Vector2 pos = new Vector2(transform.position.x, transform.position.y + ledgeHeightOffset);
@@ -1357,7 +1356,6 @@ public class PlayerMovement : MonoBehaviour
         Debug.DrawLine(pos, pos + (Vector2.left * ledgeDistance), Color.blue);
         Debug.DrawLine(pos, pos + (Vector2.right * ledgeDistance), Color.blue);
     }
-    
 
     //-----------------------------------------------------------------------------------------------------
     // TETO E PISO
